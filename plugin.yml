@@ -1,0 +1,4 @@
+name: LorinthsRpgMobs
+main: me.Lorinth.LRM.LorinthsRpgMobs
+version: 1.0
+description: A plugin that provides configurable settings for creatures
