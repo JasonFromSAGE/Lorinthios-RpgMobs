@@ -9,7 +9,7 @@ public class LevelRegion extends DirtyObject{
     private String Name;
     private int Level;
 
-    protected void SaveData(FileConfiguration config, String prefix){
+    protected void saveData(FileConfiguration config, String prefix){
 
     }
 

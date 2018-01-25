@@ -22,30 +22,69 @@ public class CreatureData extends DirtyObject{
 
     private HashMap<Integer, String> leveledNames = new HashMap<>();
 
-    protected void SaveData(FileConfiguration config, String prefix){
+    /**
+     * Creates creature data based on saved config data
+     * @param entityType - Type of entity
+     * @param prefix - yml path prefix
+     * @param config - config file
+     */
+    public CreatureData(EntityType entityType, String prefix, FileConfiguration config) {
+        EntityType = entityType;
+        load(config, prefix);
+    }
+
+    /**
+     * Creates new creature data based on a creature entity
+     * @param creature - creature to base data on
+     */
+    public CreatureData(Creature creature){
+        EntityType = creature.getType();
+
+        healthFormula = ((int) creature.getMaxHealth()) + " + ({level} / 3) + ({level} / 5) + rand(5)";
+        damageFormula = "rand(3) + ({level} / 10)";
+        expFormula = "rand(3) + 1";
+
+        this.setNew();
+    }
+
+    /**
+     * Saves all data associated with this object
+     * @param config - config file to save to
+     * @param prefix - the path prefix we will use
+     */
+    protected void saveData(FileConfiguration config, String prefix){
         prefix += EntityType.toString();
         saveFormulas(config, prefix);
         saveNames(config, prefix);
     }
 
+    /**
+     * Saves the formulas associated with this object
+     * @param config - config file to save to
+     * @param prefix - the path prefix we will use
+     */
     private void saveFormulas(FileConfiguration config, String prefix){
         config.set(prefix + ".Health", healthFormula);
         config.set(prefix + ".Damage", damageFormula);
         config.set(prefix + ".Experience", expFormula);
     }
 
+    /**
+     * Saves the names associated with this object
+     * @param config - config file to save to
+     * @param prefix - the path prefix we will use
+     */
     private void saveNames(FileConfiguration config, String prefix){
         for(Integer key : leveledNames.keySet()){
             config.set(prefix + ".Names." + key, leveledNames.get(key));
         }
     }
 
-    //loads data from file
-    public CreatureData(EntityType entityType, String prefix, FileConfiguration config) {
-        EntityType = entityType;
-        load(config, prefix);
-    }
-
+    /**
+     * Loads the data from config file
+     * @param config - config file to load from
+     * @param prefix - the path prefix we will use
+     */
     private void load(FileConfiguration config, String prefix){
         if(config.getBoolean(prefix + "Disabled") || config.getBoolean(prefix + EntityType.toString() + ".Disabled")){
             isDisabled = true;
@@ -58,55 +97,132 @@ public class CreatureData extends DirtyObject{
         loadNames(config, prefix);
     }
 
+    /**
+     * Loads the formulas associated with this object from config file
+     * @param config - config file to load from
+     * @param prefix - the path prefix we will use
+     */
     private void loadFormulas(FileConfiguration config, String prefix){
         healthFormula = config.getString(prefix + ".Health");
         damageFormula = config.getString(prefix + ".Damage");
         expFormula = config.getString(prefix + ".Experience");
     }
 
+    /**
+     * Loads the names associated with this object from config file
+     * @param config - config file to load from
+     * @param prefix - the path prefix we will use
+     */
     private void loadNames(FileConfiguration config, String prefix){
         for(String key : config.getConfigurationSection(prefix + ".Names").getKeys(false)){
             leveledNames.put(Integer.parseInt(key), config.getString(prefix + ".Names." + key));
         }
     }
 
-    //Creates data based on creature
-    public CreatureData(Creature creature){
-        EntityType = creature.getType();
-
-        healthFormula = ((int) creature.getMaxHealth()) + " + (Level / 3) + (Level / 5) + rand(5)";
-        damageFormula = "rand(3) + (Level / 10)";
-        expFormula = "rand(3) + 1";
-
-        this.setNew();
-    }
-
+    /**
+     * Get the health formula assigned to this object
+     * @return health formula
+     */
     public String getHealthFormula(){
         return healthFormula;
     }
 
+    /**
+     * Set the health formula assigned to this object
+     * @param formula - the new formula used for calculating health
+     */
+    public void setHealthFormula(String formula){
+        if(formula == null){
+            return;
+        }
+
+        healthFormula = formula;
+        setDirty();
+    }
+
+    /**
+     * Get the damage formula assigned to this object
+     * @return damage formula
+     */
     public String getDamagerFormula(){
         return damageFormula;
     }
 
+    /**
+     * Set the damage formula assigned to this object
+     * @param formula - the new formula used for calculating damage
+     */
+    public void setDamagerFormula(String formula){
+        if(formula == null){
+            return;
+        }
+
+        damageFormula = formula;
+        setDirty();
+    }
+
+    /**
+     * Get the exp formula assigned to this object
+     * @return exp formula
+     */
+    public String getExpFormula(){
+        return expFormula;
+    }
+
+    /**
+     * Set the exp formula assigned to this object
+     * @param formula - the new formula used for calculating exp
+     */
+    public void setExpFormula(String formula){
+        if(formula == null){
+            return;
+        }
+
+        expFormula = formula;
+        setDirty();
+    }
+
+    /**
+     * Get the health this data would give at the given level
+     * @param level - level used in the health formula
+     * @return - health the entity should have
+     */
     public double getHealthAtLevel(Integer level){
         return Calculator.eval(preParseFormula(healthFormula, level));
     }
 
+    /**
+     * Get the damage this data would give at the given level
+     * @param level - level used in the damage formula
+     * @return - damage the entity should do
+     */
     public double getDamageAtLevel(Integer level){
         return Calculator.eval(preParseFormula(damageFormula, level));
     }
 
+    /**
+     * Get the exp this data would give at the given level
+     * @param level - level used in the exp formula
+     * @return - exp the entity should give
+     */
     public int getExperienceAtLevel(Integer level){
         return (int) Calculator.eval(preParseFormula(expFormula, level));
     }
 
+    /**
+     * Converts the string formula to use provided values such as {level}
+     * @param formulaBefore - base formula
+     * @param level - level to replace {level}
+     * @return the formula we can evaluate
+     */
     private String preParseFormula(String formulaBefore, Integer level){
-        String formulaAfter = healthFormula.replace("level", level.toString());
-        formulaAfter = healthFormula.replace("lvl", level.toString());
-        return formulaAfter;
+        return formulaBefore.replace("{level}", level.toString());
     }
 
+    /**
+     * Is this entity disabled for this plugin
+     * @return - isDisabled
+     */
     public boolean isDisabled(){
         return isDisabled;
     }

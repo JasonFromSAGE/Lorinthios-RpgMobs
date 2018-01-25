@@ -21,7 +21,12 @@ public class SpawnPoint extends DirtyObject{
     private boolean hasMaxLevel = false;
     private boolean isDisabled = false;
 
-    //Loaded from config
+    /**
+     * Loads a pre-existing spawn point from config
+     * @param config - config file
+     * @param worldName - world the spawnpoint exists in
+     * @param prefix - yml path prefix
+     */
     public SpawnPoint(FileConfiguration config, String worldName, String prefix){
         World world = Bukkit.getWorld(worldName);
         if(world != null){
@@ -38,10 +43,15 @@ public class SpawnPoint extends DirtyObject{
         else{
             isDisabled = true;
         }
-
     }
 
-    //Newly added during session
+    /**
+     * Creates a new Spawn Point via code
+     * @param center - center of the spawnpoint
+     * @param name - the alias
+     * @param level - starting level of mobs
+     * @param distance - distance between level increments
+     */
     public SpawnPoint(Location center, String name, int level, int distance){
         center.setY(0);
 
@@ -53,33 +63,112 @@ public class SpawnPoint extends DirtyObject{
         this.setNew();
     }
 
-    protected void SaveData(FileConfiguration config, String prefix){
+    protected void saveData(FileConfiguration config, String prefix){
 
     }
 
-    public boolean IsDisabled(){
+    /**
+     * Checks if this spawn point is disabled
+     * @return - isDisabled
+     */
+    public boolean isDisabled(){
         return isDisabled;
     }
 
-    public Location GetCenter(){
+    /**
+     * Gets the center location of the spawn point, (Note: Y is at 0)
+     * @return - Center Point
+     */
+    public Location getCenter(){
         return Center;
     }
 
-    public int GetStartingLevel(){
+    /**
+     * Sets the center point of the spawn region which distance will be calculated from
+     * @param loc - center of the spawn point (if null nothing changes)
+     */
+    public void setCenter(Location loc){
+        if(loc == null)
+            return;
+
+        loc.setY(0);
+        Center = loc;
+        this.setDirty();
+    }
+
+    /**
+     * Gets the level this spawn point starts incrementing from
+     * @return - Starting Level
+     */
+    public int getStartingLevel(){
         return StartingLevel;
     }
 
-    public int GetLevelDistance(){
+    /**
+     * Sets the level this spawn point starts incrementing from
+     * @param level - between 1 and Integer.MAX_VALUE
+     */
+    public void setStartingLevel(int level){
+        if(level < 1){
+            level = 1;
+        }
+
+        StartingLevel = level;
+        this.setDirty();
+    }
+
+    /**
+     * Get the distance between level increments for this spawn point
+     * @return Level Distance
+     */
+    public int getLevelDistance(){
         return LevelDistance;
     }
 
-    public int GetMaxLevel(){
+    /**
+     * Sets the distance between level increments
+     * @param levelDistance - the distance between level increments
+     */
+    public void setLevelDistance(int levelDistance){
+        if(levelDistance < 1){
+            levelDistance = 1;
+        }
+
+        LevelDistance = levelDistance;
+        this.setDirty();
+    }
+
+    /**
+     * Get the max level allowed within the confines of this spawn point
+     * Returns Integer.MAX_VALUE if not set
+     * @return Max Level
+     */
+    public int getMaxLevel(){
         if(hasMaxLevel)
             return MaxLevel;
         return Integer.MAX_VALUE;
     }
 
-    public int CalculateDistance(Location loc, DistanceAlgorithm algorithm){
+    /**
+     * Sets the max level of monsters in this spawn points area
+     * @param maxLevel - the max level of monsters
+     */
+    public void setMaxLevel(int maxLevel){
+        if(maxLevel < 1){
+            maxLevel = 1;
+        }
+
+        MaxLevel = maxLevel;
+        this.setDirty();
+    }
+
+    /**
+     * Calculate the distance to a spawnpoint from a location
+     * @param loc - The location we want to check
+     * @param algorithm - The algorithm to calculate distance
+     * @return
+     */
+    public int calculateDistance(Location loc, DistanceAlgorithm algorithm){
         loc.setY(0); // We only care about x/y
 
         if(algorithm == DistanceAlgorithm.Accurate){
@@ -92,11 +181,17 @@ public class SpawnPoint extends DirtyObject{
         return 1;
     }
 
-    public int CalculateLevel(Location loc, DistanceAlgorithm algorithm){
+    /**
+     * Calculate the level at a location based on this spawn point
+     * @param loc - The location we want to check
+     * @param algorithm - The algorithm to calculate distance
+     * @return
+     */
+    public int calculateLevel(Location loc, DistanceAlgorithm algorithm){
         loc.setY(0); // We only care about x/y
 
         try{
-            return (int) (CalculateDistance(loc, algorithm) / (double) LevelDistance) + 1;
+            return (int) (calculateDistance(loc, algorithm) / (double) LevelDistance) + 1;
         }
         catch(Exception e){
             e.printStackTrace();
@@ -104,8 +199,12 @@ public class SpawnPoint extends DirtyObject{
         }
     }
 
-    //simple math x+z = distance
-    //results in steeper leveling diagonally, but quicker calculations
+    /**
+     *
+     * @param a - first location to compare distance
+     * @param b - second location to compare distance
+     * @return - the difference in x + z (results in diamond-esque shapes)
+     */
     private double getSimpleDistance(Location a, Location b){
         int x = a.getBlockX() - b.getBlockX();
         int z = a.getBlockX() - b.getBlockX();

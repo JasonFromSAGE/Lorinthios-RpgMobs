@@ -8,6 +8,12 @@ import java.util.Random;
 public class Calculator {
     private static Random random = new Random();
 
+    /**
+     * Evaluates a string formula supports some functions
+     *      sin, cos, tan, random(Rand, rand)
+     * @param str - formula to evaluate
+     * @return - result
+     */
     public static double eval(final String str) {
         return new Object() {
             int pos = -1, ch;
@@ -76,7 +82,9 @@ public class Calculator {
                     else if (func.equals("sin")) x = Math.sin(Math.toRadians(x));
                     else if (func.equals("cos")) x = Math.cos(Math.toRadians(x));
                     else if (func.equals("tan")) x = Math.tan(Math.toRadians(x));
+                    else if (func.equals("random")) x = random.nextInt((int) x);
                     else if (func.equals("rand")) x = random.nextInt((int) x);
+                    else if (func.equals("Rand")) x = random.nextInt((int) x);
                     else throw new RuntimeException("Unknown function: " + func);
                 } else {
                     throw new RuntimeException("Unexpected: " + (char)ch);

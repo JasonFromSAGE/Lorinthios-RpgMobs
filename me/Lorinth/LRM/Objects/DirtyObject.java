@@ -12,35 +12,61 @@ public abstract class DirtyObject {
     private boolean Changed = false;
     private boolean New = false;
 
-    public void Save(FileConfiguration config){
+    /**
+     * Save to file
+     * @param config - config file to save to
+     */
+    public void save(FileConfiguration config){
         if(isDirty()){
-            SaveData(config, "");
+            saveData(config, "");
             setClean();
         }
     }
 
-    public void Save(FileConfiguration config, String prefix){
+    /**
+     * @param config - config file to save to
+     * @param prefix - the config path prefix
+     */
+    public void save(FileConfiguration config, String prefix){
         if(isDirty()){
-            SaveData(config, prefix);
+            saveData(config, prefix);
             setClean();
         }
     }
 
-    protected abstract void SaveData(FileConfiguration config, String prefix);
+    /**
+     * Method that subclasses implement to specify how they are saved
+     * @param config - config file to save to
+     * @param prefix - the path prefix we will use
+     */
+    protected abstract void saveData(FileConfiguration config, String prefix);
 
+    /**
+     * Checks if this object has been changed
+     * @return - true - the object was changed, false - it stayed the same
+     */
     public boolean isDirty(){
         return Changed || New;
     }
 
-    public void setChanged(){
+    /**
+     * Internally set the object has changed
+     */
+    protected void setDirty(){
         Changed = true;
     }
 
-    public void setNew(){
+    /**
+     * Mark that this object was created new, not from file
+     */
+    protected void setNew(){
         New = true;
     }
 
-    public void setClean(){
+    /**
+     * Mark the object clean, only used after saving to ensure all updates are saved/reloaded correctly
+     */
+    protected void setClean(){
         Changed = false;
         New = false;
     }

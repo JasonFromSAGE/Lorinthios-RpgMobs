@@ -28,7 +28,7 @@ public class DataLoader {
         load(config);
     }
 
-    public int calculateLevel(Location location){
+    protected SpawnPoint getSpawnPointForLocation(Location location){
         if(allSpawnPoints.containsKey(location.getWorld().getName())){
             ArrayList<SpawnPoint> spawnPoints = allSpawnPoints.get(location.getWorld().getName());
 
@@ -40,7 +40,7 @@ public class DataLoader {
                 int shortestDistance = Integer.MAX_VALUE;
 
                 for(SpawnPoint spawnPoint : spawnPoints){
-                    int currentDistance = spawnPoint.CalculateDistance(location, distanceAlgorithm);
+                    int currentDistance = spawnPoint.calculateDistance(location, distanceAlgorithm);
                     if(currentDistance < shortestDistance){
                         closestSpawnPoint = spawnPoint;
                         shortestDistance = currentDistance;
@@ -48,14 +48,19 @@ public class DataLoader {
                 }
             }
 
-            if(closestSpawnPoint != null)
-                return closestSpawnPoint.CalculateLevel(location, distanceAlgorithm);
+            return closestSpawnPoint;
         }
+        return null;
+    }
 
+    protected int calculateLevel(Location location){
+        SpawnPoint closestSpawnPoint = getSpawnPointForLocation(location);
+        if(closestSpawnPoint != null)
+            return closestSpawnPoint.calculateLevel(location, distanceAlgorithm);
         return -1; //this world is disabled if -1
     }
 
-    public CreatureData getData(Creature creature){
+    protected CreatureData getData(Creature creature){
         HashMap<EntityType, CreatureData> creatureData = null;
         if(creature instanceof Monster)
             creatureData = monsterData;
@@ -72,7 +77,7 @@ public class DataLoader {
         }
     }
 
-    public void SaveDirtyObjects(FileConfiguration config){
+    protected void SaveDirtyObjects(FileConfiguration config){
         saveSpawnPoints(config);
         saveLevelRegions(config);
         saveCreatureData(config);
@@ -90,7 +95,7 @@ public class DataLoader {
             distanceAlgorithm = DistanceAlgorithm.valueOf(algo);
         }
         catch(Exception error){
-            ConsoleOutput.PrintError("Distance Algorithm : " + ConsoleOutput.Highlight + algo + ConsoleOutput.Error + " is not a valid Algorithm " + ConsoleOutput.Highlight + "(Accurate/Optimized)");
+            ConsoleOutput.PrintError("Distance Algorithm : " + ConsoleOutput.HIGHLIGHT + algo + ConsoleOutput.ERROR + " is not a valid Algorithm " + ConsoleOutput.HIGHLIGHT + "(Accurate/Optimized)");
             distanceAlgorithm = DistanceAlgorithm.Optimized;
         }
     }
@@ -111,7 +116,7 @@ public class DataLoader {
         }
 
         SpawnPoint spawnPoint = new SpawnPoint(config, worldName, prefix);
-        if(!spawnPoint.IsDisabled())
+        if(!spawnPoint.isDisabled())
             allSpawnPoints.get(worldName).add(spawnPoint);
     }
 
@@ -132,7 +137,7 @@ public class DataLoader {
         try{
             EntityType type = EntityType.fromName(key);
             if(type == null) {
-                ConsoleOutput.PrintError("Failed to find entity type for, " + ConsoleOutput.Highlight + key);
+                ConsoleOutput.PrintError("Failed to find entity type for, " + ConsoleOutput.HIGHLIGHT + key);
                 return;
             }
 
@@ -142,7 +147,7 @@ public class DataLoader {
                 monsterData.put(type, new CreatureData(type, prefix, config));
         }
         catch(Exception error){
-            ConsoleOutput.PrintError("Failed to load entity : " + ConsoleOutput.Highlight + key);
+            ConsoleOutput.PrintError("Failed to load entity : " + ConsoleOutput.HIGHLIGHT + key);
             error.printStackTrace();
         }
     }
@@ -150,7 +155,7 @@ public class DataLoader {
     private void saveSpawnPoints(FileConfiguration config){
         for(String key : allSpawnPoints.keySet()){
             for(SpawnPoint spawnPoint : allSpawnPoints.get(key)){
-                spawnPoint.Save(config, "SpawnPoints." + key + ".");
+                spawnPoint.save(config, "SpawnPoints." + key + ".");
             }
         }
     }
@@ -158,17 +163,17 @@ public class DataLoader {
     private void saveLevelRegions(FileConfiguration config){
         for(String key : allLevelRegions.keySet()){
             for(LevelRegion region : allLevelRegions.get(key)){
-                region.Save(config, "LevelRegions." + key + ".");
+                region.save(config, "LevelRegions." + key + ".");
             }
         }
     }
 
     private void saveCreatureData(FileConfiguration config){
         for(CreatureData data : animalData.values()){
-            data.Save(config, "Entity.Animal.");
+            data.save(config, "Entity.Animal.");
         }
         for(CreatureData data : monsterData.values()){
-            data.Save(config, "Entity.Monster.");
+            data.save(config, "Entity.Monster.");
         }
     }
 }
