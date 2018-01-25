@@ -1,0 +1,6 @@
+DistanceAlgorithm: Optimized
+Entity:
+  Animal:
+    Disabled: true # true = passive animals do not have levels or formulas (Includes Wolves)
+  Monster:
+    Disabled: false # false = Monsters will receive levels/formulas
