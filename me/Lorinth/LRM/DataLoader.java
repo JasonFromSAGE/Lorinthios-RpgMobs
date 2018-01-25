@@ -1,9 +1,6 @@
 package me.Lorinth.LRM;
 
-import me.Lorinth.LRM.Objects.CreatureData;
-import me.Lorinth.LRM.Objects.DistanceAlgorithm;
-import me.Lorinth.LRM.Objects.LevelRegion;
-import me.Lorinth.LRM.Objects.SpawnPoint;
+import me.Lorinth.LRM.Objects.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -43,7 +40,7 @@ public class DataLoader {
                 int shortestDistance = Integer.MAX_VALUE;
 
                 for(SpawnPoint spawnPoint : spawnPoints){
-                    int currentDistance = spawnPoint.calculateDistance(location, distanceAlgorithm);
+                    int currentDistance = spawnPoint.CalculateDistance(location, distanceAlgorithm);
                     if(currentDistance < shortestDistance){
                         closestSpawnPoint = spawnPoint;
                         shortestDistance = currentDistance;
@@ -52,7 +49,7 @@ public class DataLoader {
             }
 
             if(closestSpawnPoint != null)
-                return closestSpawnPoint.calculateLevel(location, distanceAlgorithm);
+                return closestSpawnPoint.CalculateLevel(location, distanceAlgorithm);
         }
 
         return -1; //this world is disabled if -1
@@ -93,19 +90,17 @@ public class DataLoader {
             distanceAlgorithm = DistanceAlgorithm.valueOf(algo);
         }
         catch(Exception error){
-            LorinthsRpgMobs.PrintMessage(LorinthsRpgMobs.Error + "Distance Algorithm : " + LorinthsRpgMobs.Highlight + algo + LorinthsRpgMobs.Error + " is not a valid Algorithm " + LorinthsRpgMobs.Highlight + "(Accurate/Optimized)");
+            ConsoleOutput.PrintError("Distance Algorithm : " + ConsoleOutput.Highlight + algo + ConsoleOutput.Error + " is not a valid Algorithm " + ConsoleOutput.Highlight + "(Accurate/Optimized)");
             distanceAlgorithm = DistanceAlgorithm.Optimized;
         }
     }
 
     private void loadSpawnPoints(FileConfiguration config){
         Set<String> worldNames = config.getConfigurationSection("SpawnPoints").getKeys(false);
-        for(World world : Bukkit.getServer().getWorlds()){
-            String worldName = world.getName();
-            if(worldNames.contains(worldName)){
-                for(String key : config.getConfigurationSection("SpawnPoints." + worldName).getKeys(false)){
-                    loadSpawnPoint(config, worldName, "SpawnPoints." + worldName + "." + key);
-                }
+        for(String worldName : worldNames){
+            Set<String> spawnPointsInWorld = config.getConfigurationSection("SpawnPoins." + worldName).getKeys(false);
+            for(String spawnPointName : spawnPointsInWorld){
+                loadSpawnPoint(config, worldName, "SpawnPoints." + worldName + "." + spawnPointName);
             }
         }
     }
@@ -115,7 +110,9 @@ public class DataLoader {
             allSpawnPoints.put(worldName, new ArrayList<>());
         }
 
-        allSpawnPoints.get(worldName).add(new SpawnPoint(config, prefix));
+        SpawnPoint spawnPoint = new SpawnPoint(config, worldName, prefix);
+        if(!spawnPoint.IsDisabled())
+            allSpawnPoints.get(worldName).add(spawnPoint);
     }
 
     private void loadCreatureData(FileConfiguration config){
@@ -135,7 +132,7 @@ public class DataLoader {
         try{
             EntityType type = EntityType.fromName(key);
             if(type == null) {
-                LorinthsRpgMobs.PrintMessage(LorinthsRpgMobs.Error + "Failed to find entity type for, " + LorinthsRpgMobs.Highlight + key);
+                ConsoleOutput.PrintError("Failed to find entity type for, " + ConsoleOutput.Highlight + key);
                 return;
             }
 
@@ -145,7 +142,7 @@ public class DataLoader {
                 monsterData.put(type, new CreatureData(type, prefix, config));
         }
         catch(Exception error){
-            LorinthsRpgMobs.PrintMessage(LorinthsRpgMobs.Error + "Failed to load entity : " + LorinthsRpgMobs.Highlight + key);
+            ConsoleOutput.PrintError("Failed to load entity : " + ConsoleOutput.Highlight + key);
             error.printStackTrace();
         }
     }

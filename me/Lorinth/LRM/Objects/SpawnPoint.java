@@ -1,7 +1,9 @@
 package me.Lorinth.LRM.Objects;
 
 import me.Lorinth.LRM.LorinthsRpgMobs;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.logging.Level;
@@ -17,14 +19,32 @@ public class SpawnPoint extends DirtyObject{
     private int LevelDistance = 50;
     private int MaxLevel = 1000;
     private boolean hasMaxLevel = false;
+    private boolean isDisabled = false;
 
     //Loaded from config
-    public SpawnPoint(FileConfiguration config, String prefix){
+    public SpawnPoint(FileConfiguration config, String worldName, String prefix){
+        World world = Bukkit.getWorld(worldName);
+        if(world != null){
+            int x, y, z;
+            x = config.getInt(prefix + ".Location.X");
+            z = config.getInt(prefix + ".Location.Z");
+            Center = new Location(Bukkit.getWorld(worldName), x, 0, z);
+            StartingLevel = config.getInt(prefix + ".Level");
+            LevelDistance = config.getInt(prefix + ".Distance");
+            MaxLevel = config.getInt(prefix + ".MaxLevel");
+            if(MaxLevel == -1)
+                MaxLevel = Integer.MAX_VALUE;
+        }
+        else{
+            isDisabled = true;
+        }
 
     }
 
     //Newly added during session
     public SpawnPoint(Location center, String name, int level, int distance){
+        center.setY(0);
+
         Name = name;
         Center = center;
         StartingLevel = level;
@@ -37,32 +57,29 @@ public class SpawnPoint extends DirtyObject{
 
     }
 
-    public void setMaxLevel(int maxLevel){
-        MaxLevel = maxLevel;
-        hasMaxLevel = true;
-
-        this.setChanged();
+    public boolean IsDisabled(){
+        return isDisabled;
     }
 
-    public Location getCenter(){
+    public Location GetCenter(){
         return Center;
     }
 
-    public int getStartingLevel(){
+    public int GetStartingLevel(){
         return StartingLevel;
     }
 
-    public int getLevelDistance(){
+    public int GetLevelDistance(){
         return LevelDistance;
     }
 
-    public int getMaxLevel(){
+    public int GetMaxLevel(){
         if(hasMaxLevel)
             return MaxLevel;
         return Integer.MAX_VALUE;
     }
 
-    public int calculateDistance(Location loc, DistanceAlgorithm algorithm){
+    public int CalculateDistance(Location loc, DistanceAlgorithm algorithm){
         loc.setY(0); // We only care about x/y
 
         if(algorithm == DistanceAlgorithm.Accurate){
@@ -75,11 +92,11 @@ public class SpawnPoint extends DirtyObject{
         return 1;
     }
 
-    public int calculateLevel(Location loc, DistanceAlgorithm algorithm){
+    public int CalculateLevel(Location loc, DistanceAlgorithm algorithm){
         loc.setY(0); // We only care about x/y
 
         try{
-            return (int) (calculateDistance(loc, algorithm) / (double) LevelDistance);
+            return (int) (CalculateDistance(loc, algorithm) / (double) LevelDistance) + 1;
         }
         catch(Exception e){
             e.printStackTrace();

@@ -34,6 +34,7 @@ public class CreatureEventListener implements Listener {
             entity.setMaxHealth(data.getHealthAtLevel(level));
             entity.setHealth(data.getHealthAtLevel(level));
 
+            entity.setCustomNameVisible(false);
 
             entity.setRemoveWhenFarAway(true);
         }
