@@ -1,10 +1,12 @@
 package me.Lorinth.LRM;
 
 import me.Lorinth.LRM.Objects.ConsoleOutput;
+import me.Lorinth.LRM.Objects.CreatureData;
 import me.Lorinth.LRM.Objects.SpawnPoint;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Creature;
+import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -54,6 +56,24 @@ public class LorinthsRpgMobs extends JavaPlugin{
      */
     public static int GetLevelOfCreature(Creature creature){
         return creature.getMetadata("Level").get(0).asInt();
+    }
+
+    /**
+     * Gets creature data for a given creature if it exists
+     * @param type - Entity Type to get creature data for
+     * @return - Null if doesn't exist, otherwise CreatureData object
+     */
+    public static CreatureData GetCreatureData(EntityType type){
+        return dataLoader.getData(type);
+    }
+
+    /**
+     * Gets creature data for a given creature. If it doesn't exist, it is created and returned
+     * @param creature - creature to get data for
+     * @return - CreatureData object
+     */
+    public static CreatureData GetCreatureData(Creature creature){
+        return dataLoader.getData(creature);
     }
 
     /**

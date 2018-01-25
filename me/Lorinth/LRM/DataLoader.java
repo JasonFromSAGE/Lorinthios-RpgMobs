@@ -61,19 +61,31 @@ public class DataLoader {
         return -1; //this world is disabled if -1
     }
 
-    protected CreatureData getData(Creature creature){
+    protected CreatureData getData(EntityType type){
         HashMap<EntityType, CreatureData> creatureData = null;
-        if(creature instanceof Monster)
-            creatureData = monsterData;
+        if(monsterData.containsKey(type))
+            monsterData.get(type);
+        else if(animalData.containsKey(type))
+            return animalData.get(type);
         else
-            creatureData = animalData;
+            return null;
 
-        if(creatureData.containsKey(creature.getType())){
-            return creatureData.get(creature.getType());
+
+        return null;
+
+    }
+
+    protected CreatureData getData(Creature creature){
+        CreatureData data = getData(creature.getType());
+        if(data != null){
+            return data;
         }
         else{
             CreatureData newData = new CreatureData(creature);
-            creatureData.put(creature.getType(), newData);
+            if(creature instanceof Monster)
+                monsterData.put(creature.getType(), newData);
+            else
+                animalData.put(creature.getType(), newData);
             return newData;
         }
     }
