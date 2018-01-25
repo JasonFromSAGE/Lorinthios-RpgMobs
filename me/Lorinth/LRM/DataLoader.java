@@ -1,9 +1,7 @@
 package me.Lorinth.LRM;
 
 import me.Lorinth.LRM.Objects.*;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.EntityType;
@@ -125,19 +123,19 @@ public class DataLoader {
     private void loadSpawnPoints(FileConfiguration config){
         Set<String> worldNames = config.getConfigurationSection("SpawnPoints").getKeys(false);
         for(String worldName : worldNames){
-            Set<String> spawnPointsInWorld = config.getConfigurationSection("SpawnPoins." + worldName).getKeys(false);
+            Set<String> spawnPointsInWorld = config.getConfigurationSection("SpawnPoints." + worldName).getKeys(false);
             for(String spawnPointName : spawnPointsInWorld){
-                loadSpawnPoint(config, worldName, "SpawnPoints." + worldName + "." + spawnPointName);
+                loadSpawnPoint(config, worldName, spawnPointName, "SpawnPoints." + worldName + "." + spawnPointName);
             }
         }
     }
 
-    private void loadSpawnPoint(FileConfiguration config, String worldName, String prefix){
+    private void loadSpawnPoint(FileConfiguration config, String worldName, String spawnPointName, String prefix){
         if(!allSpawnPoints.containsKey(worldName)){
             allSpawnPoints.put(worldName, new ArrayList<>());
         }
 
-        SpawnPoint spawnPoint = new SpawnPoint(config, worldName, prefix);
+        SpawnPoint spawnPoint = new SpawnPoint(config, worldName, spawnPointName, prefix);
         if(!spawnPoint.isDisabled())
             allSpawnPoints.get(worldName).add(spawnPoint);
     }

@@ -17,6 +17,7 @@ public class SpawnPoint extends DirtyObject{
     private Location Center;
     private int StartingLevel = 1;
     private int LevelDistance = 50;
+    private int CenterBuffer = 50;
     private int MaxLevel = 1000;
     private boolean hasMaxLevel = false;
     private boolean isDisabled = false;
@@ -27,15 +28,19 @@ public class SpawnPoint extends DirtyObject{
      * @param worldName - world the spawnpoint exists in
      * @param prefix - yml path prefix
      */
-    public SpawnPoint(FileConfiguration config, String worldName, String prefix){
+    public SpawnPoint(FileConfiguration config, String worldName, String spawnerName, String prefix){
         World world = Bukkit.getWorld(worldName);
         if(world != null){
             int x, y, z;
             x = config.getInt(prefix + ".Location.X");
             z = config.getInt(prefix + ".Location.Z");
+
+            Name = spawnerName;
             Center = new Location(Bukkit.getWorld(worldName), x, 0, z);
             StartingLevel = config.getInt(prefix + ".Level");
             LevelDistance = config.getInt(prefix + ".Distance");
+            CenterBuffer = config.getInt(prefix + ".CenterBuffer");
+            isDisabled = config.getBoolean(prefix + ".Disabled");
             MaxLevel = config.getInt(prefix + ".MaxLevel");
             if(MaxLevel == -1)
                 MaxLevel = Integer.MAX_VALUE;
@@ -64,7 +69,14 @@ public class SpawnPoint extends DirtyObject{
     }
 
     protected void saveData(FileConfiguration config, String prefix){
-
+        prefix += Name + ".";
+        config.set(prefix + "Location.X", Center.getBlockX());
+        config.set(prefix + "Location.Z", Center.getBlockZ());
+        config.set(prefix + "Level", StartingLevel);
+        config.set(prefix + "Distance", LevelDistance);
+        config.set(prefix + "CenterBuffer", CenterBuffer);
+        config.set(prefix + "Disabled", isDisabled);
+        config.set(prefix + "MaxLevel", MaxLevel == Integer.MAX_VALUE ? -1 : MaxLevel);
     }
 
     /**
@@ -181,6 +193,10 @@ public class SpawnPoint extends DirtyObject{
         return 1;
     }
 
+    private int calculateDistanceWithBuffer(Location loc, DistanceAlgorithm algorithm){
+        return Math.max(0, calculateDistance(loc, algorithm) - CenterBuffer);
+    }
+
     /**
      * Calculate the level at a location based on this spawn point
      * @param loc - The location we want to check
@@ -191,7 +207,7 @@ public class SpawnPoint extends DirtyObject{
         loc.setY(0); // We only care about x/y
 
         try{
-            return (int) (calculateDistance(loc, algorithm) / (double) LevelDistance) + 1;
+            return (int) Math.max(StartingLevel, 1 + (calculateDistanceWithBuffer(loc, algorithm) / (double) LevelDistance));
         }
         catch(Exception e){
             e.printStackTrace();

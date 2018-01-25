@@ -1,7 +1,28 @@
-DistanceAlgorithm: Optimized
+DistanceAlgorithm: Optimized #Accurate or Optimized
 Names:
   TagsAlwaysOn: false # (true / false) creature nameplates always on?
   Format: '[Lvl.{level}]{name}' #allows for {level} and {name} to be filled in by plugin
+SpawnPoints:
+  world: #name of the world your spawn points are in
+    mainTown: #name of your spawnpoint
+      Disabled: false # can turn off/on spawn points
+      Level: 1 # level monsters start at
+      Distance: 50 # monsters between 0-50 blocks away are level 1, monsters between 51-100 are level 2, etc
+      MaxLevel: -1 # -1 is disabled, set to 30 if you want monsters that spawn in this spawn area to be capped at 30
+      CenterBuffer: 50 # delay monster leveling from center by this distance.
+                      # example. if the edge of your spawn town is 200 blocks from the center point, you should set this to 200 so mobs on the outside of town are level 1 not 4+
+      Location: # Where the center of your spawn point is located
+        X: 0
+        Z: 0
+    otherTown: #name of a different spawn point in the main world
+      Disabled: true # will not be enabled on the server
+      Level: 20
+      Distance: 100
+      MaxLevel: 50
+      CenterBuffer: 0
+      Location:
+        X: 10000
+        Z: -5000
 Entity:
   Animal:
     Disabled: true # (true / false) true = passive animals do not have levels or formulas (Includes Wolves)
