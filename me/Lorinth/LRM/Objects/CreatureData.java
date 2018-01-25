@@ -183,6 +183,26 @@ public class CreatureData extends DirtyObject{
     }
 
     /**
+     * Gets the name for a creature at a given level
+     * @param level - level to check
+     * @return - name that will be applied
+     */
+    public String getNameAtLevel(String format, int level){
+        int highest = 0;
+        for(int key : leveledNames.keySet()){
+            if(key > highest && key < level){
+                highest = level;
+            }
+        }
+
+        String name = leveledNames.get(highest);
+        name = format.replace("{name}", name)
+                     .replace("{level}", Integer.toString(level));
+
+        return name;
+    }
+
+    /**
      * Get the health this data would give at the given level
      * @param level - level used in the health formula
      * @return - health the entity should have

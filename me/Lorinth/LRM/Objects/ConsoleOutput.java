@@ -7,7 +7,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import java.io.Console;
 
 /**
- * Created by bnra2 on 1/25/2018.
+ * Created by lorinthio on 1/25/2018.
  */
 public class ConsoleOutput {
     public static final ChatColor ERROR = ChatColor.RED;

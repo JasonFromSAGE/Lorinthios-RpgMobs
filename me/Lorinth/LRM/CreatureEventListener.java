@@ -1,6 +1,7 @@
 package me.Lorinth.LRM;
 
 import me.Lorinth.LRM.Objects.CreatureData;
+import me.Lorinth.LRM.Objects.NameOptions;
 import org.bukkit.entity.Creature;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -9,6 +10,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityTameEvent;
+import org.bukkit.metadata.FixedMetadataValue;
 
 /**
  * Created by lorinthio on 1/24/2018.
@@ -30,11 +32,16 @@ public class CreatureEventListener implements Listener {
             if(data.isDisabled())
                 return;
 
+            //Set Level
             int level = dataLoader.calculateLevel(entity.getLocation());
             entity.setMaxHealth(data.getHealthAtLevel(level));
             entity.setHealth(data.getHealthAtLevel(level));
+            entity.setMetadata("Level", new FixedMetadataValue(LorinthsRpgMobs.instance, level));
 
-            entity.setCustomNameVisible(false);
+            //Set Name
+            NameOptions nameOptions = dataLoader.getNameOptions();
+            entity.setCustomNameVisible(nameOptions.getTagsAlwaysOn());
+            entity.setCustomName(data.getNameAtLevel(nameOptions.getNameFormat(), level));
 
             entity.setRemoveWhenFarAway(true);
         }

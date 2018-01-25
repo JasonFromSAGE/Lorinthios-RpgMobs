@@ -15,6 +15,7 @@ import java.io.File;
 public class LorinthsRpgMobs extends JavaPlugin{
 
     private static DataLoader dataLoader;
+    public static LorinthsRpgMobs instance;
 
     @Override
     public void onEnable(){
@@ -24,6 +25,8 @@ public class LorinthsRpgMobs extends JavaPlugin{
         dataLoader = new DataLoader(getConfig());
         Bukkit.getPluginManager().registerEvents(new CreatureEventListener(dataLoader), this);
         ConsoleOutput.PrintMessage("Finished!");
+
+        instance = this;
     }
 
     @Override

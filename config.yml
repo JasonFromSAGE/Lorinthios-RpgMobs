@@ -1,9 +1,17 @@
 DistanceAlgorithm: Optimized
 Names:
+  TagsAlwaysOn: false # (true / false) creature nameplates always on?
   Format: '[Lvl.{level}]{name}' #allows for {level} and {name} to be filled in by plugin
-  AlwaysOn: false # (true / false) creature nameplates always on?
 Entity:
   Animal:
     Disabled: true # (true / false) true = passive animals do not have levels or formulas (Includes Wolves)
   Monster:
     Disabled: false # (true / false) false = Monsters will receive levels/formulas
+    ZOMBIE:
+      Disabled: false
+      Formulas:
+        Damage: ""
+        Health: ""
+        Exp: ""
+    CREEPER:
+      Disabled: true

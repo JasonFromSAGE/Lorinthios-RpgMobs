@@ -18,6 +18,7 @@ import java.util.Set;
  */
 public class DataLoader {
 
+    private NameOptions nameOptions;
     private DistanceAlgorithm distanceAlgorithm = DistanceAlgorithm.Optimized;
     private HashMap<String, ArrayList<SpawnPoint>> allSpawnPoints = new HashMap<>(); // String: World Name, List
     private HashMap<String, ArrayList<LevelRegion>> allLevelRegions = new HashMap<>(); // String: World Name, List<LevelRegion> list of regions
@@ -77,6 +78,10 @@ public class DataLoader {
         }
     }
 
+    protected NameOptions getNameOptions(){
+        return nameOptions;
+    }
+
     protected void SaveDirtyObjects(FileConfiguration config){
         saveSpawnPoints(config);
         saveLevelRegions(config);
@@ -84,9 +89,14 @@ public class DataLoader {
     }
 
     private void load(FileConfiguration config){
+        loadNameOptions(config);
         loadDistanceAlgorithm(config);
         loadSpawnPoints(config);
         loadCreatureData(config);
+    }
+
+    private void loadNameOptions(FileConfiguration config){
+        nameOptions = new NameOptions(config);
     }
 
     private void loadDistanceAlgorithm(FileConfiguration config){
