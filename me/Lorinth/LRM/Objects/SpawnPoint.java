@@ -223,7 +223,7 @@ public class SpawnPoint extends DirtyObject{
      */
     private double getSimpleDistance(Location a, Location b){
         int x = a.getBlockX() - b.getBlockX();
-        int z = a.getBlockX() - b.getBlockX();
+        int z = a.getBlockZ() - b.getBlockZ();
         if(x < 0)
             x = -x;
         if(z < 0)

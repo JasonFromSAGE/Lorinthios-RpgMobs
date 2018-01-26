@@ -1,10 +1,13 @@
 package me.Lorinth.LRM.Objects;
 
+import me.Lorinth.LRM.LorinthsRpgMobs;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Monster;
 
+import java.io.Console;
 import java.util.HashMap;
 
 /**
@@ -12,7 +15,7 @@ import java.util.HashMap;
  */
 public class CreatureData extends DirtyObject{
 
-    private EntityType EntityType;
+    private EntityType entityType;
     private boolean isDisabled = false;
 
     //Formulas
@@ -29,7 +32,7 @@ public class CreatureData extends DirtyObject{
      * @param config - config file
      */
     public CreatureData(EntityType entityType, String prefix, FileConfiguration config) {
-        EntityType = entityType;
+        this.entityType = entityType;
         load(config, prefix);
     }
 
@@ -38,13 +41,32 @@ public class CreatureData extends DirtyObject{
      * @param creature - creature to base data on
      */
     public CreatureData(Creature creature){
-        EntityType = creature.getType();
+        entityType = creature.getType();
+
+        String type = creature instanceof Monster ? "Monster" : "Animal";
+        if(LorinthsRpgMobs.instance.getConfig().getBoolean("Entity." + type + ".Disabled"))
+            isDisabled = true;
 
         healthFormula = ((int) creature.getMaxHealth()) + " + ({level} / 3) + ({level} / 5) + rand(5)";
         damageFormula = "rand(3) + ({level} / 10)";
         expFormula = "rand(3) + 1";
 
+        String friendlyName = getUserFriendlyName(entityType);
+        leveledNames.put(1, "Weak " + friendlyName);
+        leveledNames.put(20, friendlyName);
+        leveledNames.put(40, "Strong " + friendlyName);
+
         this.setNew();
+    }
+
+    private String getUserFriendlyName(EntityType type){
+        String friendlyTypeName = "";
+        String[] split = type.name().split("_");
+
+        for(String word : split){
+            friendlyTypeName += word.substring(0,1).toUpperCase() + word.substring(1).toLowerCase() + " ";
+        }
+        return friendlyTypeName.trim();
     }
 
     /**
@@ -53,7 +75,7 @@ public class CreatureData extends DirtyObject{
      * @param prefix - the path prefix we will use
      */
     protected void saveData(FileConfiguration config, String prefix){
-        prefix += EntityType.toString();
+        prefix += entityType.toString();
         saveFormulas(config, prefix);
         saveNames(config, prefix);
     }
@@ -86,12 +108,12 @@ public class CreatureData extends DirtyObject{
      * @param prefix - the path prefix we will use
      */
     private void load(FileConfiguration config, String prefix){
-        if(config.getBoolean(prefix + "Disabled") || config.getBoolean(prefix + EntityType.toString() + ".Disabled")){
+        if(config.getBoolean(prefix + "Disabled") || config.getBoolean(prefix + entityType.toString() + ".Disabled")){
             isDisabled = true;
             return;
         }
 
-        prefix += EntityType.toString();
+        prefix += entityType.toString();
 
         loadFormulas(config, prefix);
         loadNames(config, prefix);
@@ -114,8 +136,10 @@ public class CreatureData extends DirtyObject{
      * @param prefix - the path prefix we will use
      */
     private void loadNames(FileConfiguration config, String prefix){
-        for(String key : config.getConfigurationSection(prefix + ".Names").getKeys(false)){
-            leveledNames.put(Integer.parseInt(key), config.getString(prefix + ".Names." + key));
+        if(config.contains(prefix + ".Names")){
+            for(String key : config.getConfigurationSection(prefix + ".Names").getKeys(false)){
+                leveledNames.put(Integer.parseInt(key), config.getString(prefix + ".Names." + key));
+            }
         }
     }
 
@@ -188,14 +212,17 @@ public class CreatureData extends DirtyObject{
      * @return - name that will be applied
      */
     public String getNameAtLevel(String format, int level){
-        int highest = 0;
+        int highest = 1;
         for(int key : leveledNames.keySet()){
-            if(key > highest && key < level){
+            if(key > highest && key <= level){
                 highest = level;
             }
         }
 
         String name = leveledNames.get(highest);
+        if(name == null)
+            name = getUserFriendlyName(entityType);
+
         name = format.replace("{name}", name)
                      .replace("{level}", Integer.toString(level));
 

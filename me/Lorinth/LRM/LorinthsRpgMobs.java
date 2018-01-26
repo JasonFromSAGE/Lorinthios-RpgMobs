@@ -5,6 +5,7 @@ import me.Lorinth.LRM.Objects.CreatureData;
 import me.Lorinth.LRM.Objects.SpawnPoint;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -55,7 +56,11 @@ public class LorinthsRpgMobs extends JavaPlugin{
      * @return - level of creature
      */
     public static int GetLevelOfCreature(Creature creature){
-        return creature.getMetadata("Level").get(0).asInt();
+        if(creature.hasMetadata("Level"))
+            if(creature.getMetadata("Level").size() > 0)
+                return creature.getMetadata("Level").get(0).asInt();
+
+        return 1;
     }
 
     /**

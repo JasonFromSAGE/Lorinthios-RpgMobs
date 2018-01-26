@@ -2,10 +2,14 @@ package me.Lorinth.LRM;
 
 import me.Lorinth.LRM.Objects.CreatureData;
 import me.Lorinth.LRM.Objects.NameOptions;
+import org.bukkit.Material;
+import org.bukkit.attribute.Attributable;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Creature;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
@@ -34,9 +38,11 @@ public class CreatureEventListener implements Listener {
 
             //Set Level
             int level = dataLoader.calculateLevel(entity.getLocation());
-            entity.setMaxHealth(data.getHealthAtLevel(level));
-            entity.setHealth(data.getHealthAtLevel(level));
             entity.setMetadata("Level", new FixedMetadataValue(LorinthsRpgMobs.instance, level));
+
+            int health = (int)data.getHealthAtLevel(level);
+            entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue((double) health);
+            entity.setHealth((double) health);
 
             //Set Name
             NameOptions nameOptions = dataLoader.getNameOptions();
@@ -78,5 +84,10 @@ public class CreatureEventListener implements Listener {
             int level = LorinthsRpgMobs.GetLevelOfCreature(creature);
             event.setDroppedExp(data.getExperienceAtLevel(level));
         }
+    }
+
+    @EventHandler
+    public void onBlockPlace(BlockPlaceEvent event){
+        event.getBlock().setType(Material.SKULL);
     }
 }
