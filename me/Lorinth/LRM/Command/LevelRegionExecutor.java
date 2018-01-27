@@ -1,34 +1,27 @@
 package me.Lorinth.LRM.Command;
 
+import me.Lorinth.LRM.Command.Objects.CustomCommandExecutor;
 import me.Lorinth.LRM.Objects.OutputHandler;
 import org.bukkit.entity.Player;
 
 /**
  * Created by bnra2 on 1/27/2018.
  */
-public class LevelRegionExecutor extends CustomCommandExecutor{
+public class LevelRegionExecutor extends CustomCommandExecutor {
 
-    private final String CommandName = "region";
-    private final String CommandDescription = "access to editing region data";
-
-    @Override
-    public String getCommandDescription() {
-        return CommandDescription;
-    }
-
-    @Override
-    public String getCommandName() {
-        return CommandName;
+    public LevelRegionExecutor(){
+        super("region", "access to editing region data", null);
     }
 
     public void execute(Player player, String[] args){
-        if(args.length < 1){
+        if(args == null || args.length < 1){
             sendHelpMessage(player);
             return;
         }
     }
 
     private void sendHelpMessage(Player player){
-        OutputHandler.PrintRawInfo(player, "/lrm " + CommandName);
+        OutputHandler.PrintWhiteSpace(player, 2);
+        OutputHandler.PrintCommandInfo(player, "/lrm " + getCommandName() + " - " + getCommandDescription());
     }
 }

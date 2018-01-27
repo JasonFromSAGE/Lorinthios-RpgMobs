@@ -1,13 +1,12 @@
 package me.Lorinth.LRM.Objects;
 
 import me.Lorinth.LRM.LorinthsRpgMobs;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Creature;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Monster;
 
-import java.io.Console;
 import java.util.HashMap;
 
 /**
@@ -19,9 +18,9 @@ public class CreatureData extends DirtyObject{
     private boolean isDisabled = false;
 
     //Formulas
-    private String healthFormula;
     private String damageFormula;
     private String expFormula;
+    private String healthFormula;
 
     private HashMap<Integer, String> leveledNames = new HashMap<>();
 
@@ -47,7 +46,7 @@ public class CreatureData extends DirtyObject{
         if(LorinthsRpgMobs.instance.getConfig().getBoolean("Entity." + type + ".Disabled"))
             isDisabled = true;
 
-        healthFormula = ((int) creature.getMaxHealth()) + " + ({level} / 3) + ({level} / 5) + rand(5)";
+        healthFormula = ((int) creature.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) + " + ({level} / 3) + ({level} / 5) + rand(5)";
         damageFormula = "rand(3) + ({level} / 10)";
         expFormula = "rand(3) + 1";
 
@@ -267,7 +266,7 @@ public class CreatureData extends DirtyObject{
     }
 
     /**
-     * Is this entity disabled for this plugin
+     * Are leveling features disabled for this entity type
      * @return - isDisabled
      */
     public boolean isDisabled(){

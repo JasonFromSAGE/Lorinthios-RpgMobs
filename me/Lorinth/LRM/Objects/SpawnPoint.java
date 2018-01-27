@@ -69,22 +69,36 @@ public class SpawnPoint extends DirtyObject{
     }
 
     protected void saveData(FileConfiguration config, String prefix){
-        prefix += Name + ".";
-        config.set(prefix + "Location.X", Center.getBlockX());
-        config.set(prefix + "Location.Z", Center.getBlockZ());
-        config.set(prefix + "Level", StartingLevel);
-        config.set(prefix + "Distance", LevelDistance);
-        config.set(prefix + "CenterBuffer", CenterBuffer);
-        config.set(prefix + "Disabled", isDisabled);
-        config.set(prefix + "MaxLevel", MaxLevel == Integer.MAX_VALUE ? -1 : MaxLevel);
+        prefix += Name;
+        if(this.isDeleted()){
+            config.set(prefix, null);
+            return;
+        }
+        else{
+            config.set(prefix + "Location.X", Center.getBlockX());
+            config.set(prefix + "Location.Z", Center.getBlockZ());
+            config.set(prefix + "Level", StartingLevel);
+            config.set(prefix + "Distance", LevelDistance);
+            config.set(prefix + "CenterBuffer", CenterBuffer);
+            config.set(prefix + "Disabled", isDisabled);
+            config.set(prefix + "MaxLevel", MaxLevel == Integer.MAX_VALUE ? -1 : MaxLevel);
+        }
     }
 
     /**
-     * Checks if this spawn point is disabled
+     * Checks if this spawn point is disabled, or is marked deleted
      * @return - isDisabled
      */
     public boolean isDisabled(){
-        return isDisabled;
+        return isDisabled || isDeleted();
+    }
+
+    /**
+     * Gets the name of the spawn point
+     * @return - Name of the spawn point
+     */
+    public String getName(){
+        return Name;
     }
 
     /**
@@ -106,6 +120,22 @@ public class SpawnPoint extends DirtyObject{
         loc.setY(0);
         Center = loc;
         this.setDirty();
+    }
+
+    /**
+     * Gets the center buffer of the spawn region, this delays leveling calculations of the spawn point by a given distance
+     * @return
+     */
+    public int getCenterBuffer(){
+        return CenterBuffer;
+    }
+
+    /**
+     * Sets the center buffer of the spawn region which will delay leveling calculations by a given distance
+     * @param centerBuffer - the center distance delay/buffer
+     */
+    public void setCenterBuffer(int centerBuffer){
+        CenterBuffer = centerBuffer;
     }
 
     /**

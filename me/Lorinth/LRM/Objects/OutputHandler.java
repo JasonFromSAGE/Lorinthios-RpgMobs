@@ -13,6 +13,7 @@ import java.io.Console;
 public class OutputHandler {
     public static final ChatColor ERROR = ChatColor.RED;
     public static final ChatColor INFO = ChatColor.GOLD;
+    public static final ChatColor COMMAND = ChatColor.DARK_AQUA;
     public static final ChatColor HIGHLIGHT = ChatColor.GOLD;
     private static String consolePrefix = "[LorinthsRpgMobs] : ";
     private static String infoPrefix = INFO + consolePrefix;
@@ -55,4 +56,12 @@ public class OutputHandler {
         player.sendMessage(ERROR + message);
     }
 
+    public static void PrintCommandInfo(Player player, String message){
+        player.sendMessage(COMMAND + message);
+    }
+
+    public static void PrintWhiteSpace(Player player, int lines){
+        for(int i=0; i<lines; i++)
+            player.sendMessage("");
+    }
 }

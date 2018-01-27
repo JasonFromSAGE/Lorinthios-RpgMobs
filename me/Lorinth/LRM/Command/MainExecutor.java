@@ -1,5 +1,6 @@
 package me.Lorinth.LRM.Command;
 
+import me.Lorinth.LRM.Command.Objects.CustomCommandExecutor;
 import me.Lorinth.LRM.Objects.OutputHandler;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -22,7 +23,7 @@ public class MainExecutor implements CommandExecutor{
             return false;
         }
         Player player = (Player) sender;
-        if(args.length < 1){
+        if(args == null || args.length < 1){
             sendHelpMessage(player);
             return false;
         }
@@ -44,10 +45,11 @@ public class MainExecutor implements CommandExecutor{
     }
 
     private void sendHelpMessage(Player player){
-        OutputHandler.PrintMessage(player, "Command List");
+        OutputHandler.PrintWhiteSpace(player, 2);
+        OutputHandler.PrintCommandInfo(player, "[LorinthsRpgMobs] : " + OutputHandler.HIGHLIGHT + "Command List");
 
-        String commandPrefix = "/lrm ";
-        OutputHandler.PrintRawInfo(player, commandPrefix + spawnPointExecutor.getCommandName() + " - " + spawnPointExecutor.getCommandDescription());
-        OutputHandler.PrintRawInfo(player, commandPrefix + levelRegionExecutor.getCommandName() + " - " + levelRegionExecutor.getCommandDescription());
+        String commandPrefix = "/" + CommandConstants.LorinthsRpgMobsCommand + " ";
+        OutputHandler.PrintCommandInfo(player, commandPrefix + spawnPointExecutor.getUserFriendlyCommandText());
+        OutputHandler.PrintCommandInfo(player, commandPrefix + levelRegionExecutor.getUserFriendlyCommandText());
     }
 }

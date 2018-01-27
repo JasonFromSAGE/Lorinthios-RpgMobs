@@ -1,9 +1,12 @@
 package me.Lorinth.LRM;
 
+import me.Lorinth.LRM.Command.CommandConstants;
 import me.Lorinth.LRM.Command.MainExecutor;
+import me.Lorinth.LRM.Data.CreatureDataManager;
+import me.Lorinth.LRM.Data.DataLoader;
+import me.Lorinth.LRM.Data.SpawnPointManager;
 import me.Lorinth.LRM.Objects.CreatureData;
 import me.Lorinth.LRM.Objects.OutputHandler;
-import me.Lorinth.LRM.Objects.SpawnPoint;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Creature;
@@ -37,11 +40,13 @@ public class LorinthsRpgMobs extends JavaPlugin{
     public void onDisable(){
         OutputHandler.PrintMessage("Disabling...");
 
-        //Load possible changes in the file from user
-        reloadConfig();
-        //Apply the changes we gained during the session
-        dataLoader.SaveDirtyObjects(getConfig());
-        saveConfig();
+        if(dataLoader != null){
+            //Load possible changes in the file from user
+            reloadConfig();
+            //Apply the changes we gained during the session
+            dataLoader.saveDirtyObjects(getConfig());
+            saveConfig();
+        }
     }
 
     private void loadConfiguration(){
@@ -51,7 +56,7 @@ public class LorinthsRpgMobs extends JavaPlugin{
     }
 
     private void registerCommands(){
-        getCommand("lrm").setExecutor(new MainExecutor());
+        getCommand(CommandConstants.LorinthsRpgMobsCommand).setExecutor(new MainExecutor());
     }
 
     //API Methods
@@ -69,24 +74,6 @@ public class LorinthsRpgMobs extends JavaPlugin{
     }
 
     /**
-     * Gets creature data for a given creature if it exists
-     * @param type - Entity Type to get creature data for
-     * @return - Null if doesn't exist, otherwise CreatureData object
-     */
-    public static CreatureData GetCreatureData(EntityType type){
-        return dataLoader.getData(type);
-    }
-
-    /**
-     * Gets creature data for a given creature. If it doesn't exist, it is created and returned
-     * @param creature - creature to get data for
-     * @return - CreatureData object
-     */
-    public static CreatureData GetCreatureData(Creature creature){
-        return dataLoader.getData(creature);
-    }
-
-    /**
      * Get the level of a specific location
      * @param location - location to check
      * @return - level at location
@@ -96,12 +83,18 @@ public class LorinthsRpgMobs extends JavaPlugin{
     }
 
     /**
-     * Finds the responsible spawn point for a location
-     * @param location - location you want to check
-     * @return - Spawn point that would be used (null if world is disabled)
+     * Get the spawn point manager which contains data for all spawn points which you can read/write to
+     * @return
      */
-    public static SpawnPoint GetSpawnPointForLocation(Location location){
-        return dataLoader.getSpawnPointForLocation(location);
+    public static SpawnPointManager GetSpawnPointManager(){
+        return dataLoader.getSpawnPointManager();
     }
 
+    /**
+     * Get the creature data manager which contains data for all entities which you can read/write to
+     * @return
+     */
+    public static CreatureDataManager GetCreatureDataManager(){
+        return dataLoader.getCreatureDataManager();
+    }
 }

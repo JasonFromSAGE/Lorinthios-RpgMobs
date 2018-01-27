@@ -8,6 +8,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 public class LevelRegion extends DirtyObject{
     private String Name;
     private int Level;
+    private boolean isDisabled = false;
 
     protected void saveData(FileConfiguration config, String prefix){
 
@@ -17,9 +18,9 @@ public class LevelRegion extends DirtyObject{
 
     }
 
-    public LevelRegion(String Name, int Level){
-        this.Name = Name;
-        this.Level = Level;
+    public LevelRegion(String name, int level){
+        Name = name;
+        Level = level;
     }
 
     public int getLevel(){
@@ -28,5 +29,9 @@ public class LevelRegion extends DirtyObject{
 
     public String getName(){
         return Name;
+    }
+
+    public boolean isDisabled(){
+        return isDisabled || isDirty();
     }
 }

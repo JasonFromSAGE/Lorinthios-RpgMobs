@@ -1,9 +1,9 @@
 package me.Lorinth.LRM;
 
+import me.Lorinth.LRM.Data.DataLoader;
 import me.Lorinth.LRM.Objects.CreatureData;
 import me.Lorinth.LRM.Objects.NameOptions;
 import org.bukkit.Material;
-import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Creature;
 import org.bukkit.event.EventHandler;
@@ -32,7 +32,7 @@ public class CreatureEventListener implements Listener {
         if(event.getEntity() instanceof Creature){
             Creature entity = (Creature) event.getEntity();
 
-            CreatureData data = dataLoader.getData(entity);
+            CreatureData data = dataLoader.getCreatureDataManager().getData(entity);
             if(data.isDisabled())
                 return;
 
@@ -58,7 +58,7 @@ public class CreatureEventListener implements Listener {
         if(event.getDamager() instanceof Creature){
             Creature creature = (Creature) event.getDamager();
 
-            CreatureData data = dataLoader.getData(creature);
+            CreatureData data = dataLoader.getCreatureDataManager().getData(creature);
             if (data.isDisabled())
                 return;
 
@@ -77,7 +77,7 @@ public class CreatureEventListener implements Listener {
         if(event.getEntity() instanceof Creature) {
             Creature creature = (Creature) event.getEntity();
 
-            CreatureData data = dataLoader.getData(creature);
+            CreatureData data = dataLoader.getCreatureDataManager().getData(creature);
             if (data.isDisabled())
                 return;
 
