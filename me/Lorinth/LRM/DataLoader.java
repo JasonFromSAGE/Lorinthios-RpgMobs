@@ -115,7 +115,7 @@ public class DataLoader {
             distanceAlgorithm = DistanceAlgorithm.valueOf(algo);
         }
         catch(Exception error){
-            ConsoleOutput.PrintError("Distance Algorithm : " + ConsoleOutput.HIGHLIGHT + algo + ConsoleOutput.ERROR + " is not a valid Algorithm " + ConsoleOutput.HIGHLIGHT + "(Accurate/Optimized)");
+            OutputHandler.PrintError("Distance Algorithm : " + OutputHandler.HIGHLIGHT + algo + OutputHandler.ERROR + " is not a valid Algorithm " + OutputHandler.HIGHLIGHT + "(Accurate/Optimized)");
             distanceAlgorithm = DistanceAlgorithm.Optimized;
         }
     }
@@ -157,7 +157,7 @@ public class DataLoader {
         try{
             EntityType type = EntityType.fromName(key);
             if(type == null) {
-                ConsoleOutput.PrintError("Failed to find entity type for, " + ConsoleOutput.HIGHLIGHT + key);
+                OutputHandler.PrintError("Failed to find entity type for, " + OutputHandler.HIGHLIGHT + key);
                 return;
             }
 
@@ -167,7 +167,7 @@ public class DataLoader {
                 monsterData.put(type, new CreatureData(type, prefix, config));
         }
         catch(Exception error){
-            ConsoleOutput.PrintError("Failed to load entity : " + ConsoleOutput.HIGHLIGHT + key);
+            OutputHandler.PrintError("Failed to load entity : " + OutputHandler.HIGHLIGHT + key);
             error.printStackTrace();
         }
     }

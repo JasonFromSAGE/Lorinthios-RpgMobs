@@ -1,11 +1,11 @@
 package me.Lorinth.LRM;
 
-import me.Lorinth.LRM.Objects.ConsoleOutput;
+import me.Lorinth.LRM.Command.MainExecutor;
 import me.Lorinth.LRM.Objects.CreatureData;
+import me.Lorinth.LRM.Objects.OutputHandler;
 import me.Lorinth.LRM.Objects.SpawnPoint;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -22,19 +22,20 @@ public class LorinthsRpgMobs extends JavaPlugin{
 
     @Override
     public void onEnable(){
-        ConsoleOutput.PrintMessage("Enabling...");
+        OutputHandler.PrintMessage("Enabling...");
         loadConfiguration();
+        registerCommands();
 
         dataLoader = new DataLoader(getConfig());
         Bukkit.getPluginManager().registerEvents(new CreatureEventListener(dataLoader), this);
-        ConsoleOutput.PrintMessage("Finished!");
+        OutputHandler.PrintMessage("Finished!");
 
         instance = this;
     }
 
     @Override
     public void onDisable(){
-        ConsoleOutput.PrintMessage("Disabling...");
+        OutputHandler.PrintMessage("Disabling...");
 
         //Load possible changes in the file from user
         reloadConfig();
@@ -47,6 +48,10 @@ public class LorinthsRpgMobs extends JavaPlugin{
         if(!new File(getDataFolder(), "config.yml").exists()){
             saveDefaultConfig();
         }
+    }
+
+    private void registerCommands(){
+        getCommand("lrm").setExecutor(new MainExecutor());
     }
 
     //API Methods
