@@ -47,7 +47,9 @@ public class CreatureEventListener implements Listener {
             //Set Name
             NameOptions nameOptions = dataLoader.getNameOptions();
             entity.setCustomNameVisible(nameOptions.getTagsAlwaysOn());
-            entity.setCustomName(data.getNameAtLevel(nameOptions.getNameFormat(), level));
+            String name = data.getNameAtLevel(nameOptions.getNameFormat(), level);
+            if(name != null)
+                entity.setCustomName(name);
 
             entity.setRemoveWhenFarAway(true);
         }

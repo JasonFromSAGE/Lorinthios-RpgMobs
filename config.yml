@@ -35,8 +35,11 @@ Entity:
         Health: "20 + ({level} / 3) + ({level} / 5) + rand(5)"
         Exp: "rand(3) + 1"
       Names:
-        '1': Weak Zombie
-        '20': Zombie
-        '40': Elite Zombie
+        '1':
+          Name: Weak Zombie
+        '20':
+          Name: Zombie
+        '40':
+          Name: Elite Zombie
     CREEPER:
       Disabled: true

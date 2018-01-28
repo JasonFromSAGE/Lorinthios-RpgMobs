@@ -23,7 +23,7 @@ public class CreatureData extends DirtyObject{
     private String expFormula;
     private String healthFormula;
 
-    private HashMap<Integer, String> leveledNames = new HashMap<>();
+    private ArrayList<NameData> nameData = new ArrayList<>();
     private ArrayList<String> groupDisabledWorlds = new ArrayList<String>();
     private ArrayList<String> entityDisabledWorlds = new ArrayList<String>();
 
@@ -54,9 +54,9 @@ public class CreatureData extends DirtyObject{
         expFormula = "rand(3) + 1";
 
         String friendlyName = getUserFriendlyName(entityType);
-        leveledNames.put(1, "Weak " + friendlyName);
-        leveledNames.put(20, friendlyName);
-        leveledNames.put(40, "Strong " + friendlyName);
+        nameData.add(new NameData(1, "Weak " + friendlyName, false));
+        nameData.add(new NameData(20, friendlyName, false));
+        nameData.add(new NameData(40, "Strong " + friendlyName, false));
 
         this.setNew();
     }
@@ -110,8 +110,8 @@ public class CreatureData extends DirtyObject{
      * @param prefix - the path prefix we will use
      */
     private void saveNames(FileConfiguration config, String prefix){
-        for(Integer key : leveledNames.keySet()){
-            config.set(prefix + ".Names." + key, leveledNames.get(key).replaceAll("§", "&"));
+        for(NameData data : nameData){
+            data.save(config, prefix);
         }
     }
 
@@ -152,7 +152,21 @@ public class CreatureData extends DirtyObject{
     private void loadNames(FileConfiguration config, String prefix){
         if(config.contains(prefix + ".Names")){
             for(String key : config.getConfigurationSection(prefix + ".Names").getKeys(false)){
-                leveledNames.put(Integer.parseInt(key), config.getString(prefix + ".Names." + key).replaceAll("&", "§"));
+                int level = Integer.parseInt(key);
+
+                //Backwards support
+                if(config.get(prefix + ".Names." + key) != null) {
+                    config.set(prefix + ".Names." + key + ".Name", config.getString(prefix + ".Names." + key));
+                    config.set(prefix + ".Names." + key + ".OverrideFormat", false);
+                }
+
+                String name = config.getString(prefix + ".Names." + key + ".Name").replaceAll("&", "§");
+                boolean overrideFormat = false;
+
+                if(config.contains(prefix + ".Names." + key + ".OverrideFormat"))
+                    overrideFormat = config.getBoolean(prefix + ".Names." + key + ".OverrideFormat");
+
+                nameData.add(new NameData(level, name, overrideFormat));
             }
         }
     }
@@ -238,21 +252,18 @@ public class CreatureData extends DirtyObject{
      * @return - name that will be applied
      */
     public String getNameAtLevel(String format, int level){
-        int highest = 1;
-        for(int key : leveledNames.keySet()){
-            if(key > highest && key <= level){
-                highest = level;
+        NameData highest = null;
+        for(NameData data : nameData){
+            if((highest == null && data.getLevel() < level ) || (highest != null && data.getLevel() < level && data.getLevel() >= highest.getLevel())){
+                highest = data;
             }
+
         }
 
-        String name = leveledNames.get(highest);
-        if(name == null)
-            name = getUserFriendlyName(entityType);
+        if(highest != null)
+            return highest.getName(level, format);
 
-        name = format.replace("{name}", name)
-                     .replace("{level}", Integer.toString(level));
-
-        return name;
+        return null;
     }
 
     /**
