@@ -13,7 +13,7 @@ public abstract class CustomCommandExecutor {
 
     private final String CommandName;
     private final String CommandDescription;
-    private int RequiredArguments = 0;
+    protected int RequiredArguments = 0;
     private final ArrayList<CustomCommandArgument> CommandArguments; // Argument name, isRequired
 
     public CustomCommandExecutor(String commandName, String commandDescription, ArrayList<CustomCommandArgument> commandArguments){
@@ -27,18 +27,25 @@ public abstract class CustomCommandExecutor {
                     RequiredArguments ++;
     }
 
+    public abstract void safeExecute(Player player, String[] args);
+    public abstract void sendHelpMessage(Player player);
+
     public String getCommandName(){
         return CommandName;
     };
+
     public String getCommandDescription(){
         return CommandDescription;
     }
+
     public int getNumberOfRequiredArguments(){
         return RequiredArguments;
     }
+
     public ArrayList<CustomCommandArgument> getCommandArguments(){
         return CommandArguments;
     }
+
     private String getUserFriendlyCommandArguments(){
         if(CommandArguments == null)
             return " ";
@@ -49,9 +56,23 @@ public abstract class CustomCommandExecutor {
 
         return " " + friendlyText.trim();
     }
+
     public String getUserFriendlyCommandText(){
         String userFriendlyArgs = getUserFriendlyCommandArguments();
         return getCommandName() + userFriendlyArgs + OutputHandler.INFO + CommandConstants.DescriptionDelimeter + getCommandDescription();
     }
-    public abstract void execute(Player player, String[] args);
+
+    public void execute(Player player, String[] args){
+        if(args == null || args.length < getNumberOfRequiredArguments()){
+            sendHelpMessage(player);
+            return;
+        }
+        safeExecute(player, args);
+    }
+
+    protected void sendCommandArgumentDetails(Player player){
+        for(CustomCommandArgument arg : this.getCommandArguments()){
+            OutputHandler.PrintCommandInfo(player, CommandConstants.DescriptionDelimeter + arg.getLabel() + OutputHandler.HIGHLIGHT + CommandConstants.DescriptionDelimeter + arg.getDescription());
+        }
+    }
 }

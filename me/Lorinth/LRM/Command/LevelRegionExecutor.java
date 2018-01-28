@@ -13,14 +13,13 @@ public class LevelRegionExecutor extends CustomCommandExecutor {
         super("region", "access to editing region data", null);
     }
 
-    public void execute(Player player, String[] args){
-        if(args == null || args.length < 1){
-            sendHelpMessage(player);
-            return;
-        }
+    @Override
+    public void safeExecute(Player player, String[] args){
+
     }
 
-    private void sendHelpMessage(Player player){
+    @Override
+    public void sendHelpMessage(Player player){
         OutputHandler.PrintWhiteSpace(player, 2);
         OutputHandler.PrintCommandInfo(player, "/lrm " + getCommandName() + " - " + getCommandDescription());
     }

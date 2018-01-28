@@ -7,6 +7,7 @@ import org.bukkit.entity.Creature;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Monster;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -14,6 +15,10 @@ import java.util.HashMap;
  */
 public class CreatureDataManager {
 
+    private ArrayList<String> ignoredKeys = new ArrayList<String>(){{
+        add("Disabled");
+        add("DisabledWorlds");
+    }};
     private HashMap<EntityType, CreatureData> animalData = new HashMap<>();
     private HashMap<EntityType, CreatureData> monsterData = new HashMap<>();
     private DataLoader dataLoader;
@@ -51,6 +56,19 @@ public class CreatureDataManager {
         }
     }
 
+    protected boolean saveCreatureData(FileConfiguration config){
+        boolean changed = false;
+        for(CreatureData data : animalData.values()){
+            if(data.save(config, "Entity.Animal."))
+                changed = true;
+        }
+        for(CreatureData data : monsterData.values()){
+            if(data.save(config, "Entity.Monster."))
+                changed = true;
+        }
+        return changed;
+    }
+
     protected void loadCreatureData(FileConfiguration config){
         loadCreatureSection(config, "Entity.Animal.");
         loadCreatureSection(config, "Entity.Monster.");
@@ -59,7 +77,7 @@ public class CreatureDataManager {
 
     private void loadCreatureSection(FileConfiguration config, String prefix) {
         for(String key : config.getConfigurationSection(prefix).getKeys(false)){
-            if(!key.equalsIgnoreCase("disabled"))
+            if(!ignoredKeys.contains(key))
                 loadEntity(config, prefix, key);
         }
     }
@@ -81,18 +99,5 @@ public class CreatureDataManager {
             OutputHandler.PrintError("Failed to load entity : " + OutputHandler.HIGHLIGHT + key);
             error.printStackTrace();
         }
-    }
-
-    protected boolean saveCreatureData(FileConfiguration config){
-        boolean changed = false;
-        for(CreatureData data : animalData.values()){
-            if(data.save(config, "Entity.Animal."))
-                changed = true;
-        }
-        for(CreatureData data : monsterData.values()){
-            if(data.save(config, "Entity.Monster."))
-                changed = true;
-        }
-        return changed;
     }
 }

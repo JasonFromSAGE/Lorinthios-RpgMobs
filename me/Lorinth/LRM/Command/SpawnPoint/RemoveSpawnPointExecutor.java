@@ -4,7 +4,10 @@ import me.Lorinth.LRM.Command.CommandConstants;
 import me.Lorinth.LRM.Command.Objects.CustomCommandArgument;
 import me.Lorinth.LRM.Command.Objects.CustomCommandExecutor;
 import me.Lorinth.LRM.Command.SpawnPointExecutor;
+import me.Lorinth.LRM.LorinthsRpgMobs;
 import me.Lorinth.LRM.Objects.OutputHandler;
+import me.Lorinth.LRM.Objects.SpawnPoint;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -24,13 +27,27 @@ public class RemoveSpawnPointExecutor extends CustomCommandExecutor {
     }
 
     @Override
-    public void execute(Player player, String[] args) {
+    public void safeExecute(Player player, String[] args) {
+        try {
+            Location loc = player.getLocation();
+            String name = args[0];
 
+            SpawnPoint spawnPoint = LorinthsRpgMobs.GetSpawnPointManager().getSpawnPointInWorldByName(loc.getWorld(), name);
+            OutputHandler.PrintRawError(player, "Spawn point, " + OutputHandler.HIGHLIGHT + spawnPoint.getName() + OutputHandler.ERROR + ", has been removed");
+            spawnPoint.setDeleted();
+        }
+        catch(Exception exception){
+            OutputHandler.PrintRawError("Error occurred...");
+            exception.printStackTrace();
+            OutputHandler.PrintRawError(player, "An error occurred");
+            sendHelpMessage(player);
+        }
     }
 
-    private void sendHelpMessage(Player player){
+    @Override
+    public void sendHelpMessage(Player player){
         OutputHandler.PrintWhiteSpace(player, 2);
         String prefix = "/" + CommandConstants.LorinthsRpgMobsCommand + " " + parentExecutor.getCommandName();
-        OutputHandler.PrintRawInfo(player, prefix + " " + this.getUserFriendlyCommandText());
+        OutputHandler.PrintCommandInfo(player, prefix + " " + this.getUserFriendlyCommandText());
     }
 }

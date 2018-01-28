@@ -7,6 +7,7 @@ import org.bukkit.entity.Creature;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Monster;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -23,6 +24,8 @@ public class CreatureData extends DirtyObject{
     private String healthFormula;
 
     private HashMap<Integer, String> leveledNames = new HashMap<>();
+    private ArrayList<String> groupDisabledWorlds = new ArrayList<String>();
+    private ArrayList<String> entityDisabledWorlds = new ArrayList<String>();
 
     /**
      * Creates creature data based on saved config data
@@ -75,8 +78,19 @@ public class CreatureData extends DirtyObject{
      */
     protected void saveData(FileConfiguration config, String prefix){
         prefix += entityType.toString();
+        config.set(prefix + ".Disabled", isDisabled);
+        saveDisabledWorlds(config, prefix);
         saveFormulas(config, prefix);
         saveNames(config, prefix);
+    }
+
+    /**
+     * Saves the disabledWorlds
+     * @param config - config file to save to
+     * @param prefix - the path prefix we will use
+     */
+    private void saveDisabledWorlds(FileConfiguration config, String prefix){
+        config.set(prefix + ".DisabledWorlds", entityDisabledWorlds);
     }
 
     /**
@@ -112,6 +126,7 @@ public class CreatureData extends DirtyObject{
             return;
         }
 
+        loadDisabledWorlds(config, prefix);
         prefix += entityType.toString();
 
         loadFormulas(config, prefix);
@@ -140,6 +155,18 @@ public class CreatureData extends DirtyObject{
                 leveledNames.put(Integer.parseInt(key), config.getString(prefix + ".Names." + key));
             }
         }
+    }
+
+    /**
+     * Loads the disabled worlds associated with this object from config file
+     * @param config - config file to load from
+     * @param prefix - the path prefix we will use
+     */
+    private void loadDisabledWorlds(FileConfiguration config, String prefix){
+        if(config.contains(prefix + "DisabledWorlds"))
+            groupDisabledWorlds.addAll(config.getStringList(prefix + "DisabledWorlds"));
+        if(config.contains(prefix + entityType.toString() + ".DisabledWorlds"))
+            entityDisabledWorlds.addAll(config.getStringList(prefix + entityType.toString() + ".DisabledWorlds"));
     }
 
     /**
@@ -269,7 +296,7 @@ public class CreatureData extends DirtyObject{
      * Are leveling features disabled for this entity type
      * @return - isDisabled
      */
-    public boolean isDisabled(){
-        return isDisabled;
+    public boolean isDisabled(String worldName){
+        return isDisabled || entityDisabledWorlds.contains(worldName) || groupDisabledWorlds.contains(worldName);
     }
 }

@@ -75,13 +75,13 @@ public class SpawnPoint extends DirtyObject{
             return;
         }
         else{
-            config.set(prefix + "Location.X", Center.getBlockX());
-            config.set(prefix + "Location.Z", Center.getBlockZ());
-            config.set(prefix + "Level", StartingLevel);
-            config.set(prefix + "Distance", LevelDistance);
-            config.set(prefix + "CenterBuffer", CenterBuffer);
-            config.set(prefix + "Disabled", isDisabled);
-            config.set(prefix + "MaxLevel", MaxLevel == Integer.MAX_VALUE ? -1 : MaxLevel);
+            config.set(prefix + ".Disabled", isDisabled);
+            config.set(prefix + ".Level", StartingLevel);
+            config.set(prefix + ".MaxLevel", MaxLevel == Integer.MAX_VALUE ? -1 : MaxLevel);
+            config.set(prefix + ".Distance", LevelDistance);
+            config.set(prefix + ".CenterBuffer", CenterBuffer);
+            config.set(prefix + ".Location.X", Center.getBlockX());
+            config.set(prefix + ".Location.Z", Center.getBlockZ());
         }
     }
 
@@ -99,6 +99,14 @@ public class SpawnPoint extends DirtyObject{
      */
     public String getName(){
         return Name;
+    }
+
+    /**
+     * Gets the world the spawn point is located in, To change worlds use setCenter in a different world
+     * @return the world the spawn point is in
+     */
+    public World getWorld(){
+        return Center.getWorld();
     }
 
     /**
@@ -237,7 +245,7 @@ public class SpawnPoint extends DirtyObject{
         loc.setY(0); // We only care about x/y
 
         try{
-            return (int) Math.max(StartingLevel, 1 + (calculateDistanceWithBuffer(loc, algorithm) / (double) LevelDistance));
+            return (int) Math.min(MaxLevel, StartingLevel + (calculateDistanceWithBuffer(loc, algorithm) / (double) LevelDistance));
         }
         catch(Exception e){
             e.printStackTrace();

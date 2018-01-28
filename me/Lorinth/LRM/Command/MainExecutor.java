@@ -15,7 +15,7 @@ import java.util.Arrays;
 public class MainExecutor implements CommandExecutor{
 
     private CustomCommandExecutor spawnPointExecutor = new SpawnPointExecutor();
-    private CustomCommandExecutor levelRegionExecutor = new LevelRegionExecutor();
+    //private CustomCommandExecutor levelRegionExecutor = new LevelRegionExecutor();
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -34,9 +34,9 @@ public class MainExecutor implements CommandExecutor{
         if(commandLabel.equalsIgnoreCase(spawnPointExecutor.getCommandName())){
             spawnPointExecutor.execute(player, args);
         }
-        else if(commandLabel.equalsIgnoreCase(levelRegionExecutor.getCommandName())){
-            levelRegionExecutor.execute(player, args);
-        }
+        //else if(commandLabel.equalsIgnoreCase(levelRegionExecutor.getCommandName())){
+            //levelRegionExecutor.execute(player, args);
+        //}
         else{
             sendHelpMessage(player);
         }
@@ -50,6 +50,6 @@ public class MainExecutor implements CommandExecutor{
 
         String commandPrefix = "/" + CommandConstants.LorinthsRpgMobsCommand + " ";
         OutputHandler.PrintCommandInfo(player, commandPrefix + spawnPointExecutor.getUserFriendlyCommandText());
-        OutputHandler.PrintCommandInfo(player, commandPrefix + levelRegionExecutor.getUserFriendlyCommandText());
+        //OutputHandler.PrintCommandInfo(player, commandPrefix + levelRegionExecutor.getUserFriendlyCommandText());
     }
 }

@@ -33,7 +33,7 @@ public class CreatureEventListener implements Listener {
             Creature entity = (Creature) event.getEntity();
 
             CreatureData data = dataLoader.getCreatureDataManager().getData(entity);
-            if(data.isDisabled())
+            if(data.isDisabled(entity.getWorld().getName()))
                 return;
 
             //Set Level
@@ -59,7 +59,7 @@ public class CreatureEventListener implements Listener {
             Creature creature = (Creature) event.getDamager();
 
             CreatureData data = dataLoader.getCreatureDataManager().getData(creature);
-            if (data.isDisabled())
+            if (data.isDisabled(creature.getWorld().getName()))
                 return;
 
             int level = LorinthsRpgMobs.GetLevelOfCreature(creature);
@@ -78,16 +78,11 @@ public class CreatureEventListener implements Listener {
             Creature creature = (Creature) event.getEntity();
 
             CreatureData data = dataLoader.getCreatureDataManager().getData(creature);
-            if (data.isDisabled())
+            if (data.isDisabled(creature.getWorld().getName()))
                 return;
 
             int level = LorinthsRpgMobs.GetLevelOfCreature(creature);
             event.setDroppedExp(data.getExperienceAtLevel(level));
         }
-    }
-
-    @EventHandler
-    public void onBlockPlace(BlockPlaceEvent event){
-        event.getBlock().setType(Material.SKULL);
     }
 }

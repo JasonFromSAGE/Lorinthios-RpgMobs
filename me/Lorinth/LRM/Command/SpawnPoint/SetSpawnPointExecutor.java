@@ -31,12 +31,7 @@ public class SetSpawnPointExecutor extends CustomCommandExecutor{
     }
 
     @Override
-    public void execute(Player player, String[] args) {
-        if(args == null || args.length < getNumberOfRequiredArguments()){
-            sendHelpMessage(player);
-            return;
-        }
-
+    public void safeExecute(Player player, String[] args) {
         try{
             Location loc = player.getLocation();
             String name = args[0];
@@ -45,35 +40,39 @@ public class SetSpawnPointExecutor extends CustomCommandExecutor{
 
             SpawnPoint spawnPoint = LorinthsRpgMobs.GetSpawnPointManager().getSpawnPointInWorldByName(loc.getWorld(), name);
             if(spawnPoint == null){
-                OutputHandler.PrintError(player, "No spawnpoint found by the name, " + OutputHandler.HIGHLIGHT + name);
-                return;
+                LorinthsRpgMobs.GetSpawnPointManager().addSpawnPointInWorld(player.getWorld(), new SpawnPoint(player.getLocation(), name, startLevel, distance));
+                OutputHandler.PrintRawInfo(player, "Created spawn point with name, " + OutputHandler.HIGHLIGHT + name);
             }
+            else{
+                spawnPoint.setCenter(loc);
+                spawnPoint.setLevelDistance(distance);
+                spawnPoint.setStartingLevel(startLevel);
 
-            spawnPoint.setCenter(loc);
-            spawnPoint.setLevelDistance(distance);
-            spawnPoint.setStartingLevel(startLevel);
+                if(args.length > 3){
+                    int maxLevel = Integer.parseInt(args[3]);
+                    spawnPoint.setMaxLevel(maxLevel);
 
-            if(args.length > 3){
-                int maxLevel = Integer.parseInt(args[3]);
-                spawnPoint.setMaxLevel(maxLevel);
-
-                if(args.length > 4){
-                    int centerBuffer = Integer.parseInt(args[4]);
-                    spawnPoint.setCenterBuffer(centerBuffer);
+                    if(args.length > 4){
+                        int centerBuffer = Integer.parseInt(args[4]);
+                        spawnPoint.setCenterBuffer(centerBuffer);
+                    }
                 }
+                OutputHandler.PrintRawInfo(player, "Updated spawn point with name, " + OutputHandler.HIGHLIGHT + name);
             }
         }
         catch(Exception exception){
+            OutputHandler.PrintRawError("Error occurred...");
+            exception.printStackTrace();
+            OutputHandler.PrintRawError(player, "An error occurred");
             sendHelpMessage(player);
         }
     }
 
-    private void sendHelpMessage(Player player){
+    @Override
+    public void sendHelpMessage(Player player){
         OutputHandler.PrintWhiteSpace(player, 2);
         String prefix = "/" + CommandConstants.LorinthsRpgMobsCommand + " " + parentExecutor.getCommandName();
         OutputHandler.PrintCommandInfo(player, prefix + " " + this.getUserFriendlyCommandText());
-        for(CustomCommandArgument arg : this.getCommandArguments()){
-            OutputHandler.PrintCommandInfo(player, CommandConstants.DescriptionDelimeter + arg.getLabel() + OutputHandler.HIGHLIGHT + CommandConstants.DescriptionDelimeter + arg.getDescription());
-        }
+        sendCommandArgumentDetails(player);
     }
 }

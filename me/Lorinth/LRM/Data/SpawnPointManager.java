@@ -33,10 +33,12 @@ public class SpawnPointManager {
                 int shortestDistance = Integer.MAX_VALUE;
 
                 for(SpawnPoint spawnPoint : spawnPoints){
-                    int currentDistance = spawnPoint.calculateDistance(location, dataLoader.distanceAlgorithm);
-                    if(currentDistance < shortestDistance){
-                        closestSpawnPoint = spawnPoint;
-                        shortestDistance = currentDistance;
+                    if(!spawnPoint.isDisabled()){
+                        int currentDistance = spawnPoint.calculateDistance(location, dataLoader.distanceAlgorithm);
+                        if(currentDistance < shortestDistance){
+                            closestSpawnPoint = spawnPoint;
+                            shortestDistance = currentDistance;
+                        }
                     }
                 }
             }
@@ -52,6 +54,18 @@ public class SpawnPointManager {
                 return spawn;
         }
         return null;
+    }
+
+    public void addSpawnPointInWorld(World world, SpawnPoint spawnPoint){
+        if(!allSpawnPoints.containsKey(world.getName())){
+            allSpawnPoints.put(world.getName(), new ArrayList<SpawnPoint>());
+        }
+
+        allSpawnPoints.get(world.getName()).add(spawnPoint);
+    }
+
+    public ArrayList<SpawnPoint> getAllSpawnPointsInWorld(World world){
+        return allSpawnPoints.get(world.getName());
     }
 
     //Loading & Saving

@@ -16,7 +16,7 @@ public class NameOptions extends DirtyObject{
 
     private void loadOptions(FileConfiguration config){
         tagsAlwaysOn = config.getBoolean("Names.TagsAlwaysOn");
-        format = config.getString("Names.Format");
+        format = config.getString("Names.Format").replaceAll("&", "§");
     }
 
     @Override
