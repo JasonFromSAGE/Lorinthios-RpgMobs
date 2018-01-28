@@ -111,7 +111,7 @@ public class CreatureData extends DirtyObject{
      */
     private void saveNames(FileConfiguration config, String prefix){
         for(Integer key : leveledNames.keySet()){
-            config.set(prefix + ".Names." + key, leveledNames.get(key));
+            config.set(prefix + ".Names." + key, leveledNames.get(key).replaceAll("§", "&"));
         }
     }
 
@@ -152,7 +152,7 @@ public class CreatureData extends DirtyObject{
     private void loadNames(FileConfiguration config, String prefix){
         if(config.contains(prefix + ".Names")){
             for(String key : config.getConfigurationSection(prefix + ".Names").getKeys(false)){
-                leveledNames.put(Integer.parseInt(key), config.getString(prefix + ".Names." + key));
+                leveledNames.put(Integer.parseInt(key), config.getString(prefix + ".Names." + key).replaceAll("&", "§"));
             }
         }
     }
