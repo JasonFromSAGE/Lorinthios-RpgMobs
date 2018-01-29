@@ -18,7 +18,10 @@ public class NameData {
 
     public void save(FileConfiguration config, String prefix){
         config.set(prefix + ".Names." + Level + ".Name", Name);
-        config.set(prefix + ".Names." + Level + ".OverrideFormat", OverrideFormat);
+        if(OverrideFormat)
+            config.set(prefix + ".Names." + Level + ".OverrideFormat", OverrideFormat);
+        else
+            config.set(prefix + ".Names." + Level + ".OverrideFormat", null);
     }
 
     public String getName(int level, String format){

@@ -30,14 +30,11 @@ public class CreatureDataManager {
     public CreatureData getData(EntityType type){
         HashMap<EntityType, CreatureData> creatureData = null;
         if(monsterData.containsKey(type))
-            monsterData.get(type);
+            return monsterData.get(type);
         else if(animalData.containsKey(type))
             return animalData.get(type);
         else
             return null;
-
-
-        return null;
 
     }
 

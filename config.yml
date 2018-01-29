@@ -1,7 +1,7 @@
 DistanceAlgorithm: Optimized #Accurate or Optimized
 Names:
   TagsAlwaysOn: false # (true / false) creature nameplates always on?
-  Format: "[Lvl.{level}]{name}" # allows for {level} and {name} to be filled in by plugin
+  Format: "[Lvl.{level}] {name}" # allows for {level} and {name} to be filled in by plugin
 SpawnPoints:
   world: #name of the world your spawn points are in
     mainTown: #name of your spawnpoint
@@ -39,7 +39,12 @@ Entity:
           Name: Weak Zombie
         '20':
           Name: Zombie
+        '30':
+          Name: '&cUndead Legion'
+          OverrideFormat: true
+        '31':
+          Name: Zombie
         '40':
-          Name: Elite Zombie
+          Name: Strong Zombie
     CREEPER:
       Disabled: true

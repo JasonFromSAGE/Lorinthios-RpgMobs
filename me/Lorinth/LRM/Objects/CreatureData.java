@@ -151,22 +151,28 @@ public class CreatureData extends DirtyObject{
      */
     private void loadNames(FileConfiguration config, String prefix){
         if(config.contains(prefix + ".Names")){
+            OutputHandler.PrintRawInfo(entityType.toString());
             for(String key : config.getConfigurationSection(prefix + ".Names").getKeys(false)){
+
                 int level = Integer.parseInt(key);
-
-                //Backwards support
-                if(config.get(prefix + ".Names." + key) != null) {
-                    config.set(prefix + ".Names." + key + ".Name", config.getString(prefix + ".Names." + key));
-                    config.set(prefix + ".Names." + key + ".OverrideFormat", false);
-                }
-
-                String name = config.getString(prefix + ".Names." + key + ".Name").replaceAll("&", "§");
+                String name = "";
                 boolean overrideFormat = false;
 
+                //Backwards support for Names
+                if(config.get(prefix + ".Names." + key) != null)
+                    name = config.getString(prefix + ".Names." + key).replace("&", "§");
+                if(config.get(prefix + ".Names." + key + ".Name") != null)
+                    name = config.getString(prefix + ".Names." + key + ".Name").replace("&", "§");
+
+                //Check for OverrideFormat
                 if(config.contains(prefix + ".Names." + key + ".OverrideFormat"))
                     overrideFormat = config.getBoolean(prefix + ".Names." + key + ".OverrideFormat");
 
-                nameData.add(new NameData(level, name, overrideFormat));
+                NameData newData = new NameData(level, name, overrideFormat);
+                nameData.add(newData);
+                OutputHandler.PrintRawInfo("Adding Name Data, ");
+                OutputHandler.PrintRawInfo(level + ", " + name + ", " + overrideFormat);
+                OutputHandler.PrintRawInfo("Size: " + nameData.size());
             }
         }
     }
@@ -253,8 +259,15 @@ public class CreatureData extends DirtyObject{
      */
     public String getNameAtLevel(String format, int level){
         NameData highest = null;
+
+        OutputHandler.PrintRawInfo("Size: " + nameData.size());
+
+        if(entityType == EntityType.ZOMBIE)
+            OutputHandler.PrintRawInfo(nameData.toString());
         for(NameData data : nameData){
-            if((highest == null && data.getLevel() < level ) || (highest != null && data.getLevel() < level && data.getLevel() >= highest.getLevel())){
+            if(entityType == EntityType.ZOMBIE)
+                OutputHandler.PrintRawInfo(data.getName(level, format));
+            if((highest == null && data.getLevel() <= level ) || (highest != null && data.getLevel() <= level && data.getLevel() >= highest.getLevel())){
                 highest = data;
             }
 

@@ -15,8 +15,10 @@ public class DataLoader {
 
     private NameOptions nameOptions;
     protected DistanceAlgorithm distanceAlgorithm = DistanceAlgorithm.Optimized;
-    private SpawnPointManager spawnPointManager = new SpawnPointManager(this);
+
     private CreatureDataManager creatureDataManager = new CreatureDataManager(this);
+    private LevelRegionManager levelRegionManager = new LevelRegionManager(this);
+    private SpawnPointManager spawnPointManager = new SpawnPointManager(this);
 
     private HashMap<String, ArrayList<LevelRegion>> allLevelRegions = new HashMap<>(); // String: World Name, List<LevelRegion> list of regions
 
