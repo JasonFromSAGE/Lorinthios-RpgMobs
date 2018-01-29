@@ -38,7 +38,7 @@ public class MainExecutor implements CommandExecutor{
             spawnPointExecutor.execute(player, args);
         }
         else if(commandLabel.equalsIgnoreCase(levelRegionExecutor.getCommandName())){
-            //levelRegionExecutor.execute(player, args);
+            levelRegionExecutor.execute(player, args);
         }
         else if(player.hasPermission("lrm.update") && commandLabel.equalsIgnoreCase(updateExecutor.getCommandName())){
             updateExecutor.execute(player, args);
@@ -55,7 +55,7 @@ public class MainExecutor implements CommandExecutor{
         OutputHandler.PrintCommandInfo(player, "[LorinthsRpgMobs] : " + OutputHandler.HIGHLIGHT + "Command List");
 
         String commandPrefix = "/" + CommandConstants.LorinthsRpgMobsCommand + " ";
-        //OutputHandler.PrintCommandInfo(player, commandPrefix + levelRegionExecutor.getUserFriendlyCommandText());
+        OutputHandler.PrintCommandInfo(player, commandPrefix + levelRegionExecutor.getUserFriendlyCommandText());
         OutputHandler.PrintCommandInfo(player, commandPrefix + spawnPointExecutor.getUserFriendlyCommandText());
         OutputHandler.PrintCommandInfo(player, commandPrefix + updateExecutor.getUserFriendlyCommandText());
     }
