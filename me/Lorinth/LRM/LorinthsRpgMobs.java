@@ -20,17 +20,20 @@ import java.io.File;
  */
 public class LorinthsRpgMobs extends JavaPlugin{
 
+    protected static Updater updater;
     private static DataLoader dataLoader;
     public static LorinthsRpgMobs instance;
 
     @Override
     public void onEnable(){
-        OutputHandler.PrintMessage("Enabling...");
+        OutputHandler.PrintMessage("Enabling v" + getDescription().getVersion() + "...");
         loadConfiguration();
         registerCommands();
+        checkAutoUpdates();
 
         dataLoader = new DataLoader(getConfig());
         Bukkit.getPluginManager().registerEvents(new CreatureEventListener(dataLoader), this);
+        Bukkit.getPluginManager().registerEvents(new UpdaterEventListener(updater), this);
         OutputHandler.PrintMessage("Finished!");
 
         instance = this;
@@ -57,6 +60,23 @@ public class LorinthsRpgMobs extends JavaPlugin{
 
     private void registerCommands(){
         getCommand(CommandConstants.LorinthsRpgMobsCommand).setExecutor(new MainExecutor());
+    }
+
+    private void checkAutoUpdates(){
+        if(getConfig().getKeys(false).contains("AllowAutoUpdates")){
+            if(getConfig().getBoolean("AllowAutoUpdates"))
+                updater = new Updater(this, 73797, getFile(), Updater.UpdateType.DEFAULT, true);
+            else
+                updater = new Updater(this, 73797, getFile(), Updater.UpdateType.NO_DOWNLOAD, true);
+        }
+        else{
+            getConfig().set("AllowAutoUpdates", false);
+            saveConfig();
+        }
+    }
+
+    public static Updater ForceUpdate(Updater.UpdateCallback callback){
+        return new Updater(instance, 73797, instance.getFile(), Updater.UpdateType.DEFAULT, callback);
     }
 
     //API Methods

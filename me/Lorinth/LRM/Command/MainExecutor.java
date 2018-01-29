@@ -2,6 +2,7 @@ package me.Lorinth.LRM.Command;
 
 import me.Lorinth.LRM.Command.Objects.CustomCommandExecutor;
 import me.Lorinth.LRM.Objects.OutputHandler;
+import me.Lorinth.LRM.Updater;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -14,8 +15,10 @@ import java.util.Arrays;
  */
 public class MainExecutor implements CommandExecutor{
 
+    private CustomCommandExecutor levelRegionExecutor = new LevelRegionExecutor();
     private CustomCommandExecutor spawnPointExecutor = new SpawnPointExecutor();
-    //private CustomCommandExecutor levelRegionExecutor = new LevelRegionExecutor();
+    private UpdateExecutor updateExecutor = new UpdateExecutor();
+
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -34,9 +37,12 @@ public class MainExecutor implements CommandExecutor{
         if(commandLabel.equalsIgnoreCase(spawnPointExecutor.getCommandName())){
             spawnPointExecutor.execute(player, args);
         }
-        //else if(commandLabel.equalsIgnoreCase(levelRegionExecutor.getCommandName())){
-            //levelRegionExecutor.execute(player, args);
-        //}
+        else if(commandLabel.equalsIgnoreCase(levelRegionExecutor.getCommandName())){
+            levelRegionExecutor.execute(player, args);
+        }
+        else if(player.hasPermission("lrm.update") && commandLabel.equalsIgnoreCase(updateExecutor.getCommandName())){
+            updateExecutor.execute(player, args);
+        }
         else{
             sendHelpMessage(player);
         }
@@ -49,7 +55,8 @@ public class MainExecutor implements CommandExecutor{
         OutputHandler.PrintCommandInfo(player, "[LorinthsRpgMobs] : " + OutputHandler.HIGHLIGHT + "Command List");
 
         String commandPrefix = "/" + CommandConstants.LorinthsRpgMobsCommand + " ";
+        OutputHandler.PrintCommandInfo(player, commandPrefix + levelRegionExecutor.getUserFriendlyCommandText());
         OutputHandler.PrintCommandInfo(player, commandPrefix + spawnPointExecutor.getUserFriendlyCommandText());
-        //OutputHandler.PrintCommandInfo(player, commandPrefix + levelRegionExecutor.getUserFriendlyCommandText());
+        OutputHandler.PrintCommandInfo(player, commandPrefix + updateExecutor.getUserFriendlyCommandText());
     }
 }

@@ -1,10 +1,11 @@
 DistanceAlgorithm: Optimized #Accurate or Optimized
+AllowAutoUpdates: false
 Names:
   TagsAlwaysOn: false # (true / false) creature nameplates always on?
   Format: "[Lvl.{level}] {name}" # allows for {level} and {name} to be filled in by plugin
 SpawnPoints:
   world: #name of the world your spawn points are in
-    mainTown: #name of your spawnpoint
+    mainTown: #name of a spawnpoint
       Disabled: false # can turn off/on spawn points
       Level: 1 # level monsters start at
       Distance: 50 # monsters between 0-50 blocks away are level 1, monsters between 51-100 are level 2, etc
@@ -29,7 +30,7 @@ Entity:
   Monster:
     Disabled: false # (true / false) false = Monsters will receive levels/formulas
     ZOMBIE:
-      Disabled: false
+      Disabled: false # (true / false) disables specific entities within groups
       Formulas:
         Damage: "rand(3) + ({level} / 10)"
         Health: "20 + ({level} / 3) + ({level} / 5) + rand(5)"
