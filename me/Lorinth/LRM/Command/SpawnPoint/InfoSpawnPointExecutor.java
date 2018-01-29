@@ -57,5 +57,6 @@ public class InfoSpawnPointExecutor extends CustomCommandExecutor{
         OutputHandler.PrintWhiteSpace(player, 2);
         String prefix = "/" + CommandConstants.LorinthsRpgMobsCommand + " " + parentExecutor.getCommandName();
         OutputHandler.PrintCommandInfo(player, prefix + " " + this.getUserFriendlyCommandText());
+        sendCommandArgumentDetails(player);
     }
 }

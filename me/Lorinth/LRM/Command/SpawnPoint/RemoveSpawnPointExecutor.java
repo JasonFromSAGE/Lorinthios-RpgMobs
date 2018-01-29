@@ -20,7 +20,7 @@ public class RemoveSpawnPointExecutor extends CustomCommandExecutor {
     private final SpawnPointExecutor parentExecutor;
 
     public RemoveSpawnPointExecutor(SpawnPointExecutor parent){
-        super("remove", "deletes a spawnpoint with a given name", new ArrayList<CustomCommandArgument>(){{
+        super("remove", "marks a spawn point ", new ArrayList<CustomCommandArgument>(){{
             add(new CustomCommandArgument("name", "name of the spawnpoint you want to delete", true));
         }});
         parentExecutor = parent;
@@ -49,5 +49,6 @@ public class RemoveSpawnPointExecutor extends CustomCommandExecutor {
         OutputHandler.PrintWhiteSpace(player, 2);
         String prefix = "/" + CommandConstants.LorinthsRpgMobsCommand + " " + parentExecutor.getCommandName();
         OutputHandler.PrintCommandInfo(player, prefix + " " + this.getUserFriendlyCommandText());
+        sendCommandArgumentDetails(player);
     }
 }

@@ -27,9 +27,16 @@ public class DataLoader {
     }
 
     public int calculateLevel(Location location){
+        int strictLevel = levelRegionManager.getHighestPriorityLevelAtLocation(location);
+        boolean strictLevelIsValid = strictLevel != -1;
+
         SpawnPoint closestSpawnPoint = spawnPointManager.getSpawnPointForLocation(location);
-        if(closestSpawnPoint != null)
-            return closestSpawnPoint.calculateLevel(location, distanceAlgorithm);
+        if(closestSpawnPoint != null) {
+            if(strictLevelIsValid)
+                return strictLevel; //Regions set the level of mobs
+            else
+                return closestSpawnPoint.calculateLevel(location, distanceAlgorithm);
+        }
         return -1; //this world is disabled if -1
     }
 
@@ -54,6 +61,7 @@ public class DataLoader {
         loadDistanceAlgorithm(config);
         spawnPointManager.loadSpawnPoints(config);
         creatureDataManager.loadCreatureData(config);
+        levelRegionManager.loadAllRegions(config);
     }
 
     private void loadNameOptions(FileConfiguration config){
