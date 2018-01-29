@@ -151,7 +151,6 @@ public class CreatureData extends DirtyObject{
      */
     private void loadNames(FileConfiguration config, String prefix){
         if(config.contains(prefix + ".Names")){
-            OutputHandler.PrintRawInfo(entityType.toString());
             for(String key : config.getConfigurationSection(prefix + ".Names").getKeys(false)){
 
                 int level = Integer.parseInt(key);
@@ -168,11 +167,7 @@ public class CreatureData extends DirtyObject{
                 if(config.contains(prefix + ".Names." + key + ".OverrideFormat"))
                     overrideFormat = config.getBoolean(prefix + ".Names." + key + ".OverrideFormat");
 
-                NameData newData = new NameData(level, name, overrideFormat);
-                nameData.add(newData);
-                OutputHandler.PrintRawInfo("Adding Name Data, ");
-                OutputHandler.PrintRawInfo(level + ", " + name + ", " + overrideFormat);
-                OutputHandler.PrintRawInfo("Size: " + nameData.size());
+                nameData.add(new NameData(level, name, overrideFormat));
             }
         }
     }
@@ -260,13 +255,7 @@ public class CreatureData extends DirtyObject{
     public String getNameAtLevel(String format, int level){
         NameData highest = null;
 
-        OutputHandler.PrintRawInfo("Size: " + nameData.size());
-
-        if(entityType == EntityType.ZOMBIE)
-            OutputHandler.PrintRawInfo(nameData.toString());
         for(NameData data : nameData){
-            if(entityType == EntityType.ZOMBIE)
-                OutputHandler.PrintRawInfo(data.getName(level, format));
             if((highest == null && data.getLevel() <= level ) || (highest != null && data.getLevel() <= level && data.getLevel() >= highest.getLevel())){
                 highest = data;
             }
