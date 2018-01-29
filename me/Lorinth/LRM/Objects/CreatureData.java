@@ -8,7 +8,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Monster;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by lorinthio on 1/24/2018.
@@ -16,7 +15,8 @@ import java.util.HashMap;
 public class CreatureData extends DirtyObject{
 
     private EntityType entityType;
-    private boolean isDisabled = false;
+    private boolean entityDisabled = false;
+    private boolean groupDisabled = false;
 
     //Formulas
     private String damageFormula;
@@ -47,7 +47,7 @@ public class CreatureData extends DirtyObject{
 
         String type = creature instanceof Monster ? "Monster" : "Animal";
         if(LorinthsRpgMobs.instance.getConfig().getBoolean("Entity." + type + ".Disabled"))
-            isDisabled = true;
+            groupDisabled = true;
 
         healthFormula = ((int) creature.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) + " + ({level} / 3) + ({level} / 5) + rand(5)";
         damageFormula = "rand(3) + ({level} / 10)";
@@ -78,7 +78,7 @@ public class CreatureData extends DirtyObject{
      */
     protected void saveData(FileConfiguration config, String prefix){
         prefix += entityType.toString();
-        config.set(prefix + ".Disabled", isDisabled);
+        config.set(prefix + ".Disabled", entityDisabled);
         saveDisabledWorlds(config, prefix);
         saveFormulas(config, prefix);
         saveNames(config, prefix);
@@ -99,8 +99,16 @@ public class CreatureData extends DirtyObject{
      * @param prefix - the path prefix we will use
      */
     private void saveFormulas(FileConfiguration config, String prefix){
+        //Backwards compatibility updates
+        config.set(prefix + ".Health", null);
+        config.set(prefix + ".Damage", null);
+        config.set(prefix + ".Experience", null);
+        config.set(prefix + ".Exp", null);
+
+        prefix += ".Formulas";
         config.set(prefix + ".Health", healthFormula);
         config.set(prefix + ".Damage", damageFormula);
+        config.set(prefix + ".Exp", null);
         config.set(prefix + ".Experience", expFormula);
     }
 
@@ -121,10 +129,10 @@ public class CreatureData extends DirtyObject{
      * @param prefix - the path prefix we will use
      */
     private void load(FileConfiguration config, String prefix){
-        if(config.getBoolean(prefix + "Disabled") || config.getBoolean(prefix + entityType.toString() + ".Disabled")){
-            isDisabled = true;
-            return;
-        }
+        entityDisabled = config.getBoolean(prefix + "Disabled");
+        groupDisabled = config.getBoolean(prefix + entityType.toString() + ".Disabled");
+        if(entityDisabled || groupDisabled)
+            return; //We don't care about loading disabled entities
 
         loadDisabledWorlds(config, prefix);
         prefix += entityType.toString();
@@ -139,9 +147,25 @@ public class CreatureData extends DirtyObject{
      * @param prefix - the path prefix we will use
      */
     private void loadFormulas(FileConfiguration config, String prefix){
-        healthFormula = config.getString(prefix + ".Health");
-        damageFormula = config.getString(prefix + ".Damage");
-        expFormula = config.getString(prefix + ".Experience");
+        //Backwards Compatibility
+        if(config.contains(prefix + ".Health")){
+            healthFormula = config.getString(prefix + ".Health");
+            damageFormula = config.getString(prefix + ".Damage");
+            if(config.contains(prefix + ".Exp"))
+                expFormula = config.getString(prefix + ".Exp");
+            else
+                expFormula = config.getString(prefix + ".Experience");
+            this.setDirty();
+        }
+        else{
+            prefix += ".Formulas";
+            healthFormula = config.getString(prefix + ".Health");
+            damageFormula = config.getString(prefix + ".Damage");
+            if(config.contains(prefix + ".Exp"))
+                expFormula = config.getString(prefix + ".Exp");
+            else
+                expFormula = config.getString(prefix + ".Experience");
+        }
     }
 
     /**
@@ -274,7 +298,14 @@ public class CreatureData extends DirtyObject{
      * @return - health the entity should have
      */
     public double getHealthAtLevel(Integer level){
-        return Calculator.eval(preParseFormula(healthFormula, level));
+        try{
+            return (int) Calculator.eval(preParseFormula(healthFormula, level));
+        }
+        catch(Exception exception){
+            OutputHandler.PrintRawError("Got Health Error for, " + entityType.toString());
+            OutputHandler.PrintRawError("Level : " + level + ", Formula : " + healthFormula);
+        }
+        return 1;
     }
 
     /**
@@ -283,7 +314,14 @@ public class CreatureData extends DirtyObject{
      * @return - damage the entity should do
      */
     public double getDamageAtLevel(Integer level){
-        return Calculator.eval(preParseFormula(damageFormula, level));
+        try{
+            return (int) Calculator.eval(preParseFormula(damageFormula, level));
+        }
+        catch(Exception exception){
+            OutputHandler.PrintRawError("Got Damage Formula Error for, " + entityType.toString());
+            OutputHandler.PrintRawError("Level : " + level + ", Formula : " + damageFormula);
+        }
+        return 1;
     }
 
     /**
@@ -292,7 +330,14 @@ public class CreatureData extends DirtyObject{
      * @return - exp the entity should give
      */
     public int getExperienceAtLevel(Integer level){
-        return (int) Calculator.eval(preParseFormula(expFormula, level));
+        try{
+            return (int) Calculator.eval(preParseFormula(expFormula, level));
+        }
+        catch(Exception exception){
+            OutputHandler.PrintRawError("Got Experience Error for, " + entityType.toString());
+            OutputHandler.PrintRawError("Level : " + level + ", Formula : " + expFormula);
+        }
+        return 1;
     }
 
     /**
@@ -310,6 +355,6 @@ public class CreatureData extends DirtyObject{
      * @return - isDisabled
      */
     public boolean isDisabled(String worldName){
-        return isDisabled || entityDisabledWorlds.contains(worldName) || groupDisabledWorlds.contains(worldName);
+        return entityDisabled || groupDisabled || entityDisabledWorlds.contains(worldName) || groupDisabledWorlds.contains(worldName);
     }
 }

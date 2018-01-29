@@ -33,7 +33,7 @@ Entity:
       Formulas:
         Damage: "rand(3) + ({level} / 10)"
         Health: "20 + ({level} / 3) + ({level} / 5) + rand(5)"
-        Exp: "rand(3) + 1"
+        Experience: "rand(3) + 1"
       Names:
         '1':
           Name: Weak Zombie
