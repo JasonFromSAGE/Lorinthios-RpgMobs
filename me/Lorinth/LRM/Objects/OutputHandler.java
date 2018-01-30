@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import java.io.Console;
 
 /**
- * Created by lorinthio on 1/25/2018.
+ * Not to be used outside of LorinthsRpgMobs, this is used to ease output to players/console
  */
 public class OutputHandler {
     public static final ChatColor ERROR = ChatColor.RED;

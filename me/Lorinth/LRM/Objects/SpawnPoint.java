@@ -9,7 +9,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import java.util.logging.Level;
 
 /**
- * Created by lorinthio on 1/24/2018.
+ * Contains data for spawn calculations including, starting level, distance, center buffer, max level, and if it is disabled
  */
 public class SpawnPoint extends DirtyObject{
 
@@ -23,9 +23,9 @@ public class SpawnPoint extends DirtyObject{
 
     /**
      * Loads a pre-existing spawn point from config
-     * @param config - config file
-     * @param worldName - world the spawnpoint exists in
-     * @param prefix - yml path prefix
+     * @param config config file
+     * @param worldName world the spawnpoint exists in
+     * @param prefix yml path prefix
      */
     public SpawnPoint(FileConfiguration config, String worldName, String spawnerName, String prefix){
         World world = Bukkit.getWorld(worldName);
@@ -51,10 +51,10 @@ public class SpawnPoint extends DirtyObject{
 
     /**
      * Creates a new Spawn Point via code
-     * @param center - center of the spawnpoint
-     * @param name - the alias
-     * @param level - starting level of mobs
-     * @param distance - distance between level increments
+     * @param center center of the spawnpoint
+     * @param name the alias
+     * @param level starting level of mobs
+     * @param distance distance between level increments
      */
     public SpawnPoint(Location center, String name, int level, int distance){
         center.setY(0);
@@ -85,7 +85,7 @@ public class SpawnPoint extends DirtyObject{
 
     /**
      * Checks if this spawn point is disabled, or is marked deleted
-     * @return - isDisabled
+     * @return isDisabled
      */
     public boolean isDisabled(){
         return isDisabled || isDeleted();
@@ -93,7 +93,7 @@ public class SpawnPoint extends DirtyObject{
 
     /**
      * Gets the name of the spawn point
-     * @return - Name of the spawn point
+     * @return Name of the spawn point
      */
     public String getName(){
         return Name;
@@ -109,7 +109,7 @@ public class SpawnPoint extends DirtyObject{
 
     /**
      * Gets the center location of the spawn point, (Note: Y is at 0)
-     * @return - Center Point
+     * @return Center Point
      */
     public Location getCenter(){
         return Center;
@@ -117,7 +117,7 @@ public class SpawnPoint extends DirtyObject{
 
     /**
      * Sets the center point of the spawn region which distance will be calculated from
-     * @param loc - center of the spawn point (if null nothing changes)
+     * @param loc center of the spawn point (if null nothing changes)
      */
     public void setCenter(Location loc){
         if(loc == null)
@@ -138,7 +138,7 @@ public class SpawnPoint extends DirtyObject{
 
     /**
      * Sets the center buffer of the spawn region which will delay leveling calculations by a given distance
-     * @param centerBuffer - the center distance delay/buffer
+     * @param centerBuffer the center distance delay/buffer
      */
     public void setCenterBuffer(int centerBuffer){
         CenterBuffer = centerBuffer;
@@ -146,7 +146,7 @@ public class SpawnPoint extends DirtyObject{
 
     /**
      * Gets the level this spawn point starts incrementing from
-     * @return - Starting Level
+     * @return Starting Level
      */
     public int getStartingLevel(){
         return StartingLevel;
@@ -154,7 +154,7 @@ public class SpawnPoint extends DirtyObject{
 
     /**
      * Sets the level this spawn point starts incrementing from
-     * @param level - between 1 and Integer.MAX_VALUE
+     * @param level between 1 and Integer.MAX_VALUE
      */
     public void setStartingLevel(int level){
         if(level < 1){
@@ -175,7 +175,7 @@ public class SpawnPoint extends DirtyObject{
 
     /**
      * Sets the distance between level increments
-     * @param levelDistance - the distance between level increments
+     * @param levelDistance the distance between level increments
      */
     public void setLevelDistance(int levelDistance){
         if(levelDistance < 1){
@@ -197,7 +197,7 @@ public class SpawnPoint extends DirtyObject{
 
     /**
      * Sets the max level of monsters in this spawn points area
-     * @param maxLevel - the max level of monsters
+     * @param maxLevel the max level of monsters
      */
     public void setMaxLevel(int maxLevel){
         if(maxLevel < 1){
@@ -210,8 +210,8 @@ public class SpawnPoint extends DirtyObject{
 
     /**
      * Calculate the distance to a spawnpoint from a location
-     * @param loc - The location we want to check
-     * @param algorithm - The algorithm to calculate distance
+     * @param loc The location we want to check
+     * @param algorithm The algorithm to calculate distance
      * @return
      */
     public int calculateDistance(Location loc, DistanceAlgorithm algorithm){
@@ -233,8 +233,8 @@ public class SpawnPoint extends DirtyObject{
 
     /**
      * Calculate the level at a location based on this spawn point
-     * @param loc - The location we want to check
-     * @param algorithm - The algorithm to calculate distance
+     * @param loc The location we want to check
+     * @param algorithm The algorithm to calculate distance
      * @return
      */
     public int calculateLevel(Location loc, DistanceAlgorithm algorithm){
@@ -251,9 +251,9 @@ public class SpawnPoint extends DirtyObject{
 
     /**
      *
-     * @param a - first location to compare distance
-     * @param b - second location to compare distance
-     * @return - the difference in x + z (results in diamond-esque shapes)
+     * @param a first location to compare distance
+     * @param b second location to compare distance
+     * @return the difference in x + z (results in diamond-esque shapes)
      */
     private double getSimpleDistance(Location a, Location b){
         int x = a.getBlockX() - b.getBlockX();

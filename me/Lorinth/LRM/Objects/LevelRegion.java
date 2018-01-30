@@ -6,7 +6,7 @@ import org.bukkit.entity.EntityType;
 import java.util.HashMap;
 
 /**
- * Created by lorinthio on 1/24/2018.
+ * Contains data for levels/names for a matched world guard region
  */
 public class LevelRegion extends DirtyObject{
     private String Name;

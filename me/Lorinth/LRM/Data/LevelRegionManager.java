@@ -5,7 +5,6 @@ import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import me.Lorinth.LRM.Objects.LevelRegion;
-import me.Lorinth.LRM.Objects.OutputHandler;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -14,7 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by lorinthio on 1/28/2018.
+ * Manager object of all LevelRegions in memory. Use this class to read/manipulate level regions on the server as well as add/remove them
  */
 public class LevelRegionManager {
 
@@ -67,7 +66,7 @@ public class LevelRegionManager {
     /**
      * Gets all level region in a given world, with a given name
      * @param world - world to check
-     * @return ArrayList<LevelRegion>
+     * @return all regions in world, or an empty array
      */
     public ArrayList<LevelRegion> getAllLeveledRegionsInWorld(World world){
         if(!WorldGuardFound)

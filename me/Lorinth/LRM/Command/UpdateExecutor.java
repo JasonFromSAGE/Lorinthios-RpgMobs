@@ -6,9 +6,6 @@ import me.Lorinth.LRM.Objects.OutputHandler;
 import me.Lorinth.LRM.Updater;
 import org.bukkit.entity.Player;
 
-/**
- * Created by lorinthio on 1/29/2018.
- */
 public class UpdateExecutor extends CustomCommandExecutor{
 
 

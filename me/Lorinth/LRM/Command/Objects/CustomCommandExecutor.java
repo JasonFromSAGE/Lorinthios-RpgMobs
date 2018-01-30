@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 
 /**
- * Created by lorinthio on 1/27/2018.
+ * Object used to control commands within LRM
  */
 public abstract class CustomCommandExecutor {
 

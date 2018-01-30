@@ -1,7 +1,7 @@
 package me.Lorinth.LRM.Command.Objects;
 
 /**
- * Created by lorinthio on 1/27/2018.
+ * Object used to encapsulate and represent arguments in a command
  */
 public class CustomCommandArgument {
     private String Label;

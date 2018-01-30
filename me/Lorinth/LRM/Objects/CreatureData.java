@@ -10,7 +10,7 @@ import org.bukkit.entity.Monster;
 import java.util.ArrayList;
 
 /**
- * Created by lorinthio on 1/24/2018.
+ * Contains formulas, world data and name data for a creature type
  */
 public class CreatureData extends DirtyObject{
 

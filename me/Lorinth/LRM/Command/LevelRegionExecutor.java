@@ -7,9 +7,6 @@ import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 
-/**
- * Created by bnra2 on 1/27/2018.
- */
 public class LevelRegionExecutor extends CustomCommandExecutor {
 
     HereLevelRegionExecutor hereLevelRegionExecutor = new HereLevelRegionExecutor(this);

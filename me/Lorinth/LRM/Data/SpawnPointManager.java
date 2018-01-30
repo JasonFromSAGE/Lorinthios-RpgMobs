@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 /**
- * Created by lorinthio on 1/27/2018.
+ * Manager object of all Spawn Points in memomry. Get spawn points by location or by world/name
  */
 public class SpawnPointManager {
 

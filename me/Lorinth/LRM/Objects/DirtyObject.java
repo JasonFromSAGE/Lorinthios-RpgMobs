@@ -3,7 +3,7 @@ package me.Lorinth.LRM.Objects;
 import org.bukkit.configuration.file.FileConfiguration;
 
 /**
- * Created by lorinthio on 1/24/2018.
+ * Used for dirty tracking/saving within LorinthsRpgMobs
  */
 public abstract class DirtyObject {
 

@@ -3,7 +3,9 @@ package me.Lorinth.LRM.Objects;
 import org.bukkit.configuration.file.FileConfiguration;
 
 /**
- * Created by lorinthio on 1/28/2018.
+ * Contains name data at a given level with a name/format and option to override global settings
+ *
+ * These will be overriden by region settings
  */
 public class NameData {
     private int Level;

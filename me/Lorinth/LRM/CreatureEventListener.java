@@ -19,7 +19,7 @@ import org.bukkit.event.entity.EntityTameEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 
 /**
- * Created by lorinthio on 1/24/2018.
+ * Controls creature data and defaults
  */
 public class CreatureEventListener implements Listener {
 

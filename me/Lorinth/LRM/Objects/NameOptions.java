@@ -3,7 +3,7 @@ package me.Lorinth.LRM.Objects;
 import org.bukkit.configuration.file.FileConfiguration;
 
 /**
- * Created by lorinthio on 1/25/2018.
+ * Global name settings used for entities
  */
 public class NameOptions extends DirtyObject{
 

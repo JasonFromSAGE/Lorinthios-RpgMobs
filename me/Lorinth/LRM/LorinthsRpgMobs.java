@@ -17,7 +17,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 
 /**
- * Created by lorinthio on 1/24/2018.
+ * Main class of LorinthsRpgMobs contains main API Methods
  */
 public class LorinthsRpgMobs extends JavaPlugin{
 
@@ -83,8 +83,8 @@ public class LorinthsRpgMobs extends JavaPlugin{
     //API Methods
     /**
      * Get level of a given creature
-     * @param creature - creature you want to check
-     * @return - level of creature
+     * @param creature creature you want to check
+     * @return level of creature
      */
     public static int GetLevelOfCreature(Creature creature){
         if(creature.hasMetadata("Level"))
@@ -96,8 +96,8 @@ public class LorinthsRpgMobs extends JavaPlugin{
 
     /**
      * Get the level of a specific location
-     * @param location - location to check
-     * @return - level at location
+     * @param location location to check
+     * @return level at location
      */
     public static int GetLevelAtLocation(Location location){
         return dataLoader.calculateLevel(location);
@@ -105,7 +105,7 @@ public class LorinthsRpgMobs extends JavaPlugin{
 
     /**
      * Get the spawn point manager which contains data for all spawn points which you can read/write to
-     * @return
+     * @return SpawnPointManager
      */
     public static SpawnPointManager GetSpawnPointManager(){
         return dataLoader.getSpawnPointManager();
@@ -113,7 +113,7 @@ public class LorinthsRpgMobs extends JavaPlugin{
 
     /**
      * Get the level region manager which contains data for all regions with level settings
-     * @return
+     * @return LevelRegionManager
      */
     public static LevelRegionManager GetLevelRegionManager(){
         return dataLoader.getLevelRegionManager();
@@ -121,7 +121,7 @@ public class LorinthsRpgMobs extends JavaPlugin{
 
     /**
      * Get the creature data manager which contains data for all entities which you can read/write to
-     * @return
+     * @return CreatureDataManager
      */
     public static CreatureDataManager GetCreatureDataManager(){
         return dataLoader.getCreatureDataManager();

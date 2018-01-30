@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Created by lorinthio on 1/27/2018.
+ * Manager of all CreatureData objects in memory. Manipulate most aspects of monster data here
  */
 public class CreatureDataManager {
 

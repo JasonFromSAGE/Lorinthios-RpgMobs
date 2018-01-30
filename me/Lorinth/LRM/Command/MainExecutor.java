@@ -10,9 +10,6 @@ import org.bukkit.entity.Player;
 
 import java.util.Arrays;
 
-/**
- * Created by bnra2 on 1/27/2018.
- */
 public class MainExecutor implements CommandExecutor{
 
     private CustomCommandExecutor levelRegionExecutor = new LevelRegionExecutor();

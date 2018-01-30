@@ -3,7 +3,7 @@ package me.Lorinth.LRM.Objects;
 import java.util.Random;
 
 /**
- * Created by lorinthio on 1/24/2018.
+ * Used to do math evaluations of string formulas
  */
 public class Calculator {
     private static Random random = new Random();

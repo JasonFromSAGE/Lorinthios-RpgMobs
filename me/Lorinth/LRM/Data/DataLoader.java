@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 /**
- * Created by lorinthio on 1/24/2018.
+ * This class shouldn't be used outside of the plugin
  */
 public class DataLoader {
 
