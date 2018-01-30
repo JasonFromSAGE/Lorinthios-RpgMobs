@@ -19,15 +19,16 @@ public class CreatureDataManager {
         add("Disabled");
         add("DisabledWorlds");
     }};
-    private HashMap<EntityType, CreatureData> animalData = new HashMap<>();
-    private HashMap<EntityType, CreatureData> monsterData = new HashMap<>();
+    private HashMap<String, CreatureData> animalData = new HashMap<>();
+    private HashMap<String, CreatureData> monsterData = new HashMap<>();
 
     public CreatureData getData(EntityType type){
         HashMap<EntityType, CreatureData> creatureData = null;
-        if(monsterData.containsKey(type))
-            return monsterData.get(type);
-        else if(animalData.containsKey(type))
-            return animalData.get(type);
+        String typeString = type.toString();
+        if(monsterData.containsKey(typeString))
+            return monsterData.get(typeString);
+        else if(animalData.containsKey(typeString))
+            return animalData.get(typeString);
         else
             return null;
 
@@ -41,9 +42,9 @@ public class CreatureDataManager {
         else{
             CreatureData newData = new CreatureData(creature);
             if(creature instanceof Monster)
-                monsterData.put(creature.getType(), newData);
+                monsterData.put(creature.getType().toString(), newData);
             else
-                animalData.put(creature.getType(), newData);
+                animalData.put(creature.getType().toString(), newData);
             return newData;
         }
     }
@@ -78,14 +79,14 @@ public class CreatureDataManager {
         try{
             EntityType type = EntityType.valueOf(key);
             if(type == null) {
-                OutputHandler.PrintError("Failed to find entity type for, " + OutputHandler.HIGHLIGHT + key);
+                OutputHandler.PrintError("Entity type, " + OutputHandler.HIGHLIGHT + key + OutputHandler.ERROR + ", not valid. Remove from config to remove this error");
                 return;
             }
 
             if(prefix.contains("Animal"))
-                animalData.put(type, new CreatureData(type, prefix, config));
+                animalData.put(type.toString(), new CreatureData(type, prefix, config));
             else
-                monsterData.put(type, new CreatureData(type, prefix, config));
+                monsterData.put(type.toString(), new CreatureData(type, prefix, config));
         }
         catch(Exception error){
             OutputHandler.PrintError("Failed to load entity : " + OutputHandler.HIGHLIGHT + key);
