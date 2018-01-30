@@ -28,28 +28,26 @@ public class InfoSpawnPointExecutor extends CustomCommandExecutor{
 
     @Override
     public void safeExecute(Player player, String[] args) {
-        try {
-            Location loc = player.getLocation();
-            String name = args[0];
+        Location loc = player.getLocation();
+        String name = args[0];
 
-            SpawnPoint spawnPoint = LorinthsRpgMobs.GetSpawnPointManager().getSpawnPointInWorldByName(loc.getWorld(), name);
-            ChatColor disabledColor = (spawnPoint.isDisabled() ? ChatColor.RED : ChatColor.GREEN);
-            OutputHandler.PrintWhiteSpace(player, 2);
-            OutputHandler.PrintCommandInfo(player, "[LorinthsRpgMobs] : " + OutputHandler.HIGHLIGHT + "Spawn Point Info");
-            OutputHandler.PrintCommandInfo(player, "Name : " + OutputHandler.HIGHLIGHT + spawnPoint.getName());
-            OutputHandler.PrintCommandInfo(player, "Disabled : " + disabledColor + spawnPoint.isDisabled());
-            OutputHandler.PrintCommandInfo(player, "Location : " + OutputHandler.HIGHLIGHT + spawnPoint.getCenter().getWorld().getName() + " (" + spawnPoint.getCenter().getBlockX() + "," + spawnPoint.getCenter().getBlockZ() +")");
-            OutputHandler.PrintCommandInfo(player, "Start Level : " + OutputHandler.HIGHLIGHT + spawnPoint.getStartingLevel());
-            OutputHandler.PrintCommandInfo(player, "Max Level : " + OutputHandler.HIGHLIGHT + (spawnPoint.getMaxLevel() == Integer.MAX_VALUE ? "N/A" : spawnPoint.getMaxLevel()));
-            OutputHandler.PrintCommandInfo(player, "Distance : " + OutputHandler.HIGHLIGHT + spawnPoint.getLevelDistance());
-            OutputHandler.PrintCommandInfo(player, "Center Buffer : " + OutputHandler.HIGHLIGHT + spawnPoint.getCenterBuffer());
+        SpawnPoint spawnPoint = LorinthsRpgMobs.GetSpawnPointManager().getSpawnPointInWorldByName(loc.getWorld(), name);
+
+        if(spawnPoint == null) {
+            OutputHandler.PrintError(player, "Spawn point not found with the name, " + OutputHandler.HIGHLIGHT + name);
+            return;
         }
-        catch(Exception exception){
-            OutputHandler.PrintRawError("Error occurred...");
-            exception.printStackTrace();
-            OutputHandler.PrintRawError(player, "An error occurred");
-            sendHelpMessage(player);
-        }
+
+        ChatColor disabledColor = (spawnPoint.isDisabled() ? ChatColor.RED : ChatColor.GREEN);
+        OutputHandler.PrintWhiteSpace(player, 2);
+        OutputHandler.PrintCommandInfo(player, "[LorinthsRpgMobs] : " + OutputHandler.HIGHLIGHT + "Spawn Point Info");
+        OutputHandler.PrintCommandInfo(player, "Name : " + OutputHandler.HIGHLIGHT + spawnPoint.getName());
+        OutputHandler.PrintCommandInfo(player, "Disabled : " + disabledColor + spawnPoint.isDisabled());
+        OutputHandler.PrintCommandInfo(player, "Location : " + OutputHandler.HIGHLIGHT + spawnPoint.getCenter().getWorld().getName() + " (" + spawnPoint.getCenter().getBlockX() + "," + spawnPoint.getCenter().getBlockZ() +")");
+        OutputHandler.PrintCommandInfo(player, "Start Level : " + OutputHandler.HIGHLIGHT + spawnPoint.getStartingLevel());
+        OutputHandler.PrintCommandInfo(player, "Max Level : " + OutputHandler.HIGHLIGHT + (spawnPoint.getMaxLevel() == Integer.MAX_VALUE ? "N/A" : spawnPoint.getMaxLevel()));
+        OutputHandler.PrintCommandInfo(player, "Distance : " + OutputHandler.HIGHLIGHT + spawnPoint.getLevelDistance());
+        OutputHandler.PrintCommandInfo(player, "Center Buffer : " + OutputHandler.HIGHLIGHT + spawnPoint.getCenterBuffer());
     }
 
     @Override

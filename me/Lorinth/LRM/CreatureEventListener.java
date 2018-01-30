@@ -2,6 +2,8 @@ package me.Lorinth.LRM;
 
 import me.Lorinth.LRM.Data.DataLoader;
 import me.Lorinth.LRM.Objects.CreatureData;
+import me.Lorinth.LRM.Objects.LevelRegion;
+import me.Lorinth.LRM.Objects.NameData;
 import me.Lorinth.LRM.Objects.NameOptions;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -45,9 +47,11 @@ public class CreatureEventListener implements Listener {
             entity.setHealth((double) health);
 
             //Set Name
+            LevelRegion region = LorinthsRpgMobs.GetLevelRegionManager().getHighestPriorityLeveledRegionAtLocation(entity.getLocation());
+            NameData regionNameData = region != null ? region.getEntityName(entity.getType()) : null;
             NameOptions nameOptions = dataLoader.getNameOptions();
             entity.setCustomNameVisible(nameOptions.getTagsAlwaysOn());
-            String name = data.getNameAtLevel(nameOptions.getNameFormat(), level);
+            String name = data.getNameAtLevel(nameOptions.getNameFormat(), regionNameData, level);
             if(name != null)
                 entity.setCustomName(name);
 

@@ -32,39 +32,33 @@ public class SetSpawnPointExecutor extends CustomCommandExecutor{
 
     @Override
     public void safeExecute(Player player, String[] args) {
-        try{
-            Location loc = player.getLocation();
-            String name = args[0];
-            int distance = Integer.parseInt(args[1]);
-            int startLevel = Integer.parseInt(args[2]);
+        Location loc = player.getLocation();
+        String name = args[0];
+        int distance = Integer.parseInt(args[1]);
+        int startLevel = Integer.parseInt(args[2]);
 
-            SpawnPoint spawnPoint = LorinthsRpgMobs.GetSpawnPointManager().getSpawnPointInWorldByName(loc.getWorld(), name);
-            if(spawnPoint == null){
-                LorinthsRpgMobs.GetSpawnPointManager().addSpawnPointInWorld(player.getWorld(), new SpawnPoint(player.getLocation(), name, startLevel, distance));
-                OutputHandler.PrintRawInfo(player, "Created spawn point with name, " + OutputHandler.HIGHLIGHT + name);
-            }
-            else{
-                spawnPoint.setCenter(loc);
-                spawnPoint.setLevelDistance(distance);
-                spawnPoint.setStartingLevel(startLevel);
-
-                if(args.length > 3){
-                    int maxLevel = Integer.parseInt(args[3]);
-                    spawnPoint.setMaxLevel(maxLevel);
-
-                    if(args.length > 4){
-                        int centerBuffer = Integer.parseInt(args[4]);
-                        spawnPoint.setCenterBuffer(centerBuffer);
-                    }
-                }
-                OutputHandler.PrintRawInfo(player, "Updated spawn point with name, " + OutputHandler.HIGHLIGHT + name);
-            }
+        SpawnPoint spawnPoint = LorinthsRpgMobs.GetSpawnPointManager().getSpawnPointInWorldByName(loc.getWorld(), name);
+        //Create
+        if(spawnPoint == null){
+            LorinthsRpgMobs.GetSpawnPointManager().addSpawnPointInWorld(player.getWorld(), new SpawnPoint(player.getLocation(), name, startLevel, distance));
+            OutputHandler.PrintRawInfo(player, "Created spawn point with name, " + OutputHandler.HIGHLIGHT + name);
         }
-        catch(Exception exception){
-            OutputHandler.PrintRawError("Error occurred...");
-            exception.printStackTrace();
-            OutputHandler.PrintRawError(player, "An error occurred");
-            sendHelpMessage(player);
+        //Update
+        else{
+            spawnPoint.setCenter(loc);
+            spawnPoint.setLevelDistance(distance);
+            spawnPoint.setStartingLevel(startLevel);
+
+            if(args.length > 3){
+                int maxLevel = Integer.parseInt(args[3]);
+                spawnPoint.setMaxLevel(maxLevel);
+
+                if(args.length > 4){
+                    int centerBuffer = Integer.parseInt(args[4]);
+                    spawnPoint.setCenterBuffer(centerBuffer);
+                }
+            }
+            OutputHandler.PrintRawInfo(player, "Updated spawn point with name, " + OutputHandler.HIGHLIGHT + name);
         }
     }
 

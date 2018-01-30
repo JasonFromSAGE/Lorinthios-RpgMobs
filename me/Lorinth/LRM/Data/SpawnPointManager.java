@@ -65,7 +65,11 @@ public class SpawnPointManager {
     }
 
     public ArrayList<SpawnPoint> getAllSpawnPointsInWorld(World world){
-        return allSpawnPoints.get(world.getName());
+        ArrayList<SpawnPoint> spawnPointsInWorld = new ArrayList<SpawnPoint>();
+        if(allSpawnPoints.containsKey(world.getName()))
+            spawnPointsInWorld = allSpawnPoints.get(world.getName());
+
+        return spawnPointsInWorld;
     }
 
     //Loading & Saving

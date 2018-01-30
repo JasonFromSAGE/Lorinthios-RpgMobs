@@ -274,16 +274,19 @@ public class CreatureData extends DirtyObject{
     /**
      * Gets the name for a creature at a given level
      * @param level - level to check
+     * @param regionNameData - regionNameData if applicable
      * @return - name that will be applied
      */
-    public String getNameAtLevel(String format, int level){
-        NameData highest = null;
+    public String getNameAtLevel(String format, NameData regionNameData, int level){
+        if(regionNameData != null){
+            return regionNameData.getName(level, format);
+        }
 
+        NameData highest = null;
         for(NameData data : nameData){
             if((highest == null && data.getLevel() <= level ) || (highest != null && data.getLevel() <= level && data.getLevel() >= highest.getLevel())){
                 highest = data;
             }
-
         }
 
         if(highest != null)

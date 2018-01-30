@@ -19,7 +19,6 @@ public class SpawnPoint extends DirtyObject{
     private int LevelDistance = 50;
     private int CenterBuffer = 50;
     private int MaxLevel = 1000;
-    private boolean hasMaxLevel = false;
     private boolean isDisabled = false;
 
     /**
@@ -72,7 +71,6 @@ public class SpawnPoint extends DirtyObject{
         prefix += Name;
         if(this.isDeleted()){
             config.set(prefix, null);
-            return;
         }
         else{
             config.set(prefix + ".Disabled", isDisabled);
@@ -194,9 +192,7 @@ public class SpawnPoint extends DirtyObject{
      * @return Max Level
      */
     public int getMaxLevel(){
-        if(hasMaxLevel)
-            return MaxLevel;
-        return Integer.MAX_VALUE;
+        return MaxLevel;
     }
 
     /**

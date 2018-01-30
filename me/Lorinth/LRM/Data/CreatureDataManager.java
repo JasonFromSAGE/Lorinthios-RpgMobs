@@ -21,11 +21,6 @@ public class CreatureDataManager {
     }};
     private HashMap<EntityType, CreatureData> animalData = new HashMap<>();
     private HashMap<EntityType, CreatureData> monsterData = new HashMap<>();
-    private DataLoader dataLoader;
-
-    public CreatureDataManager(DataLoader loader){
-        dataLoader = loader;
-    }
 
     public CreatureData getData(EntityType type){
         HashMap<EntityType, CreatureData> creatureData = null;

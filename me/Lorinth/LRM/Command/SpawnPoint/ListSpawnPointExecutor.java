@@ -24,22 +24,14 @@ public class ListSpawnPointExecutor extends CustomCommandExecutor{
 
     @Override
     public void safeExecute(Player player, String[] args) {
-        try{
-            ArrayList<SpawnPoint> spawnPoints = LorinthsRpgMobs.GetSpawnPointManager().getAllSpawnPointsInWorld(player.getWorld());
-            if(spawnPoints == null){
-                OutputHandler.PrintCommandInfo(player, "No spawn points in current world");
-                return;
-            }
-            OutputHandler.PrintCommandInfo(player, "[LorinthRpgMobs] : " + OutputHandler.HIGHLIGHT + "Spawn Points in world, '" + player.getWorld().getName() + "'");
-            for(SpawnPoint spawnPoint : spawnPoints){
-                OutputHandler.PrintCommandInfo(player, CommandConstants.DescriptionDelimeter + spawnPoint.getName());
-            }
+        ArrayList<SpawnPoint> spawnPoints = LorinthsRpgMobs.GetSpawnPointManager().getAllSpawnPointsInWorld(player.getWorld());
+        if(spawnPoints == null || spawnPoints.size() == 0){
+            OutputHandler.PrintCommandInfo(player, "No spawn points in current world");
+            return;
         }
-        catch(Exception exception){
-            OutputHandler.PrintRawError("Error occurred...");
-            exception.printStackTrace();
-            OutputHandler.PrintRawError(player, "An error occurred");
-            sendHelpMessage(player);
+        OutputHandler.PrintCommandInfo(player, "[LorinthRpgMobs] : " + OutputHandler.HIGHLIGHT + "Spawn Points in world, '" + player.getWorld().getName() + "'");
+        for(SpawnPoint spawnPoint : spawnPoints){
+            OutputHandler.PrintCommandInfo(player, CommandConstants.DescriptionDelimeter + spawnPoint.getName());
         }
     }
 

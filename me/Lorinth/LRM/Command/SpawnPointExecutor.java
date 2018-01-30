@@ -27,6 +27,11 @@ public class SpawnPointExecutor extends CustomCommandExecutor {
 
     @Override
     public void safeExecute(Player player, String[] args){
+        if(args.length == 0){
+            sendHelpMessage(player);
+            return;
+        }
+
         String commandLabel = args[0];
         args = Arrays.copyOfRange(args, 1, args.length);
         if(commandLabel.equalsIgnoreCase(infoSpawnPointExecutor.getCommandName()))

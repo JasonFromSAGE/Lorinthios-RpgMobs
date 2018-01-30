@@ -69,6 +69,9 @@ public abstract class DirtyObject {
      */
     protected void setDirty(){
         isChanged = true;
+
+        if(isDeleted)
+            isDeleted = false;
     }
 
     /**

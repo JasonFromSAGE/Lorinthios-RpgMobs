@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import me.Lorinth.LRM.Objects.OutputHandler;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -184,44 +185,40 @@ public class Updater {
      * Initialize the updater.
      *
      * @param plugin   The plugin that is checking for an update.
-     * @param id       The dev.bukkit.org id of the project.
      * @param file     The file that the plugin is running from, get this by doing this.getFile() from within your main class.
      * @param type     Specify the type of update this will be. See {@link UpdateType}
-     * @param announce True if the program should announce the progress of new updates in console.
      */
-    public Updater(Plugin plugin, int id, File file, UpdateType type, boolean announce) {
-        this(plugin, id, file, type, null, announce);
+    public Updater(Plugin plugin, File file, UpdateType type) {
+        this(plugin, file, type, null, true);
     }
 
     /**
      * Initialize the updater with the provided callback.
      *
      * @param plugin   The plugin that is checking for an update.
-     * @param id       The dev.bukkit.org id of the project.
      * @param file     The file that the plugin is running from, get this by doing this.getFile() from within your main class.
      * @param type     Specify the type of update this will be. See {@link UpdateType}
      * @param callback The callback instance to notify when the Updater has finished
      */
-    public Updater(Plugin plugin, int id, File file, UpdateType type, UpdateCallback callback) {
-        this(plugin, id, file, type, callback, false);
+    public Updater(Plugin plugin, File file, UpdateType type, UpdateCallback callback) {
+        this(plugin, file, type, callback, false);
     }
 
     /**
      * Initialize the updater with the provided callback.
      *
      * @param plugin   The plugin that is checking for an update.
-     * @param id       The dev.bukkit.org id of the project.
      * @param file     The file that the plugin is running from, get this by doing this.getFile() from within your main class.
      * @param type     Specify the type of update this will be. See {@link UpdateType}
      * @param callback The callback instance to notify when the Updater has finished
      * @param announce True if the program should announce the progress of new updates in console.
      */
-    public Updater(Plugin plugin, int id, File file, UpdateType type, UpdateCallback callback, boolean announce) {
+    public Updater(Plugin plugin, File file, UpdateType type, UpdateCallback callback, boolean announce) {
         this.plugin = plugin;
         this.type = type;
         this.announce = announce;
         this.file = file;
-        this.id = id;
+        this.id = 73797;
         this.updateFolder = this.plugin.getServer().getUpdateFolderFile();
         this.callback = callback;
 
@@ -633,7 +630,22 @@ public class Updater {
      * @return true if Updater should consider the remote version an update, false if not.
      */
     public boolean shouldUpdate(String localVersion, String remoteVersion) {
-        return !localVersion.equalsIgnoreCase(remoteVersion);
+        return !localVersion.equalsIgnoreCase(remoteVersion) && remoteIsNewer(localVersion, remoteVersion);
+    }
+
+    private boolean remoteIsNewer(String localVersion, String remoteVersion){
+        String[] local = localVersion.split("\\.");
+        String[] remote = remoteVersion.split("\\.");
+
+        if(local.length == remote.length){
+            for(int i = 0; i < local.length; i++){
+                if(Integer.parseInt(local[i]) < Integer.parseInt(remote[i]))
+                    return true;
+                if(Integer.parseInt(local[i]) > Integer.parseInt(remote[i]))
+                    return false;
+            }
+        }
+        return false;
     }
 
     /**

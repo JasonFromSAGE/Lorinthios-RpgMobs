@@ -4,6 +4,8 @@ import me.Lorinth.LRM.Command.CommandConstants;
 import me.Lorinth.LRM.Command.LevelRegionExecutor;
 import me.Lorinth.LRM.Command.Objects.CustomCommandArgument;
 import me.Lorinth.LRM.Command.Objects.CustomCommandExecutor;
+import me.Lorinth.LRM.LorinthsRpgMobs;
+import me.Lorinth.LRM.Objects.LevelRegion;
 import me.Lorinth.LRM.Objects.OutputHandler;
 import org.bukkit.entity.Player;
 
@@ -26,7 +28,16 @@ public class RemoveLevelRegionExecutor extends CustomCommandExecutor{
 
     @Override
     public void safeExecute(Player player, String[] args) {
+        String name = args[0];
 
+        LevelRegion region = LorinthsRpgMobs.GetLevelRegionManager().getLevelRegionByName(player.getWorld(), name);
+        if(region == null){
+            OutputHandler.PrintError(player, "Level Region not found with the name, " + OutputHandler.HIGHLIGHT + name);
+            return;
+        }
+
+        region.setDeleted();
+        OutputHandler.PrintRawError(player, "Level Region, " + OutputHandler.HIGHLIGHT + region.getName() + OutputHandler.ERROR + ", has been removed");
     }
 
     @Override

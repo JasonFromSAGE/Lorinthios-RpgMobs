@@ -28,20 +28,17 @@ public class RemoveSpawnPointExecutor extends CustomCommandExecutor {
 
     @Override
     public void safeExecute(Player player, String[] args) {
-        try {
-            Location loc = player.getLocation();
-            String name = args[0];
+        Location loc = player.getLocation();
+        String name = args[0];
 
-            SpawnPoint spawnPoint = LorinthsRpgMobs.GetSpawnPointManager().getSpawnPointInWorldByName(loc.getWorld(), name);
-            OutputHandler.PrintRawError(player, "Spawn point, " + OutputHandler.HIGHLIGHT + spawnPoint.getName() + OutputHandler.ERROR + ", has been removed");
-            spawnPoint.setDeleted();
+        SpawnPoint spawnPoint = LorinthsRpgMobs.GetSpawnPointManager().getSpawnPointInWorldByName(loc.getWorld(), name);
+        if(spawnPoint == null) {
+            OutputHandler.PrintError(player, "Spawn point not found with the name, " + OutputHandler.HIGHLIGHT + name);
+            return;
         }
-        catch(Exception exception){
-            OutputHandler.PrintRawError("Error occurred...");
-            exception.printStackTrace();
-            OutputHandler.PrintRawError(player, "An error occurred");
-            sendHelpMessage(player);
-        }
+
+        spawnPoint.setDeleted();
+        OutputHandler.PrintRawError(player, "Spawn point, " + OutputHandler.HIGHLIGHT + spawnPoint.getName() + OutputHandler.ERROR + ", has been removed");
     }
 
     @Override

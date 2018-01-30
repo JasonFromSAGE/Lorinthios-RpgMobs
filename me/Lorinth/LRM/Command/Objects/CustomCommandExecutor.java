@@ -32,7 +32,7 @@ public abstract class CustomCommandExecutor {
 
     public String getCommandName(){
         return CommandName;
-    };
+    }
 
     public String getCommandDescription(){
         return CommandDescription;
@@ -62,12 +62,24 @@ public abstract class CustomCommandExecutor {
         return getCommandName() + userFriendlyArgs + OutputHandler.INFO + CommandConstants.DescriptionDelimeter + getCommandDescription();
     }
 
+    protected void handleError(Exception exception, Player player){
+        OutputHandler.PrintRawError("Error occurred...");
+        exception.printStackTrace();
+        OutputHandler.PrintRawError(player, "An error occurred");
+        sendHelpMessage(player);
+    }
+
     public void execute(Player player, String[] args){
-        if(args == null || args.length < getNumberOfRequiredArguments()){
-            sendHelpMessage(player);
-            return;
+        try{
+            if(args == null || args.length < getNumberOfRequiredArguments()){
+                sendHelpMessage(player);
+                return;
+            }
+            safeExecute(player, args);
         }
-        safeExecute(player, args);
+        catch(Exception exception){
+            handleError(exception, player);
+        }
     }
 
     protected void sendCommandArgumentDetails(Player player){

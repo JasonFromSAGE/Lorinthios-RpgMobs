@@ -4,6 +4,7 @@ import me.Lorinth.LRM.Command.CommandConstants;
 import me.Lorinth.LRM.Command.MainExecutor;
 import me.Lorinth.LRM.Data.CreatureDataManager;
 import me.Lorinth.LRM.Data.DataLoader;
+import me.Lorinth.LRM.Data.LevelRegionManager;
 import me.Lorinth.LRM.Data.SpawnPointManager;
 import me.Lorinth.LRM.Objects.CreatureData;
 import me.Lorinth.LRM.Objects.OutputHandler;
@@ -65,9 +66,9 @@ public class LorinthsRpgMobs extends JavaPlugin{
     private void checkAutoUpdates(){
         if(getConfig().getKeys(false).contains("AllowAutoUpdates")){
             if(getConfig().getBoolean("AllowAutoUpdates"))
-                updater = new Updater(this, 73797, getFile(), Updater.UpdateType.DEFAULT, true);
+                updater = new Updater(this, getFile(), Updater.UpdateType.DEFAULT);
             else
-                updater = new Updater(this, 73797, getFile(), Updater.UpdateType.NO_DOWNLOAD, true);
+                updater = new Updater(this, getFile(), Updater.UpdateType.NO_DOWNLOAD);
         }
         else{
             getConfig().set("AllowAutoUpdates", false);
@@ -76,7 +77,7 @@ public class LorinthsRpgMobs extends JavaPlugin{
     }
 
     public static Updater ForceUpdate(Updater.UpdateCallback callback){
-        return new Updater(instance, 73797, instance.getFile(), Updater.UpdateType.DEFAULT, callback);
+        return new Updater(instance, instance.getFile(), Updater.UpdateType.DEFAULT, callback);
     }
 
     //API Methods
@@ -108,6 +109,14 @@ public class LorinthsRpgMobs extends JavaPlugin{
      */
     public static SpawnPointManager GetSpawnPointManager(){
         return dataLoader.getSpawnPointManager();
+    }
+
+    /**
+     * Get the level region manager which contains data for all regions with level settings
+     * @return
+     */
+    public static LevelRegionManager GetLevelRegionManager(){
+        return dataLoader.getLevelRegionManager();
     }
 
     /**

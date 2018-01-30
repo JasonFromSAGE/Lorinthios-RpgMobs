@@ -16,8 +16,8 @@ public class DataLoader {
     private NameOptions nameOptions;
     protected DistanceAlgorithm distanceAlgorithm = DistanceAlgorithm.Optimized;
 
-    private CreatureDataManager creatureDataManager = new CreatureDataManager(this);
-    private LevelRegionManager levelRegionManager = new LevelRegionManager(this);
+    private CreatureDataManager creatureDataManager = new CreatureDataManager();
+    private LevelRegionManager levelRegionManager = new LevelRegionManager();
     private SpawnPointManager spawnPointManager = new SpawnPointManager(this);
 
     private HashMap<String, ArrayList<LevelRegion>> allLevelRegions = new HashMap<>(); // String: World Name, List<LevelRegion> list of regions
@@ -45,7 +45,7 @@ public class DataLoader {
     }
 
     public boolean saveDirtyObjects(FileConfiguration config){
-        return spawnPointManager.saveSpawnPoints(config) || saveLevelRegions(config) || creatureDataManager.saveCreatureData(config);
+        return spawnPointManager.saveSpawnPoints(config) || levelRegionManager.saveData(config) || creatureDataManager.saveCreatureData(config);
     }
 
     public SpawnPointManager getSpawnPointManager(){
@@ -54,6 +54,10 @@ public class DataLoader {
 
     public CreatureDataManager getCreatureDataManager(){
         return creatureDataManager;
+    }
+
+    public LevelRegionManager getLevelRegionManager(){
+        return levelRegionManager;
     }
 
     private void load(FileConfiguration config){
@@ -77,17 +81,6 @@ public class DataLoader {
             OutputHandler.PrintError("Distance Algorithm : " + OutputHandler.HIGHLIGHT + algo + OutputHandler.ERROR + " is not a valid Algorithm " + OutputHandler.HIGHLIGHT + "(Accurate/Optimized)");
             distanceAlgorithm = DistanceAlgorithm.Optimized;
         }
-    }
-
-    private boolean saveLevelRegions(FileConfiguration config){
-        boolean changed = false;
-        for(String key : allLevelRegions.keySet()){
-            for(LevelRegion region : allLevelRegions.get(key)){
-                if(region.save(config, "LevelRegions." + key + "."))
-                    changed = true;
-            }
-        }
-        return changed;
     }
 
 }
