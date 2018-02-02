@@ -49,7 +49,7 @@ public class SpawnPointManager {
     }
 
     public SpawnPoint getSpawnPointInWorldByName(World world, String name){
-        for(SpawnPoint spawn : allSpawnPoints.get(world.getName())){
+        for(SpawnPoint spawn : getAllSpawnPointsInWorld(world)){
             if(spawn.getName().equalsIgnoreCase(name))
                 return spawn;
         }
