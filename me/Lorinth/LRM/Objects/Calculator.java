@@ -14,7 +14,7 @@ public class Calculator {
      * @param str - formula to evaluate
      * @return - result
      */
-    protected static double eval(final String str) {
+    public static double eval(final String str) {
         return new Object() {
             int pos = -1, ch;
 

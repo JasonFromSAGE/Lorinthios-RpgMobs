@@ -24,7 +24,7 @@ public class OutputHandler {
      * Should only be used internally in LorinthsRpgMobs as it is used for printing info messages
      * @param message - message to display
      */
-    public static void PrintMessage(String message){
+    public static void PrintInfo(String message){
         console.sendMessage(infoPrefix + message);
     }
 
@@ -36,11 +36,16 @@ public class OutputHandler {
         console.sendMessage(errorPrefix + message);
     }
 
+    public static void PrintException(String message, Exception exception){
+        PrintError(message);
+        exception.printStackTrace();
+    }
+
     public static void PrintRawInfo(String message){ console.sendMessage(INFO + message); }
 
     public static void PrintRawError(String message){ console.sendMessage(ERROR + message); }
 
-    public static void PrintMessage(Player player, String message){
+    public static void PrintInfo(Player player, String message){
         player.sendMessage(infoPrefix + message);
     }
 

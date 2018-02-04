@@ -1,11 +1,13 @@
 package me.Lorinth.LRM.Data;
 
 import me.Lorinth.LRM.Objects.CreatureData;
+import me.Lorinth.LRM.Objects.DataManager;
 import me.Lorinth.LRM.Objects.OutputHandler;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Monster;
+import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +15,7 @@ import java.util.HashMap;
 /**
  * Manager of all CreatureData objects in memory. Manipulate most aspects of monster data here
  */
-public class CreatureDataManager {
+public class CreatureDataManager implements DataManager {
 
     private ArrayList<String> ignoredKeys = new ArrayList<String>(){{
         add("Disabled");
@@ -49,7 +51,7 @@ public class CreatureDataManager {
         }
     }
 
-    protected boolean saveCreatureData(FileConfiguration config){
+    public boolean saveData(FileConfiguration config){
         boolean changed = false;
         for(CreatureData data : animalData.values()){
             if(data.save(config, "Entity.Animal."))
@@ -62,10 +64,9 @@ public class CreatureDataManager {
         return changed;
     }
 
-    protected void loadCreatureData(FileConfiguration config){
+    public void loadData(FileConfiguration config, Plugin plugin){
         loadCreatureSection(config, "Entity.Animal.");
         loadCreatureSection(config, "Entity.Monster.");
-
     }
 
     private void loadCreatureSection(FileConfiguration config, String prefix) {

@@ -12,7 +12,6 @@ public class LevelRegion extends DirtyObject{
     private String Name;
     private int Level;
     private HashMap<String, NameData> EntityNames = new HashMap<>();
-    private boolean isDisabled = false;
 
     @Override
     protected void saveData(FileConfiguration config, String prefix){
@@ -23,7 +22,7 @@ public class LevelRegion extends DirtyObject{
         }
 
         config.set(prefix + ".Level", Level);
-        config.set(prefix + ".Disabled", isDisabled);
+        config.set(prefix + ".Disabled", isDisabled());
         for(String key : EntityNames.keySet()){
             config.set(prefix + ".Names." + key, EntityNames.get(key));
         }
@@ -33,7 +32,7 @@ public class LevelRegion extends DirtyObject{
         Name = name;
         prefix += "." + name + ".";
         Level = config.getInt(prefix + "Level");
-        isDisabled = config.getBoolean(prefix + "Disabled");
+        this.setDisabled(config.getBoolean(prefix + "Disabled"));
         if(config.contains(prefix + "Names")){
             for(String key : config.getConfigurationSection(prefix + "Names").getKeys(false)){
                 EntityNames.put(key, new NameData(Level, config.getString(prefix + "Names." + key ).replace("&", "§"), true));
@@ -67,7 +66,8 @@ public class LevelRegion extends DirtyObject{
         return EntityNames.getOrDefault(type.toString(), null);
     }
 
+    @Override
     public boolean isDisabled(){
-        return isDisabled || isDeleted();
+        return super.isDisabled() || isDeleted();
     }
 }

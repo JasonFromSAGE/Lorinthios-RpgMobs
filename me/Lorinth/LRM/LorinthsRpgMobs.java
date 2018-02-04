@@ -6,12 +6,11 @@ import me.Lorinth.LRM.Data.CreatureDataManager;
 import me.Lorinth.LRM.Data.DataLoader;
 import me.Lorinth.LRM.Data.LevelRegionManager;
 import me.Lorinth.LRM.Data.SpawnPointManager;
-import me.Lorinth.LRM.Objects.CreatureData;
+import me.Lorinth.LRM.Listener.CreatureEventListener;
 import me.Lorinth.LRM.Objects.OutputHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Creature;
-import org.bukkit.entity.EntityType;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -27,28 +26,29 @@ public class LorinthsRpgMobs extends JavaPlugin{
 
     @Override
     public void onEnable(){
-        OutputHandler.PrintMessage("Enabling v" + getDescription().getVersion() + "...");
+        OutputHandler.PrintInfo("Enabling v" + getDescription().getVersion() + "...");
         loadConfiguration();
         registerCommands();
         checkAutoUpdates();
 
-        dataLoader = new DataLoader(getConfig());
+        dataLoader = new DataLoader();
+        dataLoader.loadData(getConfig(), this);
         Bukkit.getPluginManager().registerEvents(new CreatureEventListener(dataLoader), this);
         Bukkit.getPluginManager().registerEvents(new UpdaterEventListener(updater), this);
-        OutputHandler.PrintMessage("Finished!");
+        OutputHandler.PrintInfo("Finished!");
 
         instance = this;
     }
 
     @Override
     public void onDisable(){
-        OutputHandler.PrintMessage("Disabling...");
+        OutputHandler.PrintInfo("Disabling...");
 
         if(dataLoader != null){
             //Load possible changes in the file from user
             reloadConfig();
             //Apply the changes we gained during the session
-            dataLoader.saveDirtyObjects(getConfig());
+            dataLoader.saveData(getConfig());
             saveConfig();
         }
     }

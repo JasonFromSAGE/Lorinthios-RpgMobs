@@ -5,7 +5,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 /**
  * Used for dirty tracking/saving within LorinthsRpgMobs
  */
-public abstract class DirtyObject {
+public abstract class DirtyObject extends Disableable{
 
     //Object to check whether this item is new, changed, or marked for deletion
     private boolean isChanged = false;

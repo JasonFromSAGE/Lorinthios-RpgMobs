@@ -19,7 +19,6 @@ public class SpawnPoint extends DirtyObject{
     private int LevelDistance = 50;
     private int CenterBuffer = 50;
     private int MaxLevel = 1000;
-    private boolean isDisabled = false;
 
     /**
      * Loads a pre-existing spawn point from config
@@ -39,13 +38,13 @@ public class SpawnPoint extends DirtyObject{
             StartingLevel = config.getInt(prefix + ".Level");
             LevelDistance = config.getInt(prefix + ".Distance");
             CenterBuffer = config.getInt(prefix + ".CenterBuffer");
-            isDisabled = config.getBoolean(prefix + ".Disabled");
+            setDisabled(config.getBoolean(prefix + ".Disabled"));
             MaxLevel = config.getInt(prefix + ".MaxLevel");
             if(MaxLevel == -1)
                 MaxLevel = Integer.MAX_VALUE;
         }
         else{
-            isDisabled = true;
+            setDisabled(true);
         }
     }
 
@@ -73,7 +72,7 @@ public class SpawnPoint extends DirtyObject{
             config.set(prefix, null);
         }
         else{
-            config.set(prefix + ".Disabled", isDisabled);
+            config.set(prefix + ".Disabled", isDisabled());
             config.set(prefix + ".Level", StartingLevel);
             config.set(prefix + ".MaxLevel", MaxLevel == Integer.MAX_VALUE ? -1 : MaxLevel);
             config.set(prefix + ".Distance", LevelDistance);
@@ -87,8 +86,9 @@ public class SpawnPoint extends DirtyObject{
      * Checks if this spawn point is disabled, or is marked deleted
      * @return isDisabled
      */
+    @Override
     public boolean isDisabled(){
-        return isDisabled || isDeleted();
+        return super.isDisabled() || isDeleted();
     }
 
     /**

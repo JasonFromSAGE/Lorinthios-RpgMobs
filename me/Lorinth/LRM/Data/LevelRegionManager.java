@@ -4,10 +4,12 @@ import com.sk89q.worldguard.bukkit.WGBukkit;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
 import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import me.Lorinth.LRM.Objects.DataManager;
 import me.Lorinth.LRM.Objects.LevelRegion;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +17,7 @@ import java.util.HashMap;
 /**
  * Manager object of all LevelRegions in memory. Use this class to read/manipulate level regions on the server as well as add/remove them
  */
-public class LevelRegionManager {
+public class LevelRegionManager implements DataManager{
 
     public boolean WorldGuardFound = false;
     private HashMap<String, HashMap<String, LevelRegion>> allLevelRegions = new HashMap<>();
@@ -29,7 +31,7 @@ public class LevelRegionManager {
         }
     }
 
-    protected boolean saveData(FileConfiguration config){
+    public boolean saveData(FileConfiguration config){
         boolean changed = false;
         for(String worldName : allLevelRegions.keySet()){
             for(LevelRegion region : allLevelRegions.get(worldName).values()){
@@ -39,7 +41,7 @@ public class LevelRegionManager {
         return changed;
     }
 
-    protected void loadAllRegions(FileConfiguration config){
+    public void loadData(FileConfiguration config, Plugin plugin){
         if(config.contains("LevelRegions")){
             for(String world : config.getConfigurationSection("LevelRegions").getKeys(false)){
                 allLevelRegions.put(world, new HashMap<>());

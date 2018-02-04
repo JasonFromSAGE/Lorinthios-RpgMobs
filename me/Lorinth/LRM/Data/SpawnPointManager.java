@@ -1,9 +1,11 @@
 package me.Lorinth.LRM.Data;
 
+import me.Lorinth.LRM.Objects.DataManager;
 import me.Lorinth.LRM.Objects.SpawnPoint;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,7 +14,7 @@ import java.util.Set;
 /**
  * Manager object of all Spawn Points in memomry. Get spawn points by location or by world/name
  */
-public class SpawnPointManager {
+public class SpawnPointManager implements DataManager{
 
     private HashMap<String, ArrayList<SpawnPoint>> allSpawnPoints = new HashMap<>(); // String: World Name, List
     private DataLoader dataLoader;
@@ -73,7 +75,7 @@ public class SpawnPointManager {
     }
 
     //Loading & Saving
-    protected void loadSpawnPoints(FileConfiguration config){
+    public void loadData(FileConfiguration config, Plugin plugin){
         Set<String> worldNames = config.getConfigurationSection("SpawnPoints").getKeys(false);
         for(String worldName : worldNames){
             Set<String> spawnPointsInWorld = config.getConfigurationSection("SpawnPoints." + worldName).getKeys(false);
@@ -93,7 +95,7 @@ public class SpawnPointManager {
             allSpawnPoints.get(worldName).add(spawnPoint);
     }
 
-    protected boolean saveSpawnPoints(FileConfiguration config){
+    public boolean saveData(FileConfiguration config){
         boolean changed = false;
         for(String key : allSpawnPoints.keySet()){
             for(SpawnPoint spawnPoint : allSpawnPoints.get(key)){

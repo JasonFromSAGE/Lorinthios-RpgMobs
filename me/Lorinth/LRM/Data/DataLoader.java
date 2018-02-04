@@ -3,6 +3,7 @@ package me.Lorinth.LRM.Data;
 import me.Lorinth.LRM.Objects.*;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,20 +12,18 @@ import java.util.Set;
 /**
  * This class shouldn't be used outside of the plugin
  */
-public class DataLoader {
+public class DataLoader implements DataManager{
 
     private NameOptions nameOptions;
     protected DistanceAlgorithm distanceAlgorithm = DistanceAlgorithm.Optimized;
 
     private CreatureDataManager creatureDataManager = new CreatureDataManager();
+    private HeroesDataManager heroesDataManager = new HeroesDataManager();
     private LevelRegionManager levelRegionManager = new LevelRegionManager();
+    private SkillAPIDataManager skillAPIDataManager = new SkillAPIDataManager();
     private SpawnPointManager spawnPointManager = new SpawnPointManager(this);
 
     private HashMap<String, ArrayList<LevelRegion>> allLevelRegions = new HashMap<>(); // String: World Name, List<LevelRegion> list of regions
-
-    public DataLoader(FileConfiguration config){
-        load(config);
-    }
 
     public int calculateLevel(Location location){
         int strictLevel = levelRegionManager.getHighestPriorityLevelAtLocation(location);
@@ -44,32 +43,42 @@ public class DataLoader {
         return nameOptions;
     }
 
-    public boolean saveDirtyObjects(FileConfiguration config){
-        return spawnPointManager.saveSpawnPoints(config) || levelRegionManager.saveData(config) || creatureDataManager.saveCreatureData(config);
-    }
-
-    public SpawnPointManager getSpawnPointManager(){
-        return spawnPointManager;
-    }
-
     public CreatureDataManager getCreatureDataManager(){
         return creatureDataManager;
+    }
+
+    public HeroesDataManager getHeroesDataManager(){
+        return heroesDataManager;
     }
 
     public LevelRegionManager getLevelRegionManager(){
         return levelRegionManager;
     }
 
-    private void load(FileConfiguration config){
-        loadNameOptions(config);
-        loadDistanceAlgorithm(config);
-        spawnPointManager.loadSpawnPoints(config);
-        creatureDataManager.loadCreatureData(config);
-        levelRegionManager.loadAllRegions(config);
+    public SkillAPIDataManager getSkillAPIDataManager(){ return skillAPIDataManager; }
+
+    public SpawnPointManager getSpawnPointManager(){
+        return spawnPointManager;
     }
 
-    private void loadNameOptions(FileConfiguration config){
-        nameOptions = new NameOptions(config);
+    public boolean saveData(FileConfiguration config){
+        return spawnPointManager.saveData(config) || levelRegionManager.saveData(config) || creatureDataManager.saveData(config) ||
+                heroesDataManager.saveData(config) || skillAPIDataManager.saveData(config);
+    }
+
+    public void loadData(FileConfiguration config, Plugin plugin){
+        loadNameOptions(config, plugin);
+        loadDistanceAlgorithm(config);
+        creatureDataManager.loadData(config, plugin);
+        heroesDataManager.loadData(config, plugin);
+        levelRegionManager.loadData(config, plugin);
+        skillAPIDataManager.loadData(config, plugin);
+        spawnPointManager.loadData(config, plugin);
+    }
+
+    private void loadNameOptions(FileConfiguration config, Plugin plugin){
+        nameOptions = new NameOptions();
+        nameOptions.loadData(config, plugin);
     }
 
     private void loadDistanceAlgorithm(FileConfiguration config){
