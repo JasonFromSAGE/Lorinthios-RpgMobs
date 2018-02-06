@@ -8,7 +8,7 @@ import me.Lorinth.LRM.Data.LevelRegionManager;
 import me.Lorinth.LRM.Data.SpawnPointManager;
 import me.Lorinth.LRM.Listener.CreatureEventListener;
 import me.Lorinth.LRM.Listener.UpdaterEventListener;
-import me.Lorinth.LRM.Objects.OutputHandler;
+import me.Lorinth.LRM.Util.OutputHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Creature;

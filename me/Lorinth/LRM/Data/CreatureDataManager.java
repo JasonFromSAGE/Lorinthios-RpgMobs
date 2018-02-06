@@ -2,7 +2,7 @@ package me.Lorinth.LRM.Data;
 
 import me.Lorinth.LRM.Objects.CreatureData;
 import me.Lorinth.LRM.Objects.DataManager;
-import me.Lorinth.LRM.Objects.OutputHandler;
+import me.Lorinth.LRM.Util.OutputHandler;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.EntityType;

@@ -5,6 +5,8 @@ import com.herocraftonline.heroes.characters.Hero;
 import com.herocraftonline.heroes.characters.classes.HeroClass;
 import me.Lorinth.LRM.Listener.HeroesEventListener;
 import me.Lorinth.LRM.Objects.*;
+import me.Lorinth.LRM.Util.Calculator;
+import me.Lorinth.LRM.Util.OutputHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;

@@ -2,10 +2,8 @@ package me.Lorinth.LRM.Command;
 
 import me.Lorinth.LRM.Command.Objects.CustomCommandExecutor;
 import me.Lorinth.LRM.LorinthsRpgMobs;
-import me.Lorinth.LRM.Objects.OutputHandler;
+import me.Lorinth.LRM.Util.OutputHandler;
 import org.bukkit.entity.Player;
-
-import java.util.Arrays;
 
 public class ReloadExecutor extends CustomCommandExecutor {
 

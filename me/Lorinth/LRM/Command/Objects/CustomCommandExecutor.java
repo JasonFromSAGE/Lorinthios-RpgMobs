@@ -1,7 +1,7 @@
 package me.Lorinth.LRM.Command.Objects;
 
 import me.Lorinth.LRM.Command.CommandConstants;
-import me.Lorinth.LRM.Objects.OutputHandler;
+import me.Lorinth.LRM.Util.OutputHandler;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;

@@ -1,13 +1,13 @@
 package me.Lorinth.LRM.Data;
 
 import me.Lorinth.LRM.Objects.*;
+import me.Lorinth.LRM.Util.OutputHandler;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Set;
 
 /**
  * This class shouldn't be used outside of the plugin

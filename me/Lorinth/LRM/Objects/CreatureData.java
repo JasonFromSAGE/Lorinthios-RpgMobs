@@ -1,6 +1,8 @@
 package me.Lorinth.LRM.Objects;
 
 import me.Lorinth.LRM.LorinthsRpgMobs;
+import me.Lorinth.LRM.Util.Calculator;
+import me.Lorinth.LRM.Util.OutputHandler;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Creature;

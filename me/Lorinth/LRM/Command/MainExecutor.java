@@ -1,8 +1,7 @@
 package me.Lorinth.LRM.Command;
 
 import me.Lorinth.LRM.Command.Objects.CustomCommandExecutor;
-import me.Lorinth.LRM.Objects.OutputHandler;
-import me.Lorinth.LRM.Updater;
+import me.Lorinth.LRM.Util.OutputHandler;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;

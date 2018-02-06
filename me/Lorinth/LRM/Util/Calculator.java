@@ -1,4 +1,4 @@
-package me.Lorinth.LRM.Objects;
+package me.Lorinth.LRM.Util;
 
 import me.Lorinth.LRM.Util.TryParse;
 

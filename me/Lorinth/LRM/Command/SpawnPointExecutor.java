@@ -5,7 +5,7 @@ import me.Lorinth.LRM.Command.SpawnPoint.InfoSpawnPointExecutor;
 import me.Lorinth.LRM.Command.SpawnPoint.ListSpawnPointExecutor;
 import me.Lorinth.LRM.Command.SpawnPoint.RemoveSpawnPointExecutor;
 import me.Lorinth.LRM.Command.SpawnPoint.SetSpawnPointExecutor;
-import me.Lorinth.LRM.Objects.OutputHandler;
+import me.Lorinth.LRM.Util.OutputHandler;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;

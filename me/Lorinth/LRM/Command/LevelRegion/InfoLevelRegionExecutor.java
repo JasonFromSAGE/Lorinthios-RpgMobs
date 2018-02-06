@@ -4,10 +4,9 @@ import me.Lorinth.LRM.Command.CommandConstants;
 import me.Lorinth.LRM.Command.LevelRegionExecutor;
 import me.Lorinth.LRM.Command.Objects.CustomCommandArgument;
 import me.Lorinth.LRM.Command.Objects.CustomCommandExecutor;
-import me.Lorinth.LRM.Data.LevelRegionManager;
 import me.Lorinth.LRM.LorinthsRpgMobs;
 import me.Lorinth.LRM.Objects.LevelRegion;
-import me.Lorinth.LRM.Objects.OutputHandler;
+import me.Lorinth.LRM.Util.OutputHandler;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;

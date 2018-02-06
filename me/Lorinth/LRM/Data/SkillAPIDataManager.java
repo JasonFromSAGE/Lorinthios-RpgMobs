@@ -4,7 +4,7 @@ import me.Lorinth.LRM.Listener.SkillAPIListener;
 import me.Lorinth.LRM.Objects.CreatureDeathData;
 import me.Lorinth.LRM.Objects.DataManager;
 import me.Lorinth.LRM.Objects.Disableable;
-import me.Lorinth.LRM.Objects.OutputHandler;
+import me.Lorinth.LRM.Util.OutputHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;

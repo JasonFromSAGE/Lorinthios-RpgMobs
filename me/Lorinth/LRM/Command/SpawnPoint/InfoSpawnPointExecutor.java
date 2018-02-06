@@ -5,7 +5,7 @@ import me.Lorinth.LRM.Command.Objects.CustomCommandArgument;
 import me.Lorinth.LRM.Command.Objects.CustomCommandExecutor;
 import me.Lorinth.LRM.Command.SpawnPointExecutor;
 import me.Lorinth.LRM.LorinthsRpgMobs;
-import me.Lorinth.LRM.Objects.OutputHandler;
+import me.Lorinth.LRM.Util.OutputHandler;
 import me.Lorinth.LRM.Objects.SpawnPoint;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
