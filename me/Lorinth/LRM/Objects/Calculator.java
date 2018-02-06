@@ -1,5 +1,7 @@
 package me.Lorinth.LRM.Objects;
 
+import me.Lorinth.LRM.Util.TryParse;
+
 import java.util.Random;
 
 /**
@@ -62,6 +64,14 @@ public class Calculator {
                 }
             }
 
+            double parseRandom(double x){
+                if(TryParse.parseDouble(Double.toString(x)))
+                    if((int) x > 0)
+                        return random.nextInt((int) x);
+
+                return 0;
+            }
+
             double parseFactor() {
                 if (eat('+')) return parseFactor(); // unary plus
                 if (eat('-')) return -parseFactor(); // unary minus
@@ -82,9 +92,9 @@ public class Calculator {
                     else if (func.equals("sin")) x = Math.sin(Math.toRadians(x));
                     else if (func.equals("cos")) x = Math.cos(Math.toRadians(x));
                     else if (func.equals("tan")) x = Math.tan(Math.toRadians(x));
-                    else if (func.equals("random")) x = random.nextInt((int) x);
-                    else if (func.equals("rand")) x = random.nextInt((int) x);
-                    else if (func.equals("Rand")) x = random.nextInt((int) x);
+                    else if (func.equals("random")) x = parseRandom(x);
+                    else if (func.equals("rand")) x = parseRandom(x);
+                    else if (func.equals("Rand")) x = parseRandom(x);
                     else throw new RuntimeException("Unknown function: " + func);
                 } else {
                     throw new RuntimeException("Unexpected: " + (char)ch);

@@ -1,27 +1,27 @@
-DistanceAlgorithm: Optimized
-AllowAutoUpdates: false
+DistanceAlgorithm: Diamond # Circle, Diamond, Square (Recommend Diamond for best results, Circle is pretty intensive)
+AllowAutoUpdates: false #If true this will auto download updates on server start and will take effect on next startup
 SkillAPI:
-  Enabled: false
+  Enabled: false # if enabled, will use exp calculations for skillAPI
 Heroes:
-  Enabled: false
+  Enabled: false # if enabled, will use exp calculations for skillAPI
   PartyExperienceFormulas:
-    '2': "1.5 * {exp} / 2"
+    '2': "1.5 * {exp} / 2" # sets the amount of exp a player gets in a party
     '3': "1.8 * {exp} / 3"
     '4': "2.0 * {exp} / 4"
     '5': "2.2 * {exp} / 5"
     '6': "2.4 * {exp} / 6"
 Names:
-  TagsAlwaysOn: false
-  Format: '[Lvl.{level}] {name}'
+  TagsAlwaysOn: false # Do you want creature name tags to always show?
+  Format: '[Lvl.{level}] {name}' # Global name format
 SpawnPoints:
-  world:
-    mainTown:
-      Disabled: false
-      Level: 1
-      Distance: 50
-      MaxLevel: -1
-      CenterBuffer: 50
-      Location:
+  world: # Name of the world spawnpoints are in
+    mainTown: # name of spawnpoint
+      Disabled: false # if the spawnpoint is disabled
+      Level: 1 # starting level
+      Distance: 50 # Interval to level up
+      MaxLevel: -1 # -1 is disabled, but what level do mobs cap at for this spawn point?
+      CenterBuffer: 50 # distance delay for creatures to not level up from the center
+      Location: # The actual center point distance is calculated from
         X: 0
         Z: 0
     otherTown:
@@ -33,272 +33,27 @@ SpawnPoints:
       Location:
         X: 10000
         Z: -5000
+LevelRegions:
+  world: # Name of the world the level regions are in
+    undeadkeep: # name of the level region
+      Level: 40 # level of all mobs in the region
+      Names: # custom names for entities
+        ZOMBIE: '&5Undead Warrior' # All zombies will have their name purple and be called 'Undead Warrior', accepts {level} tag
+      Disabled: false
 Entity:
   Animal:
     Disabled: true
-    MULE:
-      Disabled: true
-      DisabledWorlds: []
-      Formulas:
-        Health: 24 + ({level} / 3) + ({level} / 5) + rand(5)
-        Damage: rand(3) + ({level} / 10)
-        Experience: rand(3) + 1
-      Names:
-        '1':
-          Name: Weak Mule
-        '20':
-          Name: Mule
-        '40':
-          Name: Strong Mule
-    PARROT:
-      Disabled: true
-      DisabledWorlds: []
-      Formulas:
-        Health: 6 + ({level} / 3) + ({level} / 5) + rand(5)
-        Damage: rand(3) + ({level} / 10)
-        Experience: rand(3) + 1
-      Names:
-        '1':
-          Name: Weak Parrot
-        '20':
-          Name: Parrot
-        '40':
-          Name: Strong Parrot
-    MUSHROOM_COW:
-      Disabled: true
-      DisabledWorlds: []
-      Formulas:
-        Health: 10 + ({level} / 3) + ({level} / 5) + rand(5)
-        Damage: rand(3) + ({level} / 10)
-        Experience: rand(3) + 1
-      Names:
-        '1':
-          Name: Weak Mushroom Cow
-        '20':
-          Name: Mushroom Cow
-        '40':
-          Name: Strong Mushroom Cow
-    OCELOT:
-      Disabled: true
-      DisabledWorlds: []
-      Formulas:
-        Health: 10 + ({level} / 3) + ({level} / 5) + rand(5)
-        Damage: rand(3) + ({level} / 10)
-        Experience: rand(3) + 1
-      Names:
-        '1':
-          Name: Weak Ocelot
-        '20':
-          Name: Ocelot
-        '40':
-          Name: Strong Ocelot
-    SHULKER:
-      Disabled: true
-      DisabledWorlds: []
-      Formulas:
-        Health: 30 + ({level} / 3) + ({level} / 5) + rand(5)
-        Damage: rand(3) + ({level} / 10)
-        Experience: rand(3) + 1
-      Names:
-        '1':
-          Name: Weak Shulker
-        '20':
-          Name: Shulker
-        '40':
-          Name: Strong Shulker
-    SKELETON_HORSE:
-      Disabled: true
-      DisabledWorlds: []
-      Formulas:
-        Health: 15 + ({level} / 3) + ({level} / 5) + rand(5)
-        Damage: rand(3) + ({level} / 10)
-        Experience: rand(3) + 1
-      Names:
-        '1':
-          Name: Weak Skeleton Horse
-        '20':
-          Name: Skeleton Horse
-        '40':
-          Name: Strong Skeleton Horse
-    VILLAGER:
-      Disabled: true
-      DisabledWorlds: []
-      Formulas:
-        Health: 20 + ({level} / 3) + ({level} / 5) + rand(5)
-        Damage: rand(3) + ({level} / 10)
-        Experience: rand(3) + 1
-      Names:
-        '1':
-          Name: Weak Villager
-        '20':
-          Name: Villager
-        '40':
-          Name: Strong Villager
-    POLAR_BEAR:
-      Disabled: true
-      DisabledWorlds: []
-      Formulas:
-        Health: 30 + ({level} / 3) + ({level} / 5) + rand(5)
-        Damage: rand(3) + ({level} / 10)
-        Experience: rand(3) + 1
-      Names:
-        '1':
-          Name: Weak Polar Bear
-        '20':
-          Name: Polar Bear
-        '40':
-          Name: Strong Polar Bear
-    HORSE:
-      Disabled: true
-      DisabledWorlds: []
-      Formulas:
-        Health: 22 + ({level} / 3) + ({level} / 5) + rand(5)
-        Damage: rand(3) + ({level} / 10)
-        Experience: rand(3) + 1
-      Names:
-        '1':
-          Name: Weak Horse
-        '20':
-          Name: Horse
-        '40':
-          Name: Strong Horse
-    CHICKEN:
-      Disabled: true
-      DisabledWorlds: []
-      Formulas:
-        Health: 4 + ({level} / 3) + ({level} / 5) + rand(5)
-        Damage: rand(3) + ({level} / 10)
-        Experience: rand(3) + 1
-      Names:
-        '1':
-          Name: Weak Chicken
-        '20':
-          Name: Chicken
-        '40':
-          Name: Strong Chicken
-    LLAMA:
-      Disabled: true
-      DisabledWorlds: []
-      Formulas:
-        Health: 25 + ({level} / 3) + ({level} / 5) + rand(5)
-        Damage: rand(3) + ({level} / 10)
-        Experience: rand(3) + 1
-      Names:
-        '1':
-          Name: Weak Llama
-        '20':
-          Name: Llama
-        '40':
-          Name: Strong Llama
-    DONKEY:
-      Disabled: true
-      DisabledWorlds: []
-      Formulas:
-        Health: 22 + ({level} / 3) + ({level} / 5) + rand(5)
-        Damage: rand(3) + ({level} / 10)
-        Experience: rand(3) + 1
-      Names:
-        '1':
-          Name: Weak Donkey
-        '20':
-          Name: Donkey
-        '40':
-          Name: Strong Donkey
-    RABBIT:
-      Disabled: true
-      DisabledWorlds: []
-      Formulas:
-        Health: 3 + ({level} / 3) + ({level} / 5) + rand(5)
-        Damage: rand(3) + ({level} / 10)
-        Experience: rand(3) + 1
-      Names:
-        '1':
-          Name: Weak Rabbit
-        '20':
-          Name: Rabbit
-        '40':
-          Name: Strong Rabbit
-    SHEEP:
-      Disabled: true
-      DisabledWorlds: []
-      Formulas:
-        Health: 8 + ({level} / 3) + ({level} / 5) + rand(5)
-        Damage: rand(3) + ({level} / 10)
-        Experience: rand(3) + 1
-      Names:
-        '1':
-          Name: Weak Sheep
-        '20':
-          Name: Sheep
-        '40':
-          Name: Strong Sheep
-    COW:
-      Disabled: true
-      DisabledWorlds: []
-      Formulas:
-        Health: 10 + ({level} / 3) + ({level} / 5) + rand(5)
-        Damage: rand(3) + ({level} / 10)
-        Experience: rand(3) + 1
-      Names:
-        '1':
-          Name: Weak Cow
-        '20':
-          Name: Cow
-        '40':
-          Name: Strong Cow
-    PIG:
-      Disabled: true
-      DisabledWorlds: []
-      Formulas:
-        Health: 10 + ({level} / 3) + ({level} / 5) + rand(5)
-        Damage: rand(3) + ({level} / 10)
-        Experience: rand(3) + 1
-      Names:
-        '1':
-          Name: Weak Pig
-        '20':
-          Name: Pig
-        '40':
-          Name: Strong Pig
-    WOLF:
-      Disabled: false
-      DisabledWorlds: []
-      Formulas:
-        Health: 8 + ({level} / 3) + ({level} / 5) + rand(5)
-        Damage: rand(3) + ({level} / 10)
-        Experience: rand(3) + 1
-      Names:
-        '1':
-          Name: Weak Wolf
-        '20':
-          Name: Wolf
-        '40':
-          Name: Strong Wolf
-    ZOMBIE_HORSE:
-      Disabled: false
-      DisabledWorlds: []
-      Formulas:
-        Health: 15 + ({level} / 3) + ({level} / 5) + rand(5)
-        Damage: rand(3) + ({level} / 10)
-        Experience: rand(3) + 1
-      Names:
-        '1':
-          Name: Weak Zombie Horse
-        '20':
-          Name: Zombie Horse
-        '40':
-          Name: Strong Zombie Horse
   Monster:
-    Disabled: false
+    Disabled: false # Can disabled full groups
     ZOMBIE:
-      Disabled: false
-      Formulas:
+      Disabled: false # Can disabled certain entities
+      Formulas: # Formulas used to calculate different attributes. {level} allows for level based calculation
         Damage: rand(3) + ({level} / 10)
         Health: 20 + ({level} / 3) + ({level} / 5) + rand(5)
         Experience: rand(3) + 1
-      Equipment:
+      Equipment: # Equipment given when entity is spawned
         Weapon:
-          '1': RAW_FISH 10% drop:15%, WOOD_SWORD 10%, WOOD_AXE 10%
+          '1': RAW_FISH 10% drop:15%, WOOD_SWORD 10%, WOOD_AXE 10% # MATERIAL equip% drop:drop%, etc
           '12': STONE_SWORD 25%, STONE_AXE 20%
           '20': IRON_SWORD 30%, IRON_AXE 25%
           '30': GOLD_SWORD 35%, GOLD_AXE 30%
@@ -307,8 +62,8 @@ Entity:
           '20': SHIELD 10%
           '40': SHIELD 15%
         Helmet:
-          10: LEATHER_HELMET
-          20: CHAINMAIL_HELMET
+          10: LEATHER_HELMET #If no equip% is provided it defaults to 100%
+          20: CHAINMAIL_HELMET #If no drop% is provided it defaults to 0%
         Chestplate:
           12: LEATHER_CHESTPLATE
           22: CHAINMAIL_CHESTPLATE
@@ -318,264 +73,10 @@ Entity:
         Boots:
           12: LEATHER_BOOTS
           22: CHAINMAIL_BOOTS
-      Names:
+      Names: # Names given to the entity at certain milestones
         '1':
           Name: Weak Zombie
         '20':
           Name: Zombie
         '40':
           Name: Strong Zombie
-    CREEPER:
-      Disabled: true
-    SKELETON:
-      Disabled: false
-      DisabledWorlds: []
-      Formulas:
-        Health: 20 + ({level} / 3) + ({level} / 5) + rand(5)
-        Damage: rand(3) + ({level} / 10)
-        Experience: rand(3) + 1
-      Names:
-        '1':
-          Name: Weak Skeleton
-        '20':
-          Name: Skeleton
-        '40':
-          Name: Strong Skeleton
-    ENDERMITE:
-      Disabled: false
-      DisabledWorlds: []
-      Formulas:
-        Health: 8 + ({level} / 3) + ({level} / 5) + rand(5)
-        Damage: rand(3) + ({level} / 10)
-        Experience: rand(3) + 1
-      Names:
-        '1':
-          Name: Weak Endermite
-        '20':
-          Name: Endermite
-        '40':
-          Name: Strong Endermite
-    HUSK:
-      Disabled: false
-      DisabledWorlds: []
-      Formulas:
-        Health: 20 + ({level} / 3) + ({level} / 5) + rand(5)
-        Damage: rand(3) + ({level} / 10)
-        Experience: rand(3) + 1
-      Names:
-        '1':
-          Name: Weak Husk
-        '20':
-          Name: Husk
-        '40':
-          Name: Strong Husk
-    CAVE_SPIDER:
-      Disabled: false
-      DisabledWorlds: []
-      Formulas:
-        Health: 12 + ({level} / 3) + ({level} / 5) + rand(5)
-        Damage: rand(3) + ({level} / 10)
-        Experience: rand(3) + 1
-      Names:
-        '1':
-          Name: Weak Cave Spider
-        '20':
-          Name: Cave Spider
-        '40':
-          Name: Strong Cave Spider
-    ENDERMAN:
-      Disabled: false
-      DisabledWorlds: []
-      Formulas:
-        Health: 40 + ({level} / 3) + ({level} / 5) + rand(5)
-        Damage: rand(3) + ({level} / 10)
-        Experience: rand(3) + 1
-      Names:
-        '1':
-          Name: Weak Enderman
-        '20':
-          Name: Enderman
-        '40':
-          Name: Strong Enderman
-    EVOKER:
-      Disabled: false
-      DisabledWorlds: []
-      Formulas:
-        Health: 24 + ({level} / 3) + ({level} / 5) + rand(5)
-        Damage: rand(3) + ({level} / 10)
-        Experience: rand(3) + 1
-      Names:
-        '1':
-          Name: Weak Evoker
-        '20':
-          Name: Evoker
-        '40':
-          Name: Strong Evoker
-    VINDICATOR:
-      Disabled: false
-      DisabledWorlds: []
-      Formulas:
-        Health: 24 + ({level} / 3) + ({level} / 5) + rand(5)
-        Damage: rand(3) + ({level} / 10)
-        Experience: rand(3) + 1
-      Names:
-        '1':
-          Name: Weak Vindicator
-        '20':
-          Name: Vindicator
-        '40':
-          Name: Strong Vindicator
-    SPIDER:
-      Disabled: false
-      DisabledWorlds: []
-      Formulas:
-        Health: 16 + ({level} / 3) + ({level} / 5) + rand(5)
-        Damage: rand(3) + ({level} / 10)
-        Experience: rand(3) + 1
-      Names:
-        '1':
-          Name: Weak Spider
-        '20':
-          Name: Spider
-        '40':
-          Name: Strong Spider
-    GUARDIAN:
-      Disabled: false
-      DisabledWorlds: []
-      Formulas:
-        Health: 30 + ({level} / 3) + ({level} / 5) + rand(5)
-        Damage: rand(3) + ({level} / 10)
-        Experience: rand(3) + 1
-      Names:
-        '1':
-          Name: Weak Guardian
-        '20':
-          Name: Guardian
-        '40':
-          Name: Strong Guardian
-    BLAZE:
-      Disabled: false
-      DisabledWorlds: []
-      Formulas:
-        Health: 20 + ({level} / 3) + ({level} / 5) + rand(5)
-        Damage: rand(3) + ({level} / 10)
-        Experience: rand(3) + 1
-      Names:
-        '1':
-          Name: Weak Blaze
-        '20':
-          Name: Blaze
-        '40':
-          Name: Strong Blaze
-    VEX:
-      Disabled: false
-      DisabledWorlds: []
-      Formulas:
-        Health: 14 + ({level} / 3) + ({level} / 5) + rand(5)
-        Damage: rand(3) + ({level} / 10)
-        Experience: rand(3) + 1
-      Names:
-        '1':
-          Name: Weak Vex
-        '20':
-          Name: Vex
-        '40':
-          Name: Strong Vex
-    ELDER_GUARDIAN:
-      Disabled: false
-      DisabledWorlds: []
-      Formulas:
-        Health: 80 + ({level} / 3) + ({level} / 5) + rand(5)
-        Damage: rand(3) + ({level} / 10)
-        Experience: rand(3) + 1
-      Names:
-        '1':
-          Name: Weak Elder Guardian
-        '20':
-          Name: Elder Guardian
-        '40':
-          Name: Strong Elder Guardian
-    SILVERFISH:
-      Disabled: false
-      DisabledWorlds: []
-      Formulas:
-        Health: 8 + ({level} / 3) + ({level} / 5) + rand(5)
-        Damage: rand(3) + ({level} / 10)
-        Experience: rand(3) + 1
-      Names:
-        '1':
-          Name: Weak Silverfish
-        '20':
-          Name: Silverfish
-        '40':
-          Name: Strong Silverfish
-    STRAY:
-      Disabled: false
-      DisabledWorlds: []
-      Formulas:
-        Health: 20 + ({level} / 3) + ({level} / 5) + rand(5)
-        Damage: rand(3) + ({level} / 10)
-        Experience: rand(3) + 1
-      Names:
-        '1':
-          Name: Weak Stray
-        '20':
-          Name: Stray
-        '40':
-          Name: Strong Stray
-    WITCH:
-      Disabled: false
-      DisabledWorlds: []
-      Formulas:
-        Health: 26 + ({level} / 3) + ({level} / 5) + rand(5)
-        Damage: rand(3) + ({level} / 10)
-        Experience: rand(3) + 1
-      Names:
-        '1':
-          Name: Weak Witch
-        '20':
-          Name: Witch
-        '40':
-          Name: Strong Witch
-    WITHER_SKELETON:
-      Disabled: false
-      DisabledWorlds: []
-      Formulas:
-        Health: 20 + ({level} / 3) + ({level} / 5) + rand(5)
-        Damage: rand(3) + ({level} / 10)
-        Experience: rand(3) + 1
-      Names:
-        '1':
-          Name: Weak Wither Skeleton
-        '20':
-          Name: Wither Skeleton
-        '40':
-          Name: Strong Wither Skeleton
-    ZOMBIE_VILLAGER:
-      Disabled: false
-      DisabledWorlds: []
-      Formulas:
-        Health: 20 + ({level} / 3) + ({level} / 5) + rand(5)
-        Damage: rand(3) + ({level} / 10)
-        Experience: rand(3) + 1
-      Names:
-        '1':
-          Name: Weak Zombie Villager
-        '20':
-          Name: Zombie Villager
-        '40':
-          Name: Strong Zombie Villager
-    PIG_ZOMBIE:
-      Disabled: false
-      DisabledWorlds: []
-      Formulas:
-        Health: 20 + ({level} / 3) + ({level} / 5) + rand(5)
-        Damage: rand(3) + ({level} / 10)
-        Experience: rand(3) + 1
-      Names:
-        '1':
-          Name: Weak Pig Zombie
-        '20':
-          Name: Pig Zombie
-        '40':
-          Name: Strong Pig Zombie

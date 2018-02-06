@@ -15,7 +15,7 @@ import java.util.Set;
 public class DataLoader implements DataManager{
 
     private NameOptions nameOptions;
-    protected DistanceAlgorithm distanceAlgorithm = DistanceAlgorithm.Optimized;
+    protected DistanceAlgorithm distanceAlgorithm = DistanceAlgorithm.Diamond;
 
     private CreatureDataManager creatureDataManager = new CreatureDataManager();
     private HeroesDataManager heroesDataManager = new HeroesDataManager();
@@ -68,7 +68,7 @@ public class DataLoader implements DataManager{
 
     public void loadData(FileConfiguration config, Plugin plugin){
         loadNameOptions(config, plugin);
-        loadDistanceAlgorithm(config);
+        loadDistanceAlgorithm(config, plugin);
         creatureDataManager.loadData(config, plugin);
         heroesDataManager.loadData(config, plugin);
         levelRegionManager.loadData(config, plugin);
@@ -81,14 +81,32 @@ public class DataLoader implements DataManager{
         nameOptions.loadData(config, plugin);
     }
 
-    private void loadDistanceAlgorithm(FileConfiguration config){
+    private void loadDistanceAlgorithm(FileConfiguration config, Plugin plugin){
         String algo = config.getString("DistanceAlgorithm");
+        boolean changed = false;
+
+        if(algo.equalsIgnoreCase("Optimized")){
+            algo = "Diamond";
+            changed = true;
+        }
+
+        if(algo.equalsIgnoreCase("Accurate")){
+            algo = "Circle";
+            changed = true;
+        }
+
+        if(changed){
+            config.set("DistanceAlgorithm", algo);
+            plugin.saveConfig();
+        }
+
+
         try{
             distanceAlgorithm = DistanceAlgorithm.valueOf(algo);
         }
         catch(Exception error){
             OutputHandler.PrintError("Distance Algorithm : " + OutputHandler.HIGHLIGHT + algo + OutputHandler.ERROR + " is not a valid Algorithm " + OutputHandler.HIGHLIGHT + "(Accurate/Optimized)");
-            distanceAlgorithm = DistanceAlgorithm.Optimized;
+            distanceAlgorithm = DistanceAlgorithm.Diamond;
         }
     }
 

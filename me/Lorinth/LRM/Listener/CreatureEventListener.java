@@ -11,6 +11,7 @@ import me.Lorinth.LRM.LorinthsRpgMobs;
 import me.Lorinth.LRM.Objects.*;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -56,13 +57,17 @@ public class CreatureEventListener implements Listener {
 
     private void setHealth(Creature creature, CreatureData data, int level){
         int health = (int)data.getHealthAtLevel(level);
-        creature.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue((double) health);
+        AttributeInstance attribute = creature.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        if(attribute != null)
+            attribute.setBaseValue((double) health);
         creature.setHealth((double) health);
     }
 
     private void setDamage(Creature creature, CreatureData data, int level){
         double damage = (int)data.getDamageAtLevel(level);
-        creature.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(damage);
+        AttributeInstance attribute = creature.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE);
+        if(attribute != null)
+            attribute.setBaseValue(damage);
         creature.setMetadata("Damage", new FixedMetadataValue(LorinthsRpgMobs.instance, damage));
     }
 

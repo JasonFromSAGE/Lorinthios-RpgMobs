@@ -1,9 +1,10 @@
 package me.Lorinth.LRM.Objects;
 
 /**
- * Accurate - Uses circular more costly functions to calculate levels
- * Optimized - Uses raw x/z calculations leading to less accurate (diamond shapes)
+ * Circle - Uses circular more costly functions to calculate levels
+ * Diamond - Uses raw x/z calculations leading to less accurate (diamond shapes)
+ * Square - Uses zone-esque calculations checking if the spot is within x/z distance
  */
 public enum DistanceAlgorithm {
-    Accurate, Optimized
+    Circle, Diamond, Square
 }

@@ -41,6 +41,16 @@ public class SetSpawnPointExecutor extends CustomCommandExecutor{
         //Create
         if(spawnPoint == null){
             LorinthsRpgMobs.GetSpawnPointManager().addSpawnPointInWorld(player.getWorld(), new SpawnPoint(player.getLocation(), name, startLevel, distance));
+            spawnPoint = LorinthsRpgMobs.GetSpawnPointManager().getSpawnPointInWorldByName(loc.getWorld(), name);
+            if(args.length > 3){
+                int maxLevel = Integer.parseInt(args[3]);
+                spawnPoint.setMaxLevel(maxLevel);
+
+                if(args.length > 4){
+                    int centerBuffer = Integer.parseInt(args[4]);
+                    spawnPoint.setCenterBuffer(centerBuffer);
+                }
+            }
             OutputHandler.PrintRawInfo(player, "Created spawn point with name, " + OutputHandler.HIGHLIGHT + name);
         }
         //Update

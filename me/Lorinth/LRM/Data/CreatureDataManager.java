@@ -65,14 +65,16 @@ public class CreatureDataManager implements DataManager {
     }
 
     public void loadData(FileConfiguration config, Plugin plugin){
-        loadCreatureSection(config, "Entity.Animal.");
-        loadCreatureSection(config, "Entity.Monster.");
+        loadCreatureSection(config, "Entity.Animal");
+        loadCreatureSection(config, "Entity.Monster");
     }
 
     private void loadCreatureSection(FileConfiguration config, String prefix) {
-        for(String key : config.getConfigurationSection(prefix).getKeys(false)){
-            if(!ignoredKeys.contains(key))
-                loadEntity(config, prefix, key);
+        if(config.contains(prefix)){
+            for(String key : config.getConfigurationSection(prefix).getKeys(false)){
+                if(!ignoredKeys.contains(key))
+                    loadEntity(config, prefix, key);
+            }
         }
     }
 

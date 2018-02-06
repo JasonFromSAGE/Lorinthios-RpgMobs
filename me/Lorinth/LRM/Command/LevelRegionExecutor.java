@@ -17,15 +17,11 @@ public class LevelRegionExecutor extends CustomCommandExecutor {
 
     public LevelRegionExecutor(){
         super("region", "access to editing region data", null);
+        RequiredArguments = 1;
     }
 
     @Override
     public void safeExecute(Player player, String[] args){
-        if(args.length == 0){
-            sendHelpMessage(player);
-            return;
-        }
-
         String commandLabel = args[0];
         args = Arrays.copyOfRange(args, 1, args.length);
         if(commandLabel.equalsIgnoreCase(hereLevelRegionExecutor.getCommandName()))

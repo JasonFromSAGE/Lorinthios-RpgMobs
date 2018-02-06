@@ -54,6 +54,11 @@ public class LorinthsRpgMobs extends JavaPlugin{
         }
     }
 
+    public static void Reload(){
+        instance.onDisable();
+        instance.onEnable();
+    }
+
     private void loadConfiguration(){
         if(!new File(getDataFolder(), "config.yml").exists()){
             saveDefaultConfig();

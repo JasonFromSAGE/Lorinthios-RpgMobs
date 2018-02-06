@@ -217,11 +217,14 @@ public class SpawnPoint extends DirtyObject{
     public int calculateDistance(Location loc, DistanceAlgorithm algorithm){
         loc.setY(0); // We only care about x/y
 
-        if(algorithm == DistanceAlgorithm.Accurate){
+        if(algorithm == DistanceAlgorithm.Circle){
             return (int) (Center.distance(loc));
         }
-        else if(algorithm == DistanceAlgorithm.Optimized){
+        else if(algorithm == DistanceAlgorithm.Diamond){
             return (int) (getSimpleDistance(Center, loc));
+        }
+        else if(algorithm == DistanceAlgorithm.Square){
+            return (int) (getSquareDistance(Center, loc));
         }
 
         return 1;
@@ -256,13 +259,16 @@ public class SpawnPoint extends DirtyObject{
      * @return the difference in x + z (results in diamond-esque shapes)
      */
     private double getSimpleDistance(Location a, Location b){
-        int x = a.getBlockX() - b.getBlockX();
-        int z = a.getBlockZ() - b.getBlockZ();
-        if(x < 0)
-            x = -x;
-        if(z < 0)
-            z = -z;
+        int x = Math.abs(a.getBlockX() - b.getBlockX());
+        int z = Math.abs(a.getBlockZ() - b.getBlockZ());
 
         return x+z;
+    }
+
+    private double getSquareDistance(Location a, Location b){
+        int x = Math.abs(a.getBlockX() - b.getBlockX());
+        int z = Math.abs(a.getBlockZ() - b.getBlockZ());
+
+        return Math.max(x,z);
     }
 }

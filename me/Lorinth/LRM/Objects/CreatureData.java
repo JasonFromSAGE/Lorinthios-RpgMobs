@@ -36,7 +36,7 @@ public class CreatureData extends DirtyObject{
      */
     public CreatureData(EntityType entityType, String prefix, FileConfiguration config) {
         this.entityType = entityType;
-        load(config, prefix);
+        load(config, prefix + ".");
     }
 
     /**
@@ -50,9 +50,9 @@ public class CreatureData extends DirtyObject{
         if(LorinthsRpgMobs.instance.getConfig().getBoolean("Entity." + type + ".Disabled"))
             groupDisabled = true;
 
-        healthFormula = ((int) creature.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) + " + ({level} / 3) + ({level} / 5) + rand(5)";
-        damageFormula = "rand(3) + ({level} / 10)";
-        expFormula = "rand(3) + 1";
+        healthFormula = (creature.getAttribute(Attribute.GENERIC_MAX_HEALTH) != null ? (int) creature.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() : 20) + " + ({level} / 3) + ({level} / 5) + rand(5)";
+        damageFormula = (creature.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE) != null ? (int) creature.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).getValue() : 2) + " + rand(3) + ({level} / 12)";
+        expFormula = "rand(5) + 1 + rand({level} / 5)";
 
         String friendlyName = getUserFriendlyName(entityType);
         nameData.add(new NameData(1, "Weak " + friendlyName, false));
@@ -316,7 +316,7 @@ public class CreatureData extends DirtyObject{
         }
         catch(Exception exception){
             OutputHandler.PrintRawError("Got Health Error for, " + entityType.toString());
-            OutputHandler.PrintRawError("Level : " + level + ", Formula : " + healthFormula);
+            OutputHandler.PrintException("Level : " + level + ", Formula : " + healthFormula, exception);
         }
         return 1;
     }
@@ -332,7 +332,7 @@ public class CreatureData extends DirtyObject{
         }
         catch(Exception exception){
             OutputHandler.PrintRawError("Got Damage Formula Error for, " + entityType.toString());
-            OutputHandler.PrintRawError("Level : " + level + ", Formula : " + damageFormula);
+            OutputHandler.PrintException("Level : " + level + ", Formula : " + damageFormula, exception);
         }
         return 1;
     }
@@ -348,7 +348,7 @@ public class CreatureData extends DirtyObject{
         }
         catch(Exception exception){
             OutputHandler.PrintRawError("Got Experience Error for, " + entityType.toString());
-            OutputHandler.PrintRawError("Level : " + level + ", Formula : " + expFormula);
+            OutputHandler.PrintException("Level : " + level + ", Formula : " + expFormula, exception);
         }
         return 1;
     }
