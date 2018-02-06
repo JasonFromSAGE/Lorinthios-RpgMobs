@@ -28,7 +28,7 @@ public class RemoveLevelRegionExecutor extends CustomCommandExecutor{
 
     @Override
     public void safeExecute(Player player, String[] args) {
-        String name = args[0];
+        String name = args[0].toLowerCase();
 
         LevelRegion region = LorinthsRpgMobs.GetLevelRegionManager().getLevelRegionByName(player.getWorld(), name);
         if(region == null){

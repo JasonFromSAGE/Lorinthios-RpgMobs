@@ -1,6 +1,7 @@
-package me.Lorinth.LRM;
+package me.Lorinth.LRM.Listener;
 
 import me.Lorinth.LRM.Objects.OutputHandler;
+import me.Lorinth.LRM.Updater;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

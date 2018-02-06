@@ -8,10 +8,7 @@ import me.Lorinth.LRM.Data.DataLoader;
 import me.Lorinth.LRM.Data.HeroesDataManager;
 import me.Lorinth.LRM.Data.SkillAPIDataManager;
 import me.Lorinth.LRM.LorinthsRpgMobs;
-import me.Lorinth.LRM.Objects.CreatureData;
-import me.Lorinth.LRM.Objects.LevelRegion;
-import me.Lorinth.LRM.Objects.NameData;
-import me.Lorinth.LRM.Objects.NameOptions;
+import me.Lorinth.LRM.Objects.*;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Creature;
@@ -40,45 +37,52 @@ public class CreatureEventListener implements Listener {
     @EventHandler(ignoreCancelled = true, priority = EventPriority.HIGHEST)
     public void onCreatureSpawn(CreatureSpawnEvent event){
         if(event.getEntity() instanceof Creature){
-            Creature entity = (Creature) event.getEntity();
+            Creature creature = (Creature) event.getEntity();
 
-            CreatureData data = dataLoader.getCreatureDataManager().getData(entity);
-            if(data.isDisabled(entity.getWorld().getName()))
+            CreatureData data = dataLoader.getCreatureDataManager().getData(creature);
+            if(data.isDisabled(creature.getWorld().getName()))
                 return;
 
             //Set Level
-            int level = dataLoader.calculateLevel(entity.getLocation());
-            entity.setMetadata("Level", new FixedMetadataValue(LorinthsRpgMobs.instance, level));
+            int level = dataLoader.calculateLevel(creature.getLocation());
+            creature.setMetadata("Level", new FixedMetadataValue(LorinthsRpgMobs.instance, level));
 
-            int health = (int)data.getHealthAtLevel(level);
-            entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue((double) health);
-            entity.setHealth((double) health);
-
-            //Set Name
-            LevelRegion region = LorinthsRpgMobs.GetLevelRegionManager().getHighestPriorityLeveledRegionAtLocation(entity.getLocation());
-            NameData regionNameData = region != null ? region.getEntityName(entity.getType()) : null;
-            NameOptions nameOptions = dataLoader.getNameOptions();
-            entity.setCustomNameVisible(nameOptions.getTagsAlwaysOn());
-            String name = data.getNameAtLevel(nameOptions.getNameFormat(), regionNameData, level);
-            if(name != null)
-                entity.setCustomName(name);
-
-            entity.setRemoveWhenFarAway(true);
+            setHealth(creature, data, level);
+            setDamage(creature, data, level);
+            setEquipment(creature, data, level);
+            setName(creature, data, level);
         }
     }
 
-    @EventHandler(ignoreCancelled = true)
-    public void onCreatureAttack(EntityDamageByEntityEvent event){
-        if(event.getDamager() instanceof Creature){
-            Creature creature = (Creature) event.getDamager();
+    private void setHealth(Creature creature, CreatureData data, int level){
+        int health = (int)data.getHealthAtLevel(level);
+        creature.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue((double) health);
+        creature.setHealth((double) health);
+    }
 
-            CreatureData data = dataLoader.getCreatureDataManager().getData(creature);
-            if (data.isDisabled(creature.getWorld().getName()))
-                return;
+    private void setDamage(Creature creature, CreatureData data, int level){
+        double damage = (int)data.getDamageAtLevel(level);
+        creature.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(damage);
+        creature.setMetadata("Damage", new FixedMetadataValue(LorinthsRpgMobs.instance, damage));
+    }
 
-            int level = LorinthsRpgMobs.GetLevelOfCreature(creature);
-            event.setDamage(data.getDamageAtLevel(level));
-        }
+    private void setEquipment(Creature creature, CreatureData data, int level){
+        EquipmentData equipmentData = data.getEquipmentData();
+        if(equipmentData != null)
+            equipmentData.equip(creature, level);
+    }
+
+    private void setName(Creature creature, CreatureData data, int level){
+        LevelRegion region = LorinthsRpgMobs.GetLevelRegionManager().getHighestPriorityLeveledRegionAtLocation(creature.getLocation());
+        NameData regionNameData = region != null ? region.getEntityName(creature.getType()) : null;
+        NameOptions nameOptions = dataLoader.getNameOptions();
+        creature.setCustomNameVisible(nameOptions.getTagsAlwaysOn());
+        String name = data.getNameAtLevel(nameOptions.getNameFormat(), regionNameData, level);
+        if(name != null)
+            creature.setCustomName(name);
+
+        //Allows creatures with custom names to be removed
+        creature.setRemoveWhenFarAway(true);
     }
 
     @EventHandler(ignoreCancelled = true)

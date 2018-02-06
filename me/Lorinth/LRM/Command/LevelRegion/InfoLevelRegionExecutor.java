@@ -28,7 +28,7 @@ public class InfoLevelRegionExecutor extends CustomCommandExecutor{
 
     @Override
     public void safeExecute(Player player, String[] args) {
-        String name = args[0];
+        String name = args[0].toLowerCase();
         LevelRegion levelRegion = LorinthsRpgMobs.GetLevelRegionManager().getLevelRegionByName(player.getWorld(), name);
 
         if(levelRegion == null){

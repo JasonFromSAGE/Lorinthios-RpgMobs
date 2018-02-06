@@ -296,15 +296,32 @@ Entity:
         Damage: rand(3) + ({level} / 10)
         Health: 20 + ({level} / 3) + ({level} / 5) + rand(5)
         Experience: rand(3) + 1
+      Equipment:
+        Weapon:
+          '1': RAW_FISH 10% drop:15%, WOOD_SWORD 10%, WOOD_AXE 10%
+          '12': STONE_SWORD 25%, STONE_AXE 20%
+          '20': IRON_SWORD 30%, IRON_AXE 25%
+          '30': GOLD_SWORD 35%, GOLD_AXE 30%
+          '40': DIAMOND_SWORD 35%, DIAMOND_AXE 30%
+        Offhand:
+          '20': SHIELD 10%
+          '40': SHIELD 15%
+        Helmet:
+          10: LEATHER_HELMET
+          20: CHAINMAIL_HELMET
+        Chestplate:
+          12: LEATHER_CHESTPLATE
+          22: CHAINMAIL_CHESTPLATE
+        Leggings:
+          14: LEATHER_LEGGINGS
+          24: CHAINMAIL_LEGGINGS
+        Boots:
+          12: LEATHER_BOOTS
+          22: CHAINMAIL_BOOTS
       Names:
         '1':
           Name: Weak Zombie
         '20':
-          Name: Zombie
-        '30':
-          Name: '&cUndead Legion'
-          OverrideFormat: true
-        '31':
           Name: Zombie
         '40':
           Name: Strong Zombie

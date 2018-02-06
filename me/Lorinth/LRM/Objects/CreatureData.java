@@ -15,6 +15,7 @@ import java.util.ArrayList;
 public class CreatureData extends DirtyObject{
 
     private EntityType entityType;
+    private EquipmentData equipmentData = new EquipmentData();
     private boolean entityDisabled = false;
     private boolean groupDisabled = false;
 
@@ -139,6 +140,7 @@ public class CreatureData extends DirtyObject{
 
         loadFormulas(config, prefix);
         loadNames(config, prefix);
+        loadEquipmentData(config, prefix);
     }
 
     /**
@@ -194,6 +196,10 @@ public class CreatureData extends DirtyObject{
                 nameData.add(new NameData(level, name, overrideFormat));
             }
         }
+    }
+
+    private void loadEquipmentData(FileConfiguration config, String prefix){
+        equipmentData.loadData(config, prefix);
     }
 
     /**
@@ -293,6 +299,10 @@ public class CreatureData extends DirtyObject{
             return highest.getName(level, format);
 
         return null;
+    }
+
+    public EquipmentData getEquipmentData(){
+        return equipmentData;
     }
 
     /**
