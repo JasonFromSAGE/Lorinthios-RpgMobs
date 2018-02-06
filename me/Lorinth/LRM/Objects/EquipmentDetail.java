@@ -1,5 +1,6 @@
 package me.Lorinth.LRM.Objects;
 
+import me.Lorinth.LRM.Util.TryParse;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -20,23 +21,27 @@ public class EquipmentDetail {
         for(String item : items){
             item = item.trim();
             String[] details = item.split(" ");
-            try{
-                Material mat = Material.valueOf(details[0]);
-                Double chance = 100d;
-                Double dropChance = 0d;
-                if(details.length > 1)
-                    chance = Double.parseDouble(details[1].replace("%", "").trim());
-                if(details.length > 2)
-                    dropChance = Double.parseDouble(details[2].replace("drop:", "").replace("%", "").trim());
+            Material mat = null;
+            Double chance = 100d;
+            Double dropChance = 0d;
 
-                if(mat != null){
-                    Materials.add(mat);
-                    Chances.add(chance);
-                    DropChances.add(dropChance);
-                }
+            for(String detail : details){
+                detail = detail.replace("%", "").trim();
+                if(detail.contains("drop:") && TryParse.parseDouble(detail.replace("drop:", "").replace("%", "").trim()))
+                    dropChance = Double.parseDouble(detail.replace("drop:", "").replace("%", "").trim());
+                else if(TryParse.parseDouble(detail))
+                    chance = Double.parseDouble(detail);
+                else if(TryParse.parseMaterial(detail))
+                    mat = Material.valueOf(detail);
             }
-            catch(Exception exception){
-                OutputHandler.PrintException("Failed to load item data, " + item, exception);
+
+            if(mat != null){
+                Materials.add(mat);
+                Chances.add(chance);
+                DropChances.add(dropChance);
+            }
+            else{
+                OutputHandler.PrintError("Failed to load item data, " + item);
             }
         }
     }
