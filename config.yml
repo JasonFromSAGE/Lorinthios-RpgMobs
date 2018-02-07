@@ -16,7 +16,7 @@ Heroes:
     '6': "2.4 * {exp} / 6"
 Names:
   TagsAlwaysOn: false # Do you want creature name tags to always show?
-  Format: '[Lvl.{level}] {name}' # Global name format
+  Format: '[Lvl.{level}] {Variant} {name}' # Global name format, takes {level}, {Variant} or {variant}, {name}
 SpawnPoints:
   world: # Name of the world spawnpoints are in
     mainTown: # name of spawnpoint

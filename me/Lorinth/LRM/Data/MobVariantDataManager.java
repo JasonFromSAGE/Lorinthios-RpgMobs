@@ -2,18 +2,87 @@ package me.Lorinth.LRM.Data;
 
 import me.Lorinth.LRM.Objects.DataManager;
 import me.Lorinth.LRM.Objects.Disableable;
+import me.Lorinth.LRM.Util.ConfigHelper;
+import me.Lorinth.LRM.Util.OutputHandler;
+import me.Lorinth.LRM.Variants.*;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.plugin.Plugin;
+
+import java.util.HashMap;
+import java.util.Random;
 
 public class MobVariantDataManager extends Disableable implements DataManager {
 
+    private static HashMap<String, MobVariant> mobVariants = new HashMap<>();
+    private static int totalWeight = 0;
+    private static int variantChance = 0;
+    private static MobVariantDataManager instance;
+    private static Random random = new Random();
+
+    public MobVariantDataManager(){
+        instance = this;
+    }
+
     @Override
     public void loadData(FileConfiguration config, Plugin plugin) {
+        if(!ConfigHelper.ConfigContainsPath(config, "MobVariants.Disabled")){
+            OutputHandler.PrintInfo("Mob Variants options not found, Generating...");
+            setDefaults(config, plugin);
+        }
 
+        if(config.getBoolean("MobVariants.Disabled")) {
+            OutputHandler.PrintInfo("Mob Variants are disabled");
+            return;
+        }
+        variantChance = config.getInt("MobVariants.VariantChance");
+
+        loadInternalVariants();
+    }
+
+    //Variants self load/add when instantiated
+    private void loadInternalVariants(){
+        new BurningVariant();
+        new FastVariant();
+        new GlowingVariant();
+        new InvisibleVariant();
+        new PoisonousVariant();
+        new SlowVariant();
+        new StrongVariant();
+        new ToughVariant();
+    }
+
+    public static void AddVariant(MobVariant variant){
+        OutputHandler.PrintInfo("Loaded Variant, " + variant.getName());
+        mobVariants.put(variant.getName(), variant);
+        totalWeight += variant.getWeight();
+    }
+
+    public static void GetVariant(LivingEntity entity){
+        if(totalWeight == 0)
+            return;
+        if(random.nextDouble() * 100 < variantChance){
+            int current = 0;
+            int target = random.nextInt(totalWeight);
+            for(MobVariant variant : mobVariants.values()){
+                current += variant.getWeight();
+                if(current > target)
+                    if(variant.apply(entity))
+                        return;
+                    else
+                        GetVariant(entity);
+            }
+        }
     }
 
     @Override
     public boolean saveData(FileConfiguration config) {
         return false;
+    }
+
+    private void setDefaults(FileConfiguration config, Plugin plugin){
+        config.set("MobVariants.Disabled", false);
+        config.set("MobVariants.VariantChance", 40);
+        plugin.saveConfig();
     }
 }

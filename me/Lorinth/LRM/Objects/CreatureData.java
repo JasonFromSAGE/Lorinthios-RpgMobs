@@ -58,9 +58,8 @@ public class CreatureData extends DirtyObject{
         expFormula = "rand(5) + 1 + rand({level} / 5)";
 
         String friendlyName = getUserFriendlyName(entityType);
-        nameData.add(new NameData(1, "Weak " + friendlyName, false));
-        nameData.add(new NameData(20, friendlyName, false));
-        nameData.add(new NameData(40, "Strong " + friendlyName, false));
+        nameData.add(new NameData(1, friendlyName, false));
+        nameData.add(new NameData(40, "Epic " + friendlyName, false));
 
         this.setNew();
     }

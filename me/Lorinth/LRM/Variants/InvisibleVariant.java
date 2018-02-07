@@ -1,5 +1,6 @@
 package me.Lorinth.LRM.Variants;
 
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -10,7 +11,8 @@ public class InvisibleVariant extends MobVariant{
         super("Invisible");
     }
 
-    @Override
+    protected void loadDetails(FileConfiguration config){}
+
     boolean augment(LivingEntity entity) {
         entity.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 0, true));
         return true;

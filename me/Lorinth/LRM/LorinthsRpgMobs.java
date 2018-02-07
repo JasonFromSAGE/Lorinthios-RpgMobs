@@ -6,10 +6,12 @@ import me.Lorinth.LRM.Data.*;
 import me.Lorinth.LRM.Listener.CreatureEventListener;
 import me.Lorinth.LRM.Listener.UpdaterEventListener;
 import me.Lorinth.LRM.Util.OutputHandler;
+import me.Lorinth.LRM.Variants.MobVariant;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -25,6 +27,7 @@ public class LorinthsRpgMobs extends JavaPlugin{
 
     @Override
     public void onEnable(){
+        instance = this;
         OutputHandler.PrintInfo("Enabling v" + getDescription().getVersion() + "...");
         loadConfiguration();
         registerCommands();
@@ -35,8 +38,6 @@ public class LorinthsRpgMobs extends JavaPlugin{
         Bukkit.getPluginManager().registerEvents(new CreatureEventListener(dataLoader), this);
         Bukkit.getPluginManager().registerEvents(new UpdaterEventListener(updater), this);
         OutputHandler.PrintInfo("Finished!");
-
-        instance = this;
     }
 
     @Override
@@ -88,14 +89,10 @@ public class LorinthsRpgMobs extends JavaPlugin{
     /**
      * Get level of a given creature
      * @param creature creature you want to check
-     * @return level of creature
+     * @return level of creature, null if no level
      */
-    public static int GetLevelOfCreature(Creature creature){
-        if(creature.hasMetadata("Level"))
-            if(creature.getMetadata("Level").size() > 0)
-                return creature.getMetadata("Level").get(0).asInt();
-
-        return 1;
+    public static Integer GetLevelOfCreature(Creature creature){
+        return GetLevelOfEntity(creature);
     }
 
     /**
@@ -104,10 +101,25 @@ public class LorinthsRpgMobs extends JavaPlugin{
      * @return null if no level, otherwise returns level of entity
      */
     public static Integer GetLevelOfEntity(Entity entity){
-        if(entity instanceof Creature){
-            return GetLevelOfCreature((Creature) entity);
+        if(entity instanceof LivingEntity){
+            if(entity.hasMetadata("Lrm.Level"))
+                if(entity.getMetadata("Lrm.Level").size() > 0)
+                    return entity.getMetadata("Lrm.Level").get(0).asInt();
         }
-        else return null;
+        return null;
+    }
+
+    /**
+     * Returns the variant of the entity. Such as Burning, Poisonous, Fast, Slow, etc
+     * @param entity
+     * @return - The variant of the entity, null if no variant applied
+     */
+    public static MobVariant GetMobVariantOfEntity(Entity entity){
+        if(entity.hasMetadata("Lrm.MobVariant")){
+            return (MobVariant) entity.getMetadata("Lrm.MobVariant").get(0).value();
+        }
+
+        return null;
     }
 
     /**
