@@ -4,6 +4,7 @@ import me.Lorinth.LRM.Util.OutputHandler;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Creature;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 
@@ -43,7 +44,7 @@ public class EquipmentData{
         }
     }
 
-    public void equip(Creature creature, int level){
+    public void equip(LivingEntity creature, int level){
         EntityEquipment equipment = creature.getEquipment();
 
         //Main Hand

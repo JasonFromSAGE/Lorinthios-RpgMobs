@@ -1,5 +1,9 @@
 DistanceAlgorithm: Diamond # Circle, Diamond, Square (Recommend Diamond for best results, Circle is pretty intensive)
 AllowAutoUpdates: false #If true this will auto download updates on server start and will take effect on next startup
+MythicMobs:
+  Enabled: true
+  IgnoredWorlds:
+  - world_the_end
 SkillAPI:
   Enabled: false # if enabled, will use exp calculations for skillAPI
 Heroes:
@@ -42,6 +46,8 @@ LevelRegions:
       Disabled: false
 Entity:
   Animal:
+    Disabled: true
+  Misc:
     Disabled: true
   Monster:
     Disabled: false # Can disabled full groups

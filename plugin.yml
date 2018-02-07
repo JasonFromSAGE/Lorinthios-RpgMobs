@@ -1,7 +1,7 @@
 name: LorinthsRpgMobs
 main: me.Lorinth.LRM.LorinthsRpgMobs
-version: 1.0.1
-softdepend: [WorldGuard, Heroes, SkillAPI]
+version: 1.1.0
+softdepend: [WorldGuard, Heroes, SkillAPI, MythicMobs]
 description: A plugin that provides configurable settings for creatures
 commands:
   lrm:

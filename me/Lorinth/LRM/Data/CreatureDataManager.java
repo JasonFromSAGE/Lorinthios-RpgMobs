@@ -6,6 +6,7 @@ import me.Lorinth.LRM.Util.OutputHandler;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.plugin.Plugin;
 
@@ -22,6 +23,7 @@ public class CreatureDataManager implements DataManager {
         add("DisabledWorlds");
     }};
     private HashMap<String, CreatureData> animalData = new HashMap<>();
+    private HashMap<String, CreatureData> miscData = new HashMap<>();
     private HashMap<String, CreatureData> monsterData = new HashMap<>();
 
     public CreatureData getData(EntityType type){
@@ -31,22 +33,26 @@ public class CreatureDataManager implements DataManager {
             return monsterData.get(typeString);
         else if(animalData.containsKey(typeString))
             return animalData.get(typeString);
+        else if(miscData.containsKey(typeString))
+            return miscData.get(typeString);
         else
             return null;
 
     }
 
-    public CreatureData getData(Creature creature){
-        CreatureData data = getData(creature.getType());
+    public CreatureData getData(LivingEntity entity){
+        CreatureData data = getData(entity.getType());
         if(data != null){
             return data;
         }
         else{
-            CreatureData newData = new CreatureData(creature);
-            if(creature instanceof Monster)
-                monsterData.put(creature.getType().toString(), newData);
+            CreatureData newData = new CreatureData(entity);
+            if(entity instanceof Monster)
+                monsterData.put(entity.getType().toString(), newData);
+            else if(entity instanceof Creature)
+                animalData.put(entity.getType().toString(), newData);
             else
-                animalData.put(creature.getType().toString(), newData);
+                miscData.put(entity.getType().toString(), newData);
             return newData;
         }
     }
@@ -61,12 +67,17 @@ public class CreatureDataManager implements DataManager {
             if(data.save(config, "Entity.Monster."))
                 changed = true;
         }
+        for(CreatureData data : miscData.values()){
+            if(data.save(config, "Entity.Misc."))
+                changed = true;
+        }
         return changed;
     }
 
     public void loadData(FileConfiguration config, Plugin plugin){
         loadCreatureSection(config, "Entity.Animal");
         loadCreatureSection(config, "Entity.Monster");
+        loadCreatureSection(config, "Entity.Misc");
     }
 
     private void loadCreatureSection(FileConfiguration config, String prefix) {
@@ -88,8 +99,10 @@ public class CreatureDataManager implements DataManager {
 
             if(prefix.contains("Animal"))
                 animalData.put(type.toString(), new CreatureData(type, prefix, config));
-            else
+            else if(prefix.contains("Monster"))
                 monsterData.put(type.toString(), new CreatureData(type, prefix, config));
+            else
+                miscData.put(type.toString(), new CreatureData(type, prefix, config));
         }
         catch(Exception error){
             OutputHandler.PrintError("Failed to load entity : " + OutputHandler.HIGHLIGHT + key);

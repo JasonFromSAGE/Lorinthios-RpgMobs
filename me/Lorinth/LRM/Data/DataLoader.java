@@ -21,6 +21,7 @@ public class DataLoader implements DataManager{
     private HeroesDataManager heroesDataManager = new HeroesDataManager();
     private LevelRegionManager levelRegionManager = new LevelRegionManager();
     private SkillAPIDataManager skillAPIDataManager = new SkillAPIDataManager();
+    private MythicMobsDataManager mythicMobsDataManager = new MythicMobsDataManager();
     private SpawnPointManager spawnPointManager = new SpawnPointManager(this);
 
     private HashMap<String, ArrayList<LevelRegion>> allLevelRegions = new HashMap<>(); // String: World Name, List<LevelRegion> list of regions
@@ -55,6 +56,8 @@ public class DataLoader implements DataManager{
         return levelRegionManager;
     }
 
+    public MythicMobsDataManager getMythicMobsDataManager() { return mythicMobsDataManager; }
+
     public SkillAPIDataManager getSkillAPIDataManager(){ return skillAPIDataManager; }
 
     public SpawnPointManager getSpawnPointManager(){
@@ -63,7 +66,7 @@ public class DataLoader implements DataManager{
 
     public boolean saveData(FileConfiguration config){
         return spawnPointManager.saveData(config) || levelRegionManager.saveData(config) || creatureDataManager.saveData(config) ||
-                heroesDataManager.saveData(config) || skillAPIDataManager.saveData(config);
+                heroesDataManager.saveData(config) || skillAPIDataManager.saveData(config) || mythicMobsDataManager.saveData(config);
     }
 
     public void loadData(FileConfiguration config, Plugin plugin){
@@ -72,6 +75,7 @@ public class DataLoader implements DataManager{
         creatureDataManager.loadData(config, plugin);
         heroesDataManager.loadData(config, plugin);
         levelRegionManager.loadData(config, plugin);
+        mythicMobsDataManager.loadData(config, plugin);
         skillAPIDataManager.loadData(config, plugin);
         spawnPointManager.loadData(config, plugin);
     }

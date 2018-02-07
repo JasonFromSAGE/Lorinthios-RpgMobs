@@ -30,8 +30,7 @@ public class HeroesDataManager extends Disableable implements DataManager{
         if(!config.getKeys(false).contains("Heroes") ||
                 !config.getConfigurationSection("Heroes").getKeys(false).contains("Enabled")){
             OutputHandler.PrintInfo("Heroes options not found, Generating...");
-            setDefaults(config);
-            plugin.saveConfig();
+            setDefaults(config, plugin);
         }
 
         if(Bukkit.getServer().getPluginManager().getPlugin("Heroes") == null)
@@ -105,13 +104,15 @@ public class HeroesDataManager extends Disableable implements DataManager{
         return true;
     }
 
-    private void setDefaults(FileConfiguration config){
+    private void setDefaults(FileConfiguration config, Plugin plugin){
         config.set("Heroes.Enabled", false);
         config.set("Heroes.PartyExperienceFormulas.2", "1.5 * {exp} / 2");
         config.set("Heroes.PartyExperienceFormulas.3", "1.8 * {exp} / 3");
         config.set("Heroes.PartyExperienceFormulas.4", "2.0 * {exp} / 4");
         config.set("Heroes.PartyExperienceFormulas.5", "2.2 * {exp} / 5");
         config.set("Heroes.PartyExperienceFormulas.6", "2.4 * {exp} / 6");
+
+        plugin.saveConfig();
     }
 
 }

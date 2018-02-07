@@ -18,9 +18,8 @@ public class SkillAPIDataManager extends Disableable implements DataManager {
     public void loadData(FileConfiguration config, Plugin plugin){
         if(!config.getKeys(false).contains("SkillAPI") ||
                 !config.getConfigurationSection("SkillAPI").getKeys(false).contains("Enabled")){
-            config.set("SkillAPI.Enabled", false);
             OutputHandler.PrintInfo("SkillAPI options not found, Generating...");
-            plugin.saveConfig();
+            setDefaults(config, plugin);
         }
 
         if(Bukkit.getServer().getPluginManager().getPlugin("SkillAPI") == null)
@@ -49,5 +48,10 @@ public class SkillAPIDataManager extends Disableable implements DataManager {
 
         skillAPIEventListener.bindDeathEvent(player, new CreatureDeathData(exp, deathEvent.getEntity()));
         return true;
+    }
+
+    private void setDefaults(FileConfiguration config, Plugin plugin){
+        config.set("SkillAPI.Enabled", false);
+        plugin.saveConfig();
     }
 }

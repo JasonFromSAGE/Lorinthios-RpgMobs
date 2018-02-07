@@ -2,16 +2,14 @@ package me.Lorinth.LRM;
 
 import me.Lorinth.LRM.Command.CommandConstants;
 import me.Lorinth.LRM.Command.MainExecutor;
-import me.Lorinth.LRM.Data.CreatureDataManager;
-import me.Lorinth.LRM.Data.DataLoader;
-import me.Lorinth.LRM.Data.LevelRegionManager;
-import me.Lorinth.LRM.Data.SpawnPointManager;
+import me.Lorinth.LRM.Data.*;
 import me.Lorinth.LRM.Listener.CreatureEventListener;
 import me.Lorinth.LRM.Listener.UpdaterEventListener;
 import me.Lorinth.LRM.Util.OutputHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Creature;
+import org.bukkit.entity.Entity;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -101,6 +99,18 @@ public class LorinthsRpgMobs extends JavaPlugin{
     }
 
     /**
+     * Get level of entity
+     * @param entity the entity you want to check
+     * @return null if no level, otherwise returns level of entity
+     */
+    public static Integer GetLevelOfEntity(Entity entity){
+        if(entity instanceof Creature){
+            return GetLevelOfCreature((Creature) entity);
+        }
+        else return null;
+    }
+
+    /**
      * Get the level of a specific location
      * @param location location to check
      * @return level at location
@@ -131,5 +141,9 @@ public class LorinthsRpgMobs extends JavaPlugin{
      */
     public static CreatureDataManager GetCreatureDataManager(){
         return dataLoader.getCreatureDataManager();
+    }
+
+    public static boolean IsMythicMob(Entity entity){
+        return dataLoader.getMythicMobsDataManager().isMythicMob(entity);
     }
 }

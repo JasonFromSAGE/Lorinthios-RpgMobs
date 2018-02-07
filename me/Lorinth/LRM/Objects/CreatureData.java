@@ -7,6 +7,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 
 import java.util.ArrayList;
@@ -43,17 +44,17 @@ public class CreatureData extends DirtyObject{
 
     /**
      * Creates new creature data based on a creature entity
-     * @param creature - creature to base data on
+     * @param entity - creature to base data on
      */
-    public CreatureData(Creature creature){
-        entityType = creature.getType();
+    public CreatureData(LivingEntity entity){
+        entityType = entity.getType();
 
-        String type = creature instanceof Monster ? "Monster" : "Animal";
+        String type = entity instanceof Monster ? "Monster" : entity instanceof Creature ? "Animal" : "Misc";
         if(LorinthsRpgMobs.instance.getConfig().getBoolean("Entity." + type + ".Disabled"))
             groupDisabled = true;
 
-        healthFormula = (creature.getAttribute(Attribute.GENERIC_MAX_HEALTH) != null ? (int) creature.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() : 20) + " + ({level} / 3) + ({level} / 5) + rand(5)";
-        damageFormula = (creature.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE) != null ? (int) creature.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).getValue() : 2) + " + rand(3) + ({level} / 12)";
+        healthFormula = (entity.getAttribute(Attribute.GENERIC_MAX_HEALTH) != null ? (int) entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() : 20) + " + ({level} / 3) + ({level} / 5) + rand(5)";
+        damageFormula = (entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE) != null ? (int) entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).getValue() : 2) + " + rand(3) + ({level} / 12)";
         expFormula = "rand(5) + 1 + rand({level} / 5)";
 
         String friendlyName = getUserFriendlyName(entityType);
