@@ -12,6 +12,7 @@ import me.Lorinth.LRM.Data.MobVariantDataManager;
 import me.Lorinth.LRM.Data.SkillAPIDataManager;
 import me.Lorinth.LRM.LorinthsRpgMobs;
 import me.Lorinth.LRM.Objects.*;
+import me.Lorinth.LRM.Util.MetaDataConstants;
 import me.Lorinth.LRM.Util.OutputHandler;
 import me.Lorinth.LRM.Variants.MobVariant;
 import org.bukkit.Bukkit;
@@ -55,13 +56,13 @@ public class CreatureEventListener implements Listener {
 
         //Set Level
         int level = dataLoader.calculateLevel(entity.getLocation());
-        entity.setMetadata("Lrm.Level", new FixedMetadataValue(LorinthsRpgMobs.instance, level));
+        entity.setMetadata(MetaDataConstants.Level, new FixedMetadataValue(LorinthsRpgMobs.instance, level));
 
         setHealth(entity, data, level);
         setDamage(entity, data, level);
         setEquipment(entity, data, level);
         setName(entity, data, level);
-        setVarient(entity);
+        setVariant(entity);
     }
 
     private void setHealth(LivingEntity entity, CreatureData data, int level){
@@ -79,7 +80,7 @@ public class CreatureEventListener implements Listener {
         AttributeInstance attribute = entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE);
         if(attribute != null)
             attribute.setBaseValue(damage);
-        entity.setMetadata("Damage", new FixedMetadataValue(LorinthsRpgMobs.instance, damage));
+        entity.setMetadata(MetaDataConstants.Damage, new FixedMetadataValue(LorinthsRpgMobs.instance, damage));
     }
 
     private void setEquipment(LivingEntity entity, CreatureData data, int level){
@@ -101,7 +102,7 @@ public class CreatureEventListener implements Listener {
         entity.setRemoveWhenFarAway(true);
     }
 
-    private void setVarient(LivingEntity entity){
+    private void setVariant(LivingEntity entity){
         MobVariantDataManager.GetVariant(entity);
 
         String name = entity.getCustomName();

@@ -5,7 +5,9 @@ import me.Lorinth.LRM.LorinthsRpgMobs;
 import me.Lorinth.LRM.Objects.ConfigValue;
 import me.Lorinth.LRM.Objects.Disableable;
 import me.Lorinth.LRM.Util.ConfigHelper;
+import me.Lorinth.LRM.Util.MetaDataConstants;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
@@ -33,14 +35,6 @@ public abstract class MobVariant extends Disableable{
         load(LorinthsRpgMobs.instance.getConfig(), LorinthsRpgMobs.instance, prefix);
     }
 
-    protected String getPrefix(){
-        return prefix + "." + name;
-    }
-
-    public int getWeight(){
-        return weight;
-    }
-
     public void load(FileConfiguration config, Plugin plugin, String prefix){
         prefix += "." + name;
         //Check for config defaults
@@ -60,6 +54,26 @@ public abstract class MobVariant extends Disableable{
         }
     }
 
+    public void onHit(LivingEntity target){
+        return;
+    }
+
+    public void whenHit(LivingEntity attacker){
+        return;
+    }
+
+    public String getName(){
+        return this.name;
+    }
+
+    public int getWeight(){
+        return weight;
+    }
+
+    protected String getPrefix(){
+        return prefix + "." + name;
+    }
+
     protected ArrayList<ConfigValue> getConfigValues(){
         return configValues;
     }
@@ -70,18 +84,21 @@ public abstract class MobVariant extends Disableable{
      * Applies the variant to the entity
      * @param entity - the entity to apply the variant to
      */
-    public boolean apply(LivingEntity entity){
-        if(name == "Normal")
-            return true;
+    public boolean apply(Entity entity){
         if(isDisabled() || LorinthsRpgMobs.IsMythicMob(entity) || disabledEntityTypes.contains(entity.getType().name()))
             return false;
 
         if(augment(entity)) {
             entity.setCustomName(entity.getCustomName().replace("{Variant}", getName()).replace("{variant}", getName().toLowerCase()));
-            entity.setMetadata("Lrm.MobVariant", new FixedMetadataValue(LorinthsRpgMobs.instance, this));
+            entity.setMetadata(MetaDataConstants.Variant, new FixedMetadataValue(LorinthsRpgMobs.instance, this));
             return true;
         }
         return false;
+    }
+
+    public void remove(Entity entity){
+        removeAugment(entity);
+        entity.removeMetadata(MetaDataConstants.Variant, LorinthsRpgMobs.instance);
     }
 
     /**
@@ -89,19 +106,9 @@ public abstract class MobVariant extends Disableable{
      * @param entity
      * @return - if the variant took effect
      */
-    abstract boolean augment(LivingEntity entity);
+    abstract boolean augment(Entity entity);
 
-    public void onHit(LivingEntity target){
-        return;
-    }
-
-    public void whenHit(LivingEntity attacker){
-
-    }
-
-    public String getName(){
-        return this.name;
-    }
+    abstract void removeAugment(Entity entity);
 
     private void setDefaults(FileConfiguration config, Plugin plugin, String prefix){
         config.set(prefix + ".Disabled", false);

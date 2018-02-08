@@ -5,6 +5,7 @@ import me.Lorinth.LRM.Command.MainExecutor;
 import me.Lorinth.LRM.Data.*;
 import me.Lorinth.LRM.Listener.CreatureEventListener;
 import me.Lorinth.LRM.Listener.UpdaterEventListener;
+import me.Lorinth.LRM.Util.MetaDataConstants;
 import me.Lorinth.LRM.Util.OutputHandler;
 import me.Lorinth.LRM.Variants.MobVariant;
 import org.bukkit.Bukkit;
@@ -102,9 +103,9 @@ public class LorinthsRpgMobs extends JavaPlugin{
      */
     public static Integer GetLevelOfEntity(Entity entity){
         if(entity instanceof LivingEntity){
-            if(entity.hasMetadata("Lrm.Level"))
-                if(entity.getMetadata("Lrm.Level").size() > 0)
-                    return entity.getMetadata("Lrm.Level").get(0).asInt();
+            if(entity.hasMetadata(MetaDataConstants.Level))
+                if(entity.getMetadata(MetaDataConstants.Level).size() > 0)
+                    return entity.getMetadata(MetaDataConstants.Level).get(0).asInt();
         }
         return null;
     }
@@ -115,8 +116,8 @@ public class LorinthsRpgMobs extends JavaPlugin{
      * @return - The variant of the entity, null if no variant applied
      */
     public static MobVariant GetMobVariantOfEntity(Entity entity){
-        if(entity.hasMetadata("Lrm.MobVariant")){
-            return (MobVariant) entity.getMetadata("Lrm.MobVariant").get(0).value();
+        if(entity.hasMetadata(MetaDataConstants.Variant)){
+            return (MobVariant) entity.getMetadata(MetaDataConstants.Variant).get(0).value();
         }
 
         return null;
@@ -137,6 +138,10 @@ public class LorinthsRpgMobs extends JavaPlugin{
      */
     public static SpawnPointManager GetSpawnPointManager(){
         return dataLoader.getSpawnPointManager();
+    }
+
+    public static MythicMobsDataManager GetMythicMobsDataManager(){
+        return dataLoader.getMythicMobsDataManager();
     }
 
     /**

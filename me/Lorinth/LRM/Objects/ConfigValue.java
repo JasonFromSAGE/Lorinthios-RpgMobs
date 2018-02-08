@@ -18,7 +18,7 @@ public class ConfigValue<T> {
             return value;
         }
         catch(Exception exception){
-            return null;
+            return this.value;
         }
     }
 

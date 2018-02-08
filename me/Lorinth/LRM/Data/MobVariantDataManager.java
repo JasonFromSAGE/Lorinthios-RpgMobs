@@ -1,20 +1,24 @@
 package me.Lorinth.LRM.Data;
 
+import me.Lorinth.LRM.LorinthsRpgMobs;
 import me.Lorinth.LRM.Objects.DataManager;
 import me.Lorinth.LRM.Objects.Disableable;
 import me.Lorinth.LRM.Util.ConfigHelper;
 import me.Lorinth.LRM.Util.OutputHandler;
 import me.Lorinth.LRM.Variants.*;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.plugin.Plugin;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
 public class MobVariantDataManager extends Disableable implements DataManager {
 
     private static HashMap<String, MobVariant> mobVariants = new HashMap<>();
+    private static ArrayList<String> disabledEntityTypes = new ArrayList<>();
     private static int totalWeight = 0;
     private static int variantChance = 0;
     private static MobVariantDataManager instance;
@@ -32,16 +36,20 @@ public class MobVariantDataManager extends Disableable implements DataManager {
         }
 
         if(config.getBoolean("MobVariants.Disabled")) {
-            OutputHandler.PrintInfo("Mob Variants are disabled");
+            OutputHandler.PrintInfo("Mob Variants Disabled!");
             return;
         }
+
+        OutputHandler.PrintInfo("Mob Variants Enabled!");
         variantChance = config.getInt("MobVariants.VariantChance");
+        disabledEntityTypes.addAll(config.getStringList("MobVariants.DisabledTypes"));
 
         loadInternalVariants();
     }
 
     //Variants self load/add when instantiated
     private void loadInternalVariants(){
+        new BlindingVariant();
         new BurningVariant();
         new FastVariant();
         new GlowingVariant();
@@ -53,13 +61,17 @@ public class MobVariantDataManager extends Disableable implements DataManager {
     }
 
     public static void AddVariant(MobVariant variant){
-        OutputHandler.PrintInfo("Loaded Variant, " + variant.getName());
+        //OutputHandler.PrintInfo("Loaded Variant, " + variant.getName());
         mobVariants.put(variant.getName(), variant);
         totalWeight += variant.getWeight();
     }
 
     public static void GetVariant(LivingEntity entity){
         if(totalWeight == 0)
+            return;
+        if(disabledEntityTypes.contains(entity.getType().name()))
+            return;
+        if(LorinthsRpgMobs.IsMythicMob(entity))
             return;
         if(random.nextDouble() * 100 < variantChance){
             int current = 0;
@@ -81,8 +93,9 @@ public class MobVariantDataManager extends Disableable implements DataManager {
     }
 
     private void setDefaults(FileConfiguration config, Plugin plugin){
-        config.set("MobVariants.Disabled", false);
+        config.set("MobVariants.Disabled", true);
         config.set("MobVariants.VariantChance", 40);
+        config.set("MobVariants.DisabledTypes", new ArrayList<String>(){{ add(EntityType.CREEPER.name()); }});
         plugin.saveConfig();
     }
 }

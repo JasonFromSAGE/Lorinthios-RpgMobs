@@ -4,25 +4,24 @@ import me.Lorinth.LRM.Objects.ConfigValue;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Monster;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-public class PoisonousVariant extends MobVariant{
+public class BlindingVariant extends MobVariant{
 
     private static int duration;
     private static int potionLevel;
     private static double chance;
     private static Random random = new Random();
 
-    public PoisonousVariant(){
-        super("Poisonous", new ArrayList<ConfigValue>(){{
-            add(new ConfigValue<>("Poison.Duration", 3 * 20));
-            add(new ConfigValue<>("Poison.Level", 0));
-            add(new ConfigValue<>("Poison.Chance", 20.0));
+    public BlindingVariant(){
+        super("Blinding", new ArrayList<ConfigValue>(){{
+            add(new ConfigValue<>("Blinding.Duration", 3 * 20));
+            add(new ConfigValue<>("Blinding.Level", 0));
+            add(new ConfigValue<>("Blinding.Chance", 33.3));
         }});
     }
 
@@ -36,11 +35,12 @@ public class PoisonousVariant extends MobVariant{
 
     @Override
     boolean augment(Entity entity) {
-        if(entity instanceof Monster)
+        if(entity instanceof LivingEntity)
             return true;
         return false;
     }
 
+    @Override
     void removeAugment(Entity entity){
 
     }
@@ -48,6 +48,6 @@ public class PoisonousVariant extends MobVariant{
     @Override
     public void onHit(LivingEntity target){
         if(random.nextDouble() * 100 < chance)
-            target.addPotionEffect(new PotionEffect(PotionEffectType.POISON, duration, potionLevel));
+            target.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, duration, potionLevel));
     }
 }

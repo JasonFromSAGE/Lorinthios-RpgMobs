@@ -4,14 +4,15 @@ import me.Lorinth.LRM.Objects.ConfigValue;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 
 import java.util.ArrayList;
 
 public class ToughVariant extends MobVariant{
 
-    private int rawDefense = 2;
-    private double defenseMultiplier = 1.0;
+    private static int rawDefense;
+    private static double defenseMultiplier;
 
     public ToughVariant(){
         super("Tough", new ArrayList<ConfigValue>(){{
@@ -20,27 +21,34 @@ public class ToughVariant extends MobVariant{
         }});
     }
 
+    @Override
     protected void loadDetails(FileConfiguration config){
         ArrayList<ConfigValue> configValues = getConfigValues();
         rawDefense = (int) configValues.get(0).getValue(config);
         defenseMultiplier = (double) configValues.get(1).getValue(config);
     }
 
-    private void setRawDefenseBonus(int rawDefenseBonus){
-        rawDefense = rawDefenseBonus;
-    }
-
-    private void setDefenseMultiplier(double multiplier){
-        defenseMultiplier = multiplier;
+    @Override
+    boolean augment(Entity entity) {
+        if(entity instanceof LivingEntity) {
+            AttributeInstance instance = ((LivingEntity) entity).getAttribute(Attribute.GENERIC_ARMOR);
+            if (instance != null) {
+                instance.setBaseValue(instance.getValue() * defenseMultiplier + rawDefense);
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
-    boolean augment(LivingEntity entity) {
-        AttributeInstance instance = entity.getAttribute(Attribute.GENERIC_ARMOR);
-        if(instance != null) {
-            instance.setBaseValue(instance.getValue() * defenseMultiplier + rawDefense);
-            return true;
+    void removeAugment(Entity entity){
+        if(!(entity instanceof LivingEntity))
+            return;
+
+        LivingEntity living = (LivingEntity) entity;
+        AttributeInstance instance = living.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE);
+        if (instance != null) {
+            instance.setBaseValue(instance.getValue() * (1 / defenseMultiplier) - rawDefense);
         }
-        return false;
     }
 }
