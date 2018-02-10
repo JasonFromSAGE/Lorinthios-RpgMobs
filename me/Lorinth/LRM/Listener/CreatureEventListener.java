@@ -103,19 +103,24 @@ public class CreatureEventListener implements Listener {
     }
 
     private void setVariant(LivingEntity entity){
-        MobVariantDataManager.GetVariant(entity);
+        MobVariant variant = MobVariantDataManager.GetVariant(entity);
 
-        String name = entity.getCustomName();
-        ArrayList<String> removeTags = new ArrayList<String>(){{
-            add("{variant} ");
-            add("{Variant} ");
-            add("{variant}");
-            add("{Variant}");
-        }};
-        for(String tag : removeTags)
-            name = name.replace(tag, "");
+        //If Variant hasn't been applied, replace all variant tags
+        if(variant == null){
+            String name = entity.getCustomName();
+            if(name != null){
+                ArrayList<String> removeTags = new ArrayList<String>(){{
+                    add("{variant} ");
+                    add("{Variant} ");
+                    add("{variant}");
+                    add("{Variant}");
+                }};
+                for(String tag : removeTags)
+                    name = name.replace(tag, "");
 
-        entity.setCustomName(name);
+                entity.setCustomName(name);
+            }
+        }
     }
 
     @EventHandler(ignoreCancelled = true)

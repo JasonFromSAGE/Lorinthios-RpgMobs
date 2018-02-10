@@ -3,7 +3,6 @@ package me.Lorinth.LRM.Listener;
 import com.sucy.skill.api.enums.ExpSource;
 import com.sucy.skill.api.event.PlayerExperienceGainEvent;
 import me.Lorinth.LRM.Objects.CreatureDeathData;
-import org.bukkit.entity.Creature;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

@@ -66,13 +66,12 @@ public class MobVariantDataManager extends Disableable implements DataManager {
         totalWeight += variant.getWeight();
     }
 
-    public static void GetVariant(LivingEntity entity){
-        if(totalWeight == 0)
-            return;
-        if(disabledEntityTypes.contains(entity.getType().name()))
-            return;
-        if(LorinthsRpgMobs.IsMythicMob(entity))
-            return;
+    public static MobVariant GetVariant(LivingEntity entity){
+        if(totalWeight == 0 ||
+            disabledEntityTypes.contains(entity.getType().name()) ||
+            LorinthsRpgMobs.IsMythicMob(entity))
+            return null;
+
         if(random.nextDouble() * 100 < variantChance){
             int current = 0;
             int target = random.nextInt(totalWeight);
@@ -80,11 +79,12 @@ public class MobVariantDataManager extends Disableable implements DataManager {
                 current += variant.getWeight();
                 if(current > target)
                     if(variant.apply(entity))
-                        return;
+                        return variant;
                     else
-                        GetVariant(entity);
+                        return GetVariant(entity);
             }
         }
+        return null;
     }
 
     @Override

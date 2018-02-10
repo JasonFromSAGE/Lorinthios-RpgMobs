@@ -140,6 +140,8 @@ public class LorinthsRpgMobs extends JavaPlugin{
         return dataLoader.getSpawnPointManager();
     }
 
+    public static MobVariantDataManager GetMobVariantManager(){ return dataLoader.getMobVariantManager(); }
+
     public static MythicMobsDataManager GetMythicMobsDataManager(){
         return dataLoader.getMythicMobsDataManager();
     }

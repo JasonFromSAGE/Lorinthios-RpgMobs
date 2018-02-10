@@ -57,6 +57,8 @@ public class DataLoader implements DataManager{
         return levelRegionManager;
     }
 
+    public MobVariantDataManager getMobVariantManager(){ return mobVariantDataManager; }
+
     public MythicMobsDataManager getMythicMobsDataManager() { return mythicMobsDataManager; }
 
     public SkillAPIDataManager getSkillAPIDataManager(){ return skillAPIDataManager; }
