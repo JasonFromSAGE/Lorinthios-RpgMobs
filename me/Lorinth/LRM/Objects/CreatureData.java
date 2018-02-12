@@ -2,6 +2,7 @@ package me.Lorinth.LRM.Objects;
 
 import me.Lorinth.LRM.LorinthsRpgMobs;
 import me.Lorinth.LRM.Util.Calculator;
+import me.Lorinth.LRM.Util.ConfigHelper;
 import me.Lorinth.LRM.Util.OutputHandler;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -178,25 +179,32 @@ public class CreatureData extends DirtyObject{
      * @param prefix - the path prefix we will use
      */
     private void loadNames(FileConfiguration config, String prefix){
-        if(config.contains(prefix + ".Names")){
+        if(ConfigHelper.ConfigContainsPath(config, prefix + ".Names")){
             for(String key : config.getConfigurationSection(prefix + ".Names").getKeys(false)){
+                try{
+                    int level = Integer.parseInt(key);
+                    String name = "";
+                    boolean overrideFormat = false;
 
-                int level = Integer.parseInt(key);
-                String name = "";
-                boolean overrideFormat = false;
+                    //Backwards support for Names
+                    if(config.get(prefix + ".Names." + key) != null)
+                        name = config.getString(prefix + ".Names." + key).replace("&", "§");
+                    if(config.get(prefix + ".Names." + key + ".Name") != null)
+                        name = config.getString(prefix + ".Names." + key + ".Name").replace("&", "§");
 
-                //Backwards support for Names
-                if(config.get(prefix + ".Names." + key) != null)
-                    name = config.getString(prefix + ".Names." + key).replace("&", "§");
-                if(config.get(prefix + ".Names." + key + ".Name") != null)
-                    name = config.getString(prefix + ".Names." + key + ".Name").replace("&", "§");
+                    //Check for OverrideFormat
+                    if(config.contains(prefix + ".Names." + key + ".OverrideFormat"))
+                        overrideFormat = config.getBoolean(prefix + ".Names." + key + ".OverrideFormat");
 
-                //Check for OverrideFormat
-                if(config.contains(prefix + ".Names." + key + ".OverrideFormat"))
-                    overrideFormat = config.getBoolean(prefix + ".Names." + key + ".OverrideFormat");
-
-                nameData.add(new NameData(level, name, overrideFormat));
+                    nameData.add(new NameData(level, name, overrideFormat));
+                }
+                catch(Exception exception){
+                    OutputHandler.PrintException("Unable to part key, '" + key + "' as a level/int.", exception);
+                }
             }
+        }
+        else{
+            OutputHandler.PrintInfo("No names for entity, " + entityType.name());
         }
     }
 
@@ -286,9 +294,8 @@ public class CreatureData extends DirtyObject{
      * @return - name that will be applied
      */
     public String getNameAtLevel(String format, NameData regionNameData, int level){
-        if(regionNameData != null){
+        if(regionNameData != null)
             return regionNameData.getName(level, format);
-        }
 
         NameData highest = null;
         for(NameData data : nameData){
@@ -299,7 +306,6 @@ public class CreatureData extends DirtyObject{
 
         if(highest != null)
             return highest.getName(level, format);
-
         return null;
     }
 

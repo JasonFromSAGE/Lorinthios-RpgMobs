@@ -149,27 +149,30 @@ public class CreatureEventListener implements Listener {
     @EventHandler(ignoreCancelled = true)
     public void onCreatureDeath(EntityDeathEvent event){
         LivingEntity entity = event.getEntity();
-        if(event.getDroppedExp() == 0 || entity.getKiller() == null){
+        if(event.getDroppedExp() == 0 || entity.getKiller() == null)
             return;
-        }
+
 
         CreatureData data = dataLoader.getCreatureDataManager().getData(entity);
         if (data.isDisabled(entity.getWorld().getName()))
             return;
 
-        int level = LorinthsRpgMobs.GetLevelOfEntity(entity);
-        int exp = data.getExperienceAtLevel(level);
 
-        if(exp > 0){
-            Player player = entity.getKiller();
-            HeroesDataManager heroesManager = dataLoader.getHeroesDataManager();
-            SkillAPIDataManager skillAPIDataManager = dataLoader.getSkillAPIDataManager();
-            if(!heroesManager.handleEntityDeathEvent(event, player, exp))
-                event.setDroppedExp(0);
-            else if(!skillAPIDataManager.handleEntityDeathEvent(event, player, exp))
-                event.setDroppedExp(0);
-            else
-                event.setDroppedExp(exp);
+        Integer level = LorinthsRpgMobs.GetLevelOfEntity(entity);
+        if(level != null){
+            int exp = data.getExperienceAtLevel(level);
+
+            if(exp > 0){
+                Player player = entity.getKiller();
+                HeroesDataManager heroesManager = dataLoader.getHeroesDataManager();
+                SkillAPIDataManager skillAPIDataManager = dataLoader.getSkillAPIDataManager();
+                if(heroesManager.handleEntityDeathEvent(event, player, exp))
+                    event.setDroppedExp(0);
+                else if(skillAPIDataManager.handleEntityDeathEvent(event, player, exp))
+                    event.setDroppedExp(0);
+                else
+                    event.setDroppedExp(exp);
+            }
         }
     }
 }
