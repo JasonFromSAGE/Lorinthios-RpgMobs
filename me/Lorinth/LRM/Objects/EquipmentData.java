@@ -1,5 +1,6 @@
 package me.Lorinth.LRM.Objects;
 
+import me.Lorinth.LRM.LorinthsRpgMobs;
 import me.Lorinth.LRM.Util.OutputHandler;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -46,48 +47,52 @@ public class EquipmentData{
 
     public void equip(LivingEntity creature, int level){
         EntityEquipment equipment = creature.getEquipment();
-        if (!(equipment.getItemInMainHand() != null && equipment.getItemInMainHand().getType() != Material.AIR)){
-        	//Main Hand
+        //Main Hand
+        if (!(doesVanillaItemOverride(equipment.getItemInMainHand()))){
         	EquipmentResult mainHand = getHighest(level, WeaponLevels);
             equipment.setItemInMainHand(mainHand.getItem());
             equipment.setItemInMainHandDropChance((float) mainHand.getDropChance());
         }
-        
-        if (!(equipment.getItemInOffHand() != null && equipment.getItemInOffHand().getType() != Material.AIR)){
-        	//Off Hand
+
+        //Off Hand
+        if (!(doesVanillaItemOverride(equipment.getItemInOffHand()))){
         	EquipmentResult offHand = getHighest(level, OffHandLevels);
             equipment.setItemInOffHand(offHand.getItem());
             equipment.setItemInOffHandDropChance((float) offHand.getDropChance());
         }
-        
-        if (!(equipment.getHelmet() != null && equipment.getHelmet().getType() != Material.AIR)){
-        	//Helmet
+
+        //Helmet
+        if (!(doesVanillaItemOverride(equipment.getHelmet()))){
         	EquipmentResult helmet = getHighest(level, HelmetLevels);
             equipment.setHelmet(helmet.getItem());
             equipment.setHelmetDropChance((float) helmet.getDropChance());
-        }  
-        
-        if (!(equipment.getChestplate() != null && equipment.getChestplate().getType() != Material.AIR)){
-            //Chest
+        }
+
+        //Chest
+        if (!(doesVanillaItemOverride(equipment.getChestplate()))){
             EquipmentResult chest = getHighest(level, ChestLevels);
             equipment.setChestplate(chest.getItem());
             equipment.setChestplateDropChance((float) chest.getDropChance());
         }
 
-
-        if (!(equipment.getLeggings() != null && equipment.getLeggings().getType() != Material.AIR)){
-            //Legs
+        //Legs
+        if (!(doesVanillaItemOverride(equipment.getLeggings()))){
             EquipmentResult legs = getHighest(level, LegLevels);
             equipment.setLeggings(legs.getItem());
             equipment.setLeggingsDropChance((float) legs.getDropChance());
         }
-        
-        if (!(equipment.getBoots() != null && equipment.getBoots().getType() != Material.AIR)){
-            //Boots
+
+        //Boots
+        if (!(doesVanillaItemOverride(equipment.getBoots()))){
             EquipmentResult boots = getHighest(level, BootLevels);
             equipment.setBoots(boots.getItem());
             equipment.setBootsDropChance((float) boots.getDropChance());
         }
+    }
+
+    private boolean doesVanillaItemOverride(ItemStack item){
+        return LorinthsRpgMobs.properties.VanillaMobEquipmentOverrides && item != null && item.getType() != Material.AIR &&
+                item.getItemMeta() != null && item.getItemMeta().hasEnchants();
     }
 
     private EquipmentResult getHighest(int level, HashMap<Integer, EquipmentDetail> equipLevels){

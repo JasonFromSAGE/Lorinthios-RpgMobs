@@ -3,6 +3,7 @@ package me.Lorinth.LRM.Data;
 import me.Lorinth.LRM.Listener.MythicMobsListener;
 import me.Lorinth.LRM.Objects.DataManager;
 import me.Lorinth.LRM.Objects.Disableable;
+import me.Lorinth.LRM.Util.ConfigHelper;
 import me.Lorinth.LRM.Util.OutputHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -18,8 +19,8 @@ public class MythicMobsDataManager extends Disableable implements DataManager{
     private MythicMobsListener mythicMobsListener;
 
     public void loadData(FileConfiguration config, Plugin plugin){
-        if(!config.getKeys(false).contains("MythicMobs") ||
-                !config.getConfigurationSection("MythicMobs").getKeys(false).contains("Enabled")){
+        if(!ConfigHelper.ConfigContainsPath(config, "MythicMobs") ||
+                !!ConfigHelper.ConfigContainsPath(config, "MythicMobs.Enabled")){
             OutputHandler.PrintInfo("MythicMobs options not found, Generating...");
             setDefaults(config, plugin);
         }

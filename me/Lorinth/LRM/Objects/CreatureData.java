@@ -293,9 +293,9 @@ public class CreatureData extends DirtyObject{
      * @param regionNameData - regionNameData if applicable
      * @return - name that will be applied
      */
-    public String getNameAtLevel(String format, NameData regionNameData, int level){
+    public String getNameAtLevel(NameData regionNameData, int level){
         if(regionNameData != null)
-            return regionNameData.getName(level, format);
+            return regionNameData.getName(level);
 
         NameData highest = null;
         for(NameData data : nameData){
@@ -305,7 +305,7 @@ public class CreatureData extends DirtyObject{
         }
 
         if(highest != null)
-            return highest.getName(level, format);
+            return highest.getName(level);
         return null;
     }
 

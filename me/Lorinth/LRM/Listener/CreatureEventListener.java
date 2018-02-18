@@ -1,11 +1,5 @@
 package me.Lorinth.LRM.Listener;
 
-import com.herocraftonline.heroes.api.events.ExperienceChangeEvent;
-import com.herocraftonline.heroes.api.events.HeroKillCharacterEvent;
-import com.herocraftonline.heroes.characters.classes.HeroClass;
-import com.sucy.skill.api.skills.Skill;
-import io.lumine.xikage.mythicmobs.MythicMobs;
-import io.lumine.xikage.mythicmobs.api.bukkit.BukkitAPIHelper;
 import me.Lorinth.LRM.Data.DataLoader;
 import me.Lorinth.LRM.Data.HeroesDataManager;
 import me.Lorinth.LRM.Data.MobVariantDataManager;
@@ -13,26 +7,19 @@ import me.Lorinth.LRM.Data.SkillAPIDataManager;
 import me.Lorinth.LRM.LorinthsRpgMobs;
 import me.Lorinth.LRM.Objects.*;
 import me.Lorinth.LRM.Util.MetaDataConstants;
-import me.Lorinth.LRM.Util.OutputHandler;
 import me.Lorinth.LRM.Variants.MobVariant;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.entity.Creature;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityTameEvent;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 
@@ -92,9 +79,8 @@ public class CreatureEventListener implements Listener {
     private void setName(LivingEntity entity, CreatureData data, int level){
         LevelRegion region = LorinthsRpgMobs.GetLevelRegionManager().getHighestPriorityLeveledRegionAtLocation(entity.getLocation());
         NameData regionNameData = region != null ? region.getEntityName(entity.getType()) : null;
-        NameOptions nameOptions = dataLoader.getNameOptions();
-        entity.setCustomNameVisible(nameOptions.getTagsAlwaysOn());
-        String name = data.getNameAtLevel(nameOptions.getNameFormat(), regionNameData, level);
+        entity.setCustomNameVisible(LorinthsRpgMobs.properties.NameTagsAlwaysOn);
+        String name = data.getNameAtLevel(regionNameData, level);
         if(name != null)
             entity.setCustomName(name);
 
@@ -105,7 +91,7 @@ public class CreatureEventListener implements Listener {
     private void setVariant(LivingEntity entity){
         MobVariant variant = MobVariantDataManager.GetVariant(entity);
 
-        //If Variant hasn't been applied, replace all variant tags
+        //If Variant hasn't been applied, replace all variant tags in format
         if(variant == null){
             String name = entity.getCustomName();
             if(name != null){

@@ -1,5 +1,6 @@
 package me.Lorinth.LRM.Objects;
 
+import me.Lorinth.LRM.LorinthsRpgMobs;
 import org.bukkit.configuration.file.FileConfiguration;
 
 /**
@@ -26,11 +27,11 @@ public class NameData {
             config.set(prefix + ".Names." + Level + ".OverrideFormat", null);
     }
 
-    public String getName(int level, String format){
+    public String getName(int level){
         if(OverrideFormat)
             return Name.replace("{level}", Integer.toString(level));
         else
-            return format.replace("{name}", Name)
+            return LorinthsRpgMobs.properties.NameFormat.replace("{name}", Name)
                          .replace("{level}", Integer.toString(level));
     }
 

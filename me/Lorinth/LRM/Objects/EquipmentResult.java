@@ -1,6 +1,5 @@
 package me.Lorinth.LRM.Objects;
 
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 public class EquipmentResult {

@@ -1,6 +1,8 @@
 package me.Lorinth.LRM.Data;
 
+import me.Lorinth.LRM.LorinthsRpgMobs;
 import me.Lorinth.LRM.Objects.*;
+import me.Lorinth.LRM.Util.ConfigHelper;
 import me.Lorinth.LRM.Util.OutputHandler;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -14,7 +16,6 @@ import java.util.HashMap;
  */
 public class DataLoader implements DataManager{
 
-    private NameOptions nameOptions;
     protected DistanceAlgorithm distanceAlgorithm = DistanceAlgorithm.Diamond;
 
     private CreatureDataManager creatureDataManager = new CreatureDataManager();
@@ -39,10 +40,6 @@ public class DataLoader implements DataManager{
                 return closestSpawnPoint.calculateLevel(location, distanceAlgorithm);
         }
         return -1; //this world is disabled if -1
-    }
-
-    public NameOptions getNameOptions(){
-        return nameOptions;
     }
 
     public CreatureDataManager getCreatureDataManager(){
@@ -74,8 +71,7 @@ public class DataLoader implements DataManager{
     }
 
     public void loadData(FileConfiguration config, Plugin plugin){
-        loadNameOptions(config, plugin);
-        loadDistanceAlgorithm(config, plugin);
+        loadGlobalOptions(config, plugin);
         creatureDataManager.loadData(config, plugin);
         heroesDataManager.loadData(config, plugin);
         levelRegionManager.loadData(config, plugin);
@@ -85,9 +81,17 @@ public class DataLoader implements DataManager{
         spawnPointManager.loadData(config, plugin);
     }
 
-    private void loadNameOptions(FileConfiguration config, Plugin plugin){
-        nameOptions = new NameOptions();
-        nameOptions.loadData(config, plugin);
+    private void loadGlobalOptions(FileConfiguration config, Plugin plugin){
+        LorinthsRpgMobs.properties.NameTagsAlwaysOn = config.getBoolean("Names.TagsAlwaysOn");
+        LorinthsRpgMobs.properties.NameFormat = config.getString("Names.Format").replaceAll("&", "§");
+        loadDistanceAlgorithm(config, plugin);
+
+        if(ConfigHelper.ConfigContainsPath(config, "VanillaMobEquipmentOverrides")){
+            LorinthsRpgMobs.properties.VanillaMobEquipmentOverrides = config.getBoolean("VanillaMobEquipmentOverrides");
+        }
+        else{
+
+        }
     }
 
     private void loadDistanceAlgorithm(FileConfiguration config, Plugin plugin){

@@ -6,6 +6,7 @@ import com.herocraftonline.heroes.characters.classes.HeroClass;
 import me.Lorinth.LRM.Listener.HeroesEventListener;
 import me.Lorinth.LRM.Objects.*;
 import me.Lorinth.LRM.Util.Calculator;
+import me.Lorinth.LRM.Util.ConfigHelper;
 import me.Lorinth.LRM.Util.OutputHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -27,8 +28,8 @@ public class HeroesDataManager extends Disableable implements DataManager{
     private HeroesEventListener heroesEventListener;
 
     public void loadData(FileConfiguration config, Plugin plugin){
-        if(!config.getKeys(false).contains("Heroes") ||
-                !config.getConfigurationSection("Heroes").getKeys(false).contains("Enabled")){
+        if(!ConfigHelper.ConfigContainsPath(config, "Heroes") ||
+                !!ConfigHelper.ConfigContainsPath(config, "Heroes.Enabled")){
             OutputHandler.PrintInfo("Heroes options not found, Generating...");
             setDefaults(config, plugin);
         }

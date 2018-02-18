@@ -1,12 +1,9 @@
 package me.Lorinth.LRM.Objects;
 
-import me.Lorinth.LRM.LorinthsRpgMobs;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
-
-import java.util.logging.Level;
 
 /**
  * Contains data for spawn calculations including, starting level, distance, center buffer, max level, and if it is disabled

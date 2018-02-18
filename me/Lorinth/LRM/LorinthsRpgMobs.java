@@ -5,6 +5,7 @@ import me.Lorinth.LRM.Command.MainExecutor;
 import me.Lorinth.LRM.Data.*;
 import me.Lorinth.LRM.Listener.CreatureEventListener;
 import me.Lorinth.LRM.Listener.UpdaterEventListener;
+import me.Lorinth.LRM.Objects.Properties;
 import me.Lorinth.LRM.Util.MetaDataConstants;
 import me.Lorinth.LRM.Util.OutputHandler;
 import me.Lorinth.LRM.Variants.MobVariant;
@@ -25,6 +26,7 @@ public class LorinthsRpgMobs extends JavaPlugin{
     protected static Updater updater;
     private static DataLoader dataLoader;
     public static LorinthsRpgMobs instance;
+    public static Properties properties;
 
     @Override
     public void onEnable(){
