@@ -19,8 +19,7 @@ public class MythicMobsDataManager extends Disableable implements DataManager{
     private MythicMobsListener mythicMobsListener;
 
     public void loadData(FileConfiguration config, Plugin plugin){
-        if(!ConfigHelper.ConfigContainsPath(config, "MythicMobs") ||
-                !!ConfigHelper.ConfigContainsPath(config, "MythicMobs.Enabled")){
+        if(!ConfigHelper.ConfigContainsPath(config, "MythicMobs.Enabled")){
             OutputHandler.PrintInfo("MythicMobs options not found, Generating...");
             setDefaults(config, plugin);
         }

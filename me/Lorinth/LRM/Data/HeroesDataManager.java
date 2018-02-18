@@ -28,8 +28,7 @@ public class HeroesDataManager extends Disableable implements DataManager{
     private HeroesEventListener heroesEventListener;
 
     public void loadData(FileConfiguration config, Plugin plugin){
-        if(!ConfigHelper.ConfigContainsPath(config, "Heroes") ||
-                !!ConfigHelper.ConfigContainsPath(config, "Heroes.Enabled")){
+        if(!ConfigHelper.ConfigContainsPath(config, "Heroes.Enabled")){
             OutputHandler.PrintInfo("Heroes options not found, Generating...");
             setDefaults(config, plugin);
         }

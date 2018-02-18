@@ -85,13 +85,7 @@ public class DataLoader implements DataManager{
         LorinthsRpgMobs.properties.NameTagsAlwaysOn = config.getBoolean("Names.TagsAlwaysOn");
         LorinthsRpgMobs.properties.NameFormat = config.getString("Names.Format").replaceAll("&", "§");
         loadDistanceAlgorithm(config, plugin);
-
-        if(ConfigHelper.ConfigContainsPath(config, "VanillaMobEquipmentOverrides")){
-            LorinthsRpgMobs.properties.VanillaMobEquipmentOverrides = config.getBoolean("VanillaMobEquipmentOverrides");
-        }
-        else{
-
-        }
+        loadVanillaEquipmentOverride(config, plugin);
     }
 
     private void loadDistanceAlgorithm(FileConfiguration config, Plugin plugin){
@@ -120,6 +114,17 @@ public class DataLoader implements DataManager{
         catch(Exception error){
             OutputHandler.PrintError("Distance Algorithm : " + OutputHandler.HIGHLIGHT + algo + OutputHandler.ERROR + " is not a valid Algorithm " + OutputHandler.HIGHLIGHT + "(Accurate/Optimized)");
             distanceAlgorithm = DistanceAlgorithm.Diamond;
+        }
+    }
+
+    private void loadVanillaEquipmentOverride(FileConfiguration config, Plugin plugin){
+        if(ConfigHelper.ConfigContainsPath(config, "VanillaMobEquipmentOverrides")){
+            LorinthsRpgMobs.properties.VanillaMobEquipmentOverrides = config.getBoolean("VanillaMobEquipmentOverrides");
+        }
+        else{
+            LorinthsRpgMobs.properties.VanillaMobEquipmentOverrides = true;
+            config.set("VanillaMobEquipmentOverrides", true);
+            plugin.saveConfig();
         }
     }
 

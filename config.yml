@@ -1,5 +1,6 @@
 DistanceAlgorithm: Diamond # Circle, Diamond, Square (Recommend Diamond for best results, Circle is pretty intensive)
 AllowAutoUpdates: false #If true this will auto download updates on server start and will take effect on next startup
+VanillaMobEquipmentOverrides: true #If true, enchanted vanilla gear will override equipment settings in this file
 MythicMobs:
   Enabled: true
   IgnoredWorlds:

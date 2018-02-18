@@ -20,17 +20,15 @@ public class ConfigHelper {
 
         String keyToSearchFor = pathParts[pathParts.length-1];
         String configSection = makeConfigSection(Arrays.copyOfRange(pathParts, 0, pathParts.length-1));
-        if(configSection.equalsIgnoreCase("")){
+        if(!configSection.equalsIgnoreCase("")){
             ConfigurationSection section = config.getConfigurationSection(configSection);
             if(section == null)
                 return false;
 
             return section.getKeys(false).contains(keyToSearchFor);
         }
-        else{
+        else
             return config.getKeys(false).contains(keyToSearchFor);
-        }
-
     }
 
     private static String makeConfigSection(String[] pieces){

@@ -17,8 +17,7 @@ public class SkillAPIDataManager extends Disableable implements DataManager {
     private SkillAPIListener skillAPIEventListener;
 
     public void loadData(FileConfiguration config, Plugin plugin){
-        if(!ConfigHelper.ConfigContainsPath(config, "SkillAPI") ||
-                !!ConfigHelper.ConfigContainsPath(config, "SkillAPI.Enabled")){
+        if(!ConfigHelper.ConfigContainsPath(config, "SkillAPI.Enabled")){
             OutputHandler.PrintInfo("SkillAPI options not found, Generating...");
             setDefaults(config, plugin);
         }
