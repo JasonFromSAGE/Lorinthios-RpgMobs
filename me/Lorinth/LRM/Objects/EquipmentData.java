@@ -50,43 +50,56 @@ public class EquipmentData{
         //Main Hand
         if (!(doesVanillaItemOverride(equipment.getItemInMainHand()))){
         	EquipmentResult mainHand = getHighest(level, WeaponLevels);
-            equipment.setItemInMainHand(mainHand.getItem());
-            equipment.setItemInMainHandDropChance((float) mainHand.getDropChance());
+            if(mainHand != null) {
+                equipment.setItemInMainHand(mainHand.getItem());
+                equipment.setItemInMainHandDropChance((float) mainHand.getDropChance());
+            }
         }
 
         //Off Hand
         if (!(doesVanillaItemOverride(equipment.getItemInOffHand()))){
         	EquipmentResult offHand = getHighest(level, OffHandLevels);
-            equipment.setItemInOffHand(offHand.getItem());
-            equipment.setItemInOffHandDropChance((float) offHand.getDropChance());
+            if(offHand != null) {
+                equipment.setItemInOffHand(offHand.getItem());
+                equipment.setItemInOffHandDropChance((float) offHand.getDropChance());
+            }
         }
 
         //Helmet
         if (!(doesVanillaItemOverride(equipment.getHelmet()))){
         	EquipmentResult helmet = getHighest(level, HelmetLevels);
-            equipment.setHelmet(helmet.getItem());
-            equipment.setHelmetDropChance((float) helmet.getDropChance());
+            if(helmet != null) {
+                equipment.setHelmet(helmet.getItem());
+                equipment.setHelmetDropChance((float) helmet.getDropChance());
+            }
         }
 
         //Chest
         if (!(doesVanillaItemOverride(equipment.getChestplate()))){
             EquipmentResult chest = getHighest(level, ChestLevels);
-            equipment.setChestplate(chest.getItem());
-            equipment.setChestplateDropChance((float) chest.getDropChance());
+            if(chest != null) {
+                equipment.setChestplate(chest.getItem());
+                equipment.setChestplateDropChance((float) chest.getDropChance());
+            }
+
         }
 
         //Legs
         if (!(doesVanillaItemOverride(equipment.getLeggings()))){
             EquipmentResult legs = getHighest(level, LegLevels);
-            equipment.setLeggings(legs.getItem());
-            equipment.setLeggingsDropChance((float) legs.getDropChance());
+            if(legs != null) {
+                equipment.setLeggings(legs.getItem());
+                equipment.setLeggingsDropChance((float) legs.getDropChance());
+            }
         }
 
         //Boots
         if (!(doesVanillaItemOverride(equipment.getBoots()))){
             EquipmentResult boots = getHighest(level, BootLevels);
-            equipment.setBoots(boots.getItem());
-            equipment.setBootsDropChance((float) boots.getDropChance());
+            if(boots != null) {
+                equipment.setBoots(boots.getItem());
+                equipment.setBootsDropChance((float) boots.getDropChance());
+            }
         }
     }
 
@@ -105,6 +118,6 @@ public class EquipmentData{
         if(highest > 0){
             return equipLevels.get(highest).getItem();
         }
-        return new EquipmentResult(new ItemStack(Material.AIR), 0);
+        return null;
     }
 }
