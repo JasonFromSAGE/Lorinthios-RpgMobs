@@ -19,6 +19,7 @@ public class MobVariantDataManager extends Disableable implements DataManager {
 
     private static HashMap<String, MobVariant> mobVariants = new HashMap<>();
     private static ArrayList<String> disabledEntityTypes = new ArrayList<>();
+    private static boolean disabled = false;
     private static int totalWeight = 0;
     private static int variantChance = 0;
     private static MobVariantDataManager instance;
@@ -37,6 +38,7 @@ public class MobVariantDataManager extends Disableable implements DataManager {
 
         if(config.getBoolean("MobVariants.Disabled")) {
             OutputHandler.PrintInfo("Mob Variants Disabled!");
+            disabled = true;
             return;
         }
 
@@ -67,7 +69,8 @@ public class MobVariantDataManager extends Disableable implements DataManager {
     }
 
     public static MobVariant GetVariant(LivingEntity entity){
-        if(totalWeight == 0 ||
+        if(disabled ||
+            totalWeight == 0 ||
             disabledEntityTypes.contains(entity.getType().name()) ||
             LorinthsRpgMobs.IsMythicMob(entity))
             return null;
