@@ -46,36 +46,48 @@ public class EquipmentData{
 
     public void equip(LivingEntity creature, int level){
         EntityEquipment equipment = creature.getEquipment();
+        if (!(equipment.getItemInMainHand() != null && equipment.getItemInMainHand().getType() != Material.AIR)){
+        	//Main Hand
+        	EquipmentResult mainHand = getHighest(level, WeaponLevels);
+            equipment.setItemInMainHand(mainHand.getItem());
+            equipment.setItemInMainHandDropChance((float) mainHand.getDropChance());
+        }
+        
+        if (!(equipment.getItemInOffHand() != null && equipment.getItemInOffHand().getType() != Material.AIR)){
+        	//Off Hand
+        	EquipmentResult offHand = getHighest(level, OffHandLevels);
+            equipment.setItemInOffHand(offHand.getItem());
+            equipment.setItemInOffHandDropChance((float) offHand.getDropChance());
+        }
+        
+        if (!(equipment.getHelmet() != null && equipment.getHelmet().getType() != Material.AIR)){
+        	//Helmet
+        	EquipmentResult helmet = getHighest(level, HelmetLevels);
+            equipment.setHelmet(helmet.getItem());
+            equipment.setHelmetDropChance((float) helmet.getDropChance());
+        }  
+        
+        if (!(equipment.getChestplate() != null && equipment.getChestplate().getType() != Material.AIR)){
+            //Chest
+            EquipmentResult chest = getHighest(level, ChestLevels);
+            equipment.setChestplate(chest.getItem());
+            equipment.setChestplateDropChance((float) chest.getDropChance());
+        }
 
-        //Main Hand
-        EquipmentResult mainHand = getHighest(level, WeaponLevels);
-        equipment.setItemInMainHand(mainHand.getItem());
-        equipment.setItemInMainHandDropChance((float) mainHand.getDropChance());
 
-        //Off Hand
-        EquipmentResult offHand = getHighest(level, OffHandLevels);
-        equipment.setItemInOffHand(offHand.getItem());
-        equipment.setItemInOffHandDropChance((float) offHand.getDropChance());
-
-        //Helmet
-        EquipmentResult helmet = getHighest(level, HelmetLevels);
-        equipment.setHelmet(helmet.getItem());
-        equipment.setHelmetDropChance((float) helmet.getDropChance());
-
-        //Chest
-        EquipmentResult chest = getHighest(level, ChestLevels);
-        equipment.setChestplate(chest.getItem());
-        equipment.setChestplateDropChance((float) chest.getDropChance());
-
-        //Legs
-        EquipmentResult legs = getHighest(level, LegLevels);
-        equipment.setLeggings(legs.getItem());
-        equipment.setLeggingsDropChance((float) legs.getDropChance());
-
-        //Boots
-        EquipmentResult boots = getHighest(level, BootLevels);
-        equipment.setBoots(boots.getItem());
-        equipment.setBootsDropChance((float) boots.getDropChance());
+        if (!(equipment.getLeggings() != null && equipment.getLeggings().getType() != Material.AIR)){
+            //Legs
+            EquipmentResult legs = getHighest(level, LegLevels);
+            equipment.setLeggings(legs.getItem());
+            equipment.setLeggingsDropChance((float) legs.getDropChance());
+        }
+        
+        if (!(equipment.getBoots() != null && equipment.getBoots().getType() != Material.AIR)){
+            //Boots
+            EquipmentResult boots = getHighest(level, BootLevels);
+            equipment.setBoots(boots.getItem());
+            equipment.setBootsDropChance((float) boots.getDropChance());
+        }
     }
 
     private EquipmentResult getHighest(int level, HashMap<Integer, EquipmentDetail> equipLevels){
