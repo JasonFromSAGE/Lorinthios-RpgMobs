@@ -4,6 +4,7 @@ import me.Lorinth.LRM.Objects.ConfigValue;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -46,7 +47,7 @@ public class BlindingVariant extends MobVariant{
     }
 
     @Override
-    public void onHit(LivingEntity target){
+    public void onHit(LivingEntity target, EntityDamageByEntityEvent event){
         if(random.nextDouble() * 100 < chance)
             target.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, duration, potionLevel));
     }

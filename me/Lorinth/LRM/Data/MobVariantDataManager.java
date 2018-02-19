@@ -53,12 +53,14 @@ public class MobVariantDataManager extends Disableable implements DataManager {
     private void loadInternalVariants(){
         new BlindingVariant();
         new BurningVariant();
+        new ExplosiveVariant();
         new FastVariant();
         new GlowingVariant();
         new InvisibleVariant();
         new PoisonousVariant();
         new SlowVariant();
         new StrongVariant();
+        new SturdyVariant();
         new ToughVariant();
     }
 

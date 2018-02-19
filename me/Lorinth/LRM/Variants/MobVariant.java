@@ -9,6 +9,7 @@ import me.Lorinth.LRM.Util.MetaDataConstants;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.plugin.Plugin;
 
@@ -38,14 +39,12 @@ public abstract class MobVariant extends Disableable{
     public void load(FileConfiguration config, Plugin plugin, String prefix){
         prefix += "." + name;
         //Check for config defaults
-        if(!ConfigHelper.ConfigContainsPath(config, prefix + ".Disabled")){
+        if(!ConfigHelper.ConfigContainsPath(config, prefix + ".Disabled"))
             setDefaults(config, plugin, prefix);
-        }
 
         setDisabled(config.getBoolean(prefix + ".Disabled"));
-        if(config.getConfigurationSection(prefix).getKeys(false).contains("DisabledTypes")){
+        if(config.getConfigurationSection(prefix).getKeys(false).contains("DisabledTypes"))
             disabledEntityTypes.addAll(config.getStringList(prefix + ".DisabledTypes"));
-        }
 
         if(!isDisabled()) {
             weight = config.getInt(prefix + ".Weight");
@@ -54,13 +53,13 @@ public abstract class MobVariant extends Disableable{
         }
     }
 
-    public void onHit(LivingEntity target){
-        return;
-    }
+    public void onHit(LivingEntity target, EntityDamageByEntityEvent event){}
 
-    public void whenHit(LivingEntity attacker){
-        return;
-    }
+    public void whenHit(LivingEntity attacker, EntityDamageByEntityEvent event){}
+
+    public void onSpawn(LivingEntity entity){}
+
+    public void onDeath(LivingEntity entity){}
 
     public String getName(){
         return this.name;
@@ -91,6 +90,8 @@ public abstract class MobVariant extends Disableable{
         if(augment(entity)) {
             entity.setCustomName(entity.getCustomName().replace("{Variant}", getName()).replace("{variant}", getName().toLowerCase()));
             entity.setMetadata(MetaDataConstants.Variant, new FixedMetadataValue(LorinthsRpgMobs.instance, this));
+            if(entity instanceof LivingEntity)
+                onSpawn((LivingEntity) entity);
             return true;
         }
         return false;

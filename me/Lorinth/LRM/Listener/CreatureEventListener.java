@@ -10,6 +10,7 @@ import me.Lorinth.LRM.Util.MetaDataConstants;
 import me.Lorinth.LRM.Variants.MobVariant;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,6 +21,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityTameEvent;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.metadata.Metadatable;
 
 import java.util.ArrayList;
 
@@ -50,6 +52,10 @@ public class CreatureEventListener implements Listener {
         setEquipment(entity, data, level);
         setName(entity, data, level);
         setVariant(entity);
+    }
+
+    private boolean isEpicMob(Entity entity){
+        return entity.hasMetadata("EliteMob") || entity.hasMetadata("EliteMob");
     }
 
     private void setHealth(LivingEntity entity, CreatureData data, int level){
@@ -121,14 +127,14 @@ public class CreatureEventListener implements Listener {
 
             MobVariant variant = LorinthsRpgMobs.GetMobVariantOfEntity(event.getDamager());
             if(variant != null)
-                variant.onHit(target);
+                variant.onHit(target, event);
         }
         if(event.getDamager() instanceof LivingEntity){
             LivingEntity damager = (LivingEntity) event.getDamager();
 
             MobVariant variant = LorinthsRpgMobs.GetMobVariantOfEntity(event.getEntity());
             if(variant != null)
-                variant.whenHit(damager);
+                variant.whenHit(damager, event);
         }
     }
 

@@ -7,6 +7,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.WaterMob;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -56,7 +57,7 @@ public class BurningVariant extends MobVariant{
     }
 
     @Override
-    public void whenHit(LivingEntity entity){
+    public void whenHit(LivingEntity entity, EntityDamageByEntityEvent event){
         if(random.nextDouble() * 100 < defensiveBurnChance)
             entity.setFireTicks(defensiveBurnTicks);
     }
