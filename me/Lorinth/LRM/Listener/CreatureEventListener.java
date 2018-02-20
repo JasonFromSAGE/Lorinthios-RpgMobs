@@ -55,7 +55,7 @@ public class CreatureEventListener implements Listener {
     }
 
     private boolean isEpicMob(Entity entity){
-        return entity.hasMetadata("EliteMob") || entity.hasMetadata("EliteMob");
+        return entity.hasMetadata("EliteMob") || entity.hasMetadata("PassiveEliteMob");
     }
 
     private void setHealth(LivingEntity entity, CreatureData data, int level){
