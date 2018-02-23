@@ -11,17 +11,23 @@ import me.Lorinth.LRM.Util.OutputHandler;
 import me.Lorinth.LRM.Variants.MobVariant;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * Main class of LorinthsRpgMobs contains main API Methods
  */
-public class LorinthsRpgMobs extends JavaPlugin{
+public class LorinthsRpgMobs extends JavaPlugin {
 
     protected static Updater updater;
     private static DataLoader dataLoader;
@@ -63,7 +69,22 @@ public class LorinthsRpgMobs extends JavaPlugin{
 
     private void loadConfiguration(){
         if(!new File(getDataFolder(), "config.yml").exists()){
-            saveDefaultConfig();
+            copy(getResource("config.yml"), new File(getDataFolder(), "config.yml"));
+        }
+    }
+
+    private void copy(InputStream in, File file) {
+        try {
+            OutputStream out = new FileOutputStream(file);
+            byte[] buf = new byte[1024];
+            int len;
+            while((len=in.read(buf))>0){
+                out.write(buf,0,len);
+            }
+            out.close();
+            in.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

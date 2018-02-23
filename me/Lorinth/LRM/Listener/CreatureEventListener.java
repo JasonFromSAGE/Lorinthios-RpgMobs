@@ -42,6 +42,8 @@ public class CreatureEventListener implements Listener {
         CreatureData data = dataLoader.getCreatureDataManager().getData(entity);
         if(data.isDisabled(entity.getWorld().getName()))
             return;
+        if(isEpicMob(entity))
+            return;
 
         //Set Level
         int level = dataLoader.calculateLevel(entity.getLocation());

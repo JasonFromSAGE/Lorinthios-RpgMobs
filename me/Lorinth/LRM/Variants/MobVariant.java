@@ -88,7 +88,8 @@ public abstract class MobVariant extends Disableable{
             return false;
 
         if(augment(entity)) {
-            entity.setCustomName(entity.getCustomName().replace("{Variant}", getName()).replace("{variant}", getName().toLowerCase()));
+            if(entity != null && getName() != null && entity.getCustomName() != null)
+                entity.setCustomName(entity.getCustomName().replace("{Variant}", getName()).replace("{variant}", getName().toLowerCase()));
             entity.setMetadata(MetaDataConstants.Variant, new FixedMetadataValue(LorinthsRpgMobs.instance, this));
             if(entity instanceof LivingEntity)
                 onSpawn((LivingEntity) entity);

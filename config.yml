@@ -46,18 +46,18 @@ LevelRegions:
         ZOMBIE: '&5Undead Warrior' # All zombies will have their name purple and be called 'Undead Warrior', accepts {level} tag
       Disabled: false
 MobVariants:
-  Disabled: true
-  VariantChance: 40
-  DisabledTypes:
+  Disabled: true # Disable random variants?
+  VariantChance: 40 # Chance (out of 100) for a mob to be variant
+  DisabledTypes: #Disable variants for entire entity types
   - CREEPER
   Blinding:
-    Disabled: false
+    Disabled: false # Disable specific variants
     DisabledTypes: []
-    Weight: 10
-    Blinding:
-      Duration: 60
-      Level: 2
-      Chance: 100.0
+    Weight: 10 # The chance this variant is selected
+    Blinding: # Effect details
+      Duration: 60 # Blinding duration in ticks (1 second = 20 ticks)
+      Level: 2 # potion effect level
+      Chance: 100.0 # chance to blind on hit
   Burning:
     Disabled: false
     DisabledTypes: []
