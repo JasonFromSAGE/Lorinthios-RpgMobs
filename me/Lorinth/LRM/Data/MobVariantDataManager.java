@@ -55,6 +55,7 @@ public class MobVariantDataManager extends Disableable implements DataManager {
         new BurningVariant();
         new ExplosiveVariant();
         new FastVariant();
+        new ForcefulVariant();
         new GlowingVariant();
         new InvisibleVariant();
         new PoisonousVariant();

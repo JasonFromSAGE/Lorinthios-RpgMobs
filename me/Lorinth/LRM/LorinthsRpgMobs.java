@@ -29,7 +29,7 @@ import java.io.OutputStream;
  */
 public class LorinthsRpgMobs extends JavaPlugin {
 
-    protected static Updater updater;
+    public static Updater updater;
     private static DataLoader dataLoader;
     public static LorinthsRpgMobs instance;
     public static Properties properties;
@@ -45,7 +45,7 @@ public class LorinthsRpgMobs extends JavaPlugin {
         dataLoader = new DataLoader();
         dataLoader.loadData(getConfig(), this);
         Bukkit.getPluginManager().registerEvents(new CreatureEventListener(dataLoader), this);
-        Bukkit.getPluginManager().registerEvents(new UpdaterEventListener(updater), this);
+        Bukkit.getPluginManager().registerEvents(new UpdaterEventListener(), this);
         OutputHandler.PrintInfo("Finished!");
     }
 
