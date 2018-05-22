@@ -6,6 +6,7 @@ import me.Lorinth.LRM.Util.ConfigHelper;
 import me.Lorinth.LRM.Util.OutputHandler;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
@@ -28,17 +29,21 @@ public class DataLoader implements DataManager{
 
     private HashMap<String, ArrayList<LevelRegion>> allLevelRegions = new HashMap<>(); // String: World Name, List<LevelRegion> list of regions
 
-    public int calculateLevel(Location location){
-        int strictLevel = levelRegionManager.getHighestPriorityLevelAtLocation(location);
-        boolean strictLevelIsValid = strictLevel != -1;
+    public int calculateLevel(Location location, Entity entity){
+        LevelRegion region = levelRegionManager.getHighestPriorityLeveledRegionAtLocation(location);
+        if(region != null && entity != null)
+            if(region.entityIsDisabled(entity))
+                return -1;
 
-        SpawnPoint closestSpawnPoint = spawnPointManager.getSpawnPointForLocation(location);
-        if(closestSpawnPoint != null) {
-            if(strictLevelIsValid)
-                return strictLevel; //Regions set the level of mobs
-            else
+        if(region != null && region.getLevel() != -1)
+            return region.getLevel();
+        else{
+            SpawnPoint closestSpawnPoint = spawnPointManager.getSpawnPointForLocation(location);
+            if(closestSpawnPoint != null) {
                 return closestSpawnPoint.calculateLevel(location, distanceAlgorithm);
+            }
         }
+
         return -1; //this world is disabled if -1
     }
 
@@ -90,42 +95,18 @@ public class DataLoader implements DataManager{
 
     private void loadDistanceAlgorithm(FileConfiguration config, Plugin plugin){
         String algo = config.getString("DistanceAlgorithm");
-        boolean changed = false;
-
-        if(algo.equalsIgnoreCase("Optimized")){
-            algo = "Diamond";
-            changed = true;
-        }
-
-        if(algo.equalsIgnoreCase("Accurate")){
-            algo = "Circle";
-            changed = true;
-        }
-
-        if(changed){
-            config.set("DistanceAlgorithm", algo);
-            plugin.saveConfig();
-        }
-
-
         try{
             distanceAlgorithm = DistanceAlgorithm.valueOf(algo);
         }
         catch(Exception error){
-            OutputHandler.PrintError("Distance Algorithm : " + OutputHandler.HIGHLIGHT + algo + OutputHandler.ERROR + " is not a valid Algorithm " + OutputHandler.HIGHLIGHT + "(Accurate/Optimized)");
+            OutputHandler.PrintError("Distance Algorithm : " + OutputHandler.HIGHLIGHT + algo + OutputHandler.ERROR + " is not a valid Algorithm " + OutputHandler.HIGHLIGHT + "(Circle/Diamond/Square)");
+            OutputHandler.PrintError("Using " + OutputHandler.HIGHLIGHT + "Diamond" + OutputHandler.ERROR + " Distance Algorithm");
             distanceAlgorithm = DistanceAlgorithm.Diamond;
         }
     }
 
     private void loadVanillaEquipmentOverride(FileConfiguration config, Plugin plugin){
-        if(ConfigHelper.ConfigContainsPath(config, "VanillaMobEquipmentOverrides")){
-            LorinthsRpgMobs.properties.VanillaMobEquipmentOverrides = config.getBoolean("VanillaMobEquipmentOverrides");
-        }
-        else{
-            LorinthsRpgMobs.properties.VanillaMobEquipmentOverrides = true;
-            config.set("VanillaMobEquipmentOverrides", true);
-            plugin.saveConfig();
-        }
+        LorinthsRpgMobs.properties.VanillaMobEquipmentOverrides = config.getBoolean("VanillaMobEquipmentOverrides");
     }
 
 }

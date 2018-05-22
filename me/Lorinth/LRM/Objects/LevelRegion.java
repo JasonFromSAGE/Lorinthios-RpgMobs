@@ -1,9 +1,12 @@
 package me.Lorinth.LRM.Objects;
 
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * Contains data for levels/names for a matched world guard region
@@ -12,6 +15,8 @@ public class LevelRegion extends DirtyObject{
     private String Name;
     private int Level;
     private HashMap<String, NameData> EntityNames = new HashMap<>();
+    private List<String> DisabledEntities = new ArrayList<>();
+    private boolean EntitiesDisabled = false;
 
     @Override
     protected void saveData(FileConfiguration config, String prefix){
@@ -38,6 +43,11 @@ public class LevelRegion extends DirtyObject{
                 EntityNames.put(key, new NameData(Level, config.getString(prefix + "Names." + key ).replace("&", "§"), true));
             }
         }
+        if(config.contains(prefix + "DisabledEntities")){
+            DisabledEntities = config.getStringList(prefix + "DisabledEntities");
+            if(DisabledEntities.contains("*"))
+                EntitiesDisabled = true;
+        }
     }
 
     public LevelRegion(String name, int level){
@@ -56,6 +66,10 @@ public class LevelRegion extends DirtyObject{
 
         Level = level;
         setDirty();
+    }
+
+    public boolean entityIsDisabled(Entity entity){
+        return EntitiesDisabled || this.DisabledEntities.contains(entity.getType().toString());
     }
 
     public String getName(){

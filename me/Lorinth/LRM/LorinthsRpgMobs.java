@@ -68,7 +68,9 @@ public class LorinthsRpgMobs extends JavaPlugin {
     }
 
     private void loadConfiguration(){
-        if(!new File(getDataFolder(), "config.yml").exists()){
+        File configFile = new File(getDataFolder(), "config.yml");
+        if(!configFile.exists()){
+            configFile.getParentFile().mkdirs();
             copy(getResource("config.yml"), new File(getDataFolder(), "config.yml"));
         }
     }
@@ -152,7 +154,7 @@ public class LorinthsRpgMobs extends JavaPlugin {
      * @return level at location
      */
     public static int GetLevelAtLocation(Location location){
-        return dataLoader.calculateLevel(location);
+        return dataLoader.calculateLevel(location, null);
     }
 
     /**

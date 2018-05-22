@@ -46,7 +46,7 @@ public class CreatureEventListener implements Listener {
             return;
 
         //Set Level
-        int level = dataLoader.calculateLevel(entity.getLocation());
+        int level = dataLoader.calculateLevel(entity.getLocation(), entity);
         entity.setMetadata(MetaDataConstants.Level, new FixedMetadataValue(LorinthsRpgMobs.instance, level));
 
         setHealth(entity, data, level);

@@ -6,9 +6,9 @@ MythicMobs:
   IgnoredWorlds:
   - world_the_end
 SkillAPI:
-  Enabled: false # if enabled, will use exp calculations for skillAPI
+  Enabled: false # if enabled, will use exp calculations for SkillAPI
 Heroes:
-  Enabled: false # if enabled, will use exp calculations for skillAPI
+  Enabled: false # if enabled, will use exp calculations for Heroes
   PartyExperienceFormulas:
     '2': "1.5 * {exp} / 2" # sets the amount of exp a player gets in a party
     '3': "1.8 * {exp} / 3"
@@ -45,6 +45,9 @@ LevelRegions:
       Names: # custom names for entities
         ZOMBIE: '&5Undead Warrior' # All zombies will have their name purple and be called 'Undead Warrior', accepts {level} tag
       Disabled: false
+      DisabledEntities:
+      # Use '- * ' to disable all entities
+      - PIG
 MobVariants:
   Disabled: true # Disable random variants?
   VariantChance: 40 # Chance (out of 100) for a mob to be variant
@@ -52,7 +55,7 @@ MobVariants:
   - CREEPER
   Blinding:
     Disabled: false # Disable specific variants
-    DisabledTypes: []
+    DisabledTypes: [] # Disable specific entity types for a variant
     Weight: 10 # The chance this variant is selected
     Blinding: # Effect details
       Duration: 60 # Blinding duration in ticks (1 second = 20 ticks)

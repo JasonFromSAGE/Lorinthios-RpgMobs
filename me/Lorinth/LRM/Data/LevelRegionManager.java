@@ -6,6 +6,7 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import me.Lorinth.LRM.Objects.DataManager;
 import me.Lorinth.LRM.Objects.LevelRegion;
+import me.Lorinth.LRM.Util.OutputHandler;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -47,8 +48,11 @@ public class LevelRegionManager implements DataManager{
                 allLevelRegions.put(world, new HashMap<>());
 
                 for(String key : config.getConfigurationSection("LevelRegions." + world).getKeys(false)){
-                    allLevelRegions.get(world).put(key, loadRegion(config, key, "LevelRegions." + world));
+                    LevelRegion region = loadRegion(config, key, "LevelRegions." + world);
+                    allLevelRegions.get(world).put(key, region);
+                    OutputHandler.PrintInfo("Loaded Region, " + region.getName());
                 }
+                OutputHandler.PrintInfo("Loaded World, " + world);
             }
         }
     }

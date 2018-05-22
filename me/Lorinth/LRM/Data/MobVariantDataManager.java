@@ -78,7 +78,7 @@ public class MobVariantDataManager extends Disableable implements DataManager {
             LorinthsRpgMobs.IsMythicMob(entity))
             return null;
 
-        if(random.nextDouble() * 100 < variantChance){
+        if(random.nextInt(100) < variantChance){
             int current = 0;
             int target = random.nextInt(totalWeight);
             for(MobVariant variant : mobVariants.values()){
