@@ -1,17 +1,25 @@
 package me.Lorinth.LRM.Data;
 
 import com.herocraftonline.heroes.Heroes;
+import com.herocraftonline.heroes.characters.CharacterManager;
+import com.herocraftonline.heroes.characters.CharacterTemplate;
 import com.herocraftonline.heroes.characters.Hero;
+import com.herocraftonline.heroes.characters.Monster;
 import com.herocraftonline.heroes.characters.classes.HeroClass;
 import me.Lorinth.LRM.Listener.HeroesEventListener;
 import me.Lorinth.LRM.Objects.*;
 import me.Lorinth.LRM.Util.Calculator;
 import me.Lorinth.LRM.Util.ConfigHelper;
+import me.Lorinth.LRM.Util.MetaDataConstants;
 import me.Lorinth.LRM.Util.OutputHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.plugin.Plugin;
 
@@ -25,6 +33,7 @@ import java.util.Set;
 public class HeroesDataManager extends Disableable implements DataManager{
 
     private HashMap<Integer, String> PartyFormulas = new HashMap<>();
+    private CharacterManager characterManager;
     private HeroesEventListener heroesEventListener;
 
     public void loadData(FileConfiguration config, Plugin plugin){
@@ -53,6 +62,7 @@ public class HeroesDataManager extends Disableable implements DataManager{
         else {
             OutputHandler.PrintInfo("Heroes Integration is Enabled!");
             heroesEventListener = new HeroesEventListener();
+            characterManager = Heroes.getInstance().getCharacterManager();
             Bukkit.getPluginManager().registerEvents(heroesEventListener, plugin);
         }
     }
@@ -101,6 +111,17 @@ public class HeroesDataManager extends Disableable implements DataManager{
 
         heroesEventListener.bindExperienceEvent(deathEvent.getEntity().getLocation(), new CreatureDeathData(exp, deathEvent.getEntity()));
 
+        return true;
+    }
+
+    public boolean handleEntityDamageEvent(LivingEntity entity, double damage){
+        if(this.isDisabled())
+            return false;
+
+        CharacterTemplate template = characterManager.getCharacter(entity);
+        if(template instanceof Monster) {
+            ((Monster) template).setDamage(damage);
+        }
         return true;
     }
 

@@ -2,15 +2,11 @@ package me.Lorinth.LRM.Data;
 
 import me.Lorinth.LRM.LorinthsRpgMobs;
 import me.Lorinth.LRM.Objects.*;
-import me.Lorinth.LRM.Util.ConfigHelper;
 import me.Lorinth.LRM.Util.OutputHandler;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.plugin.Plugin;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * This class shouldn't be used outside of the plugin
@@ -20,14 +16,13 @@ public class DataLoader implements DataManager{
     protected DistanceAlgorithm distanceAlgorithm = DistanceAlgorithm.Diamond;
 
     private CreatureDataManager creatureDataManager = new CreatureDataManager();
+    private ExperiencePermissionManager experiencePermissionManager = new ExperiencePermissionManager();
     private HeroesDataManager heroesDataManager = new HeroesDataManager();
     private LevelRegionManager levelRegionManager = new LevelRegionManager();
     private MobVariantDataManager mobVariantDataManager = new MobVariantDataManager();
     private MythicMobsDataManager mythicMobsDataManager = new MythicMobsDataManager();
     private SkillAPIDataManager skillAPIDataManager = new SkillAPIDataManager();
     private SpawnPointManager spawnPointManager = new SpawnPointManager(this);
-
-    private HashMap<String, ArrayList<LevelRegion>> allLevelRegions = new HashMap<>(); // String: World Name, List<LevelRegion> list of regions
 
     public int calculateLevel(Location location, Entity entity){
         LevelRegion region = levelRegionManager.getHighestPriorityLeveledRegionAtLocation(location);
@@ -51,6 +46,8 @@ public class DataLoader implements DataManager{
         return creatureDataManager;
     }
 
+    public ExperiencePermissionManager getExperiencePermissionManager(){ return experiencePermissionManager; }
+
     public HeroesDataManager getHeroesDataManager(){
         return heroesDataManager;
     }
@@ -72,12 +69,13 @@ public class DataLoader implements DataManager{
     public boolean saveData(FileConfiguration config){
         return spawnPointManager.saveData(config) || levelRegionManager.saveData(config) || creatureDataManager.saveData(config) ||
                 heroesDataManager.saveData(config) || skillAPIDataManager.saveData(config) || mythicMobsDataManager.saveData(config) ||
-                mobVariantDataManager.saveData(config);
+                mobVariantDataManager.saveData(config) || experiencePermissionManager.saveData(config);
     }
 
     public void loadData(FileConfiguration config, Plugin plugin){
         loadGlobalOptions(config, plugin);
         creatureDataManager.loadData(config, plugin);
+        experiencePermissionManager.loadData(config, plugin);
         heroesDataManager.loadData(config, plugin);
         levelRegionManager.loadData(config, plugin);
         mobVariantDataManager.loadData(config, plugin);

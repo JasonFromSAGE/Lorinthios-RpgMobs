@@ -1,5 +1,6 @@
 package me.Lorinth.LRM.Listener;
 
+import com.herocraftonline.heroes.Heroes;
 import me.Lorinth.LRM.Data.DataLoader;
 import me.Lorinth.LRM.Data.HeroesDataManager;
 import me.Lorinth.LRM.Data.MobVariantDataManager;
@@ -127,19 +128,30 @@ public class CreatureEventListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onEntityHit(EntityDamageByEntityEvent event){
-        if(event.getEntity() instanceof LivingEntity){
-            LivingEntity target = (LivingEntity) event.getEntity();
+        if(event.getDamager() instanceof Player)
+            return;
 
-            MobVariant variant = LorinthsRpgMobs.GetMobVariantOfEntity(event.getDamager());
+        Entity entity = event.getEntity();
+        Entity damager = event.getDamager();
+        if(entity instanceof LivingEntity){
+            LivingEntity target = (LivingEntity) entity;
+
+            MobVariant variant = LorinthsRpgMobs.GetMobVariantOfEntity(damager);
             if(variant != null)
                 variant.onHit(target, event);
         }
-        if(event.getDamager() instanceof LivingEntity){
-            LivingEntity damager = (LivingEntity) event.getDamager();
+        if(damager instanceof LivingEntity){
+            LivingEntity living = (LivingEntity) damager;
 
-            MobVariant variant = LorinthsRpgMobs.GetMobVariantOfEntity(event.getEntity());
+            if(living.hasMetadata(MetaDataConstants.Damage)){
+                double damage = living.getMetadata(MetaDataConstants.Damage).get(0).asDouble();
+                dataLoader.getHeroesDataManager().handleEntityDamageEvent(living, damage);
+                event.setDamage(damage);
+            }
+
+            MobVariant variant = LorinthsRpgMobs.GetMobVariantOfEntity(entity);
             if(variant != null)
-                variant.whenHit(damager, event);
+                variant.whenHit(living, event);
         }
     }
 
@@ -148,7 +160,6 @@ public class CreatureEventListener implements Listener {
         LivingEntity entity = event.getEntity();
         if(event.getDroppedExp() == 0 || entity.getKiller() == null)
             return;
-
 
         CreatureData data = dataLoader.getCreatureDataManager().getData(entity);
         if (data.isDisabled(entity.getWorld().getName()))
@@ -161,6 +172,9 @@ public class CreatureEventListener implements Listener {
 
             if(exp > 0){
                 Player player = entity.getKiller();
+                float multiplier = dataLoader.getExperiencePermissionManager().getExperienceMultiplier(player);
+                exp =  (int) (exp * multiplier);
+
                 HeroesDataManager heroesManager = dataLoader.getHeroesDataManager();
                 SkillAPIDataManager skillAPIDataManager = dataLoader.getSkillAPIDataManager();
                 if(heroesManager.handleEntityDeathEvent(event, player, exp))

@@ -15,6 +15,9 @@ Heroes:
     '4': "2.0 * {exp} / 4"
     '5': "2.2 * {exp} / 5"
     '6': "2.4 * {exp} / 6"
+ExperiencePermissions: # Give permissions with, lrm.experience.<name> e.g. lrm.experience.vip
+  default: 1.0 # multiplier of dropped/gained experience
+  vip: 1.5 # 1.5x exp dropped
 Names:
   TagsAlwaysOn: false # Do you want creature name tags to always show?
   Format: '[Lvl.{level}] {Variant} {name}' # Global name format, takes {level}, {Variant} or {variant}, {name}

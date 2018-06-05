@@ -14,6 +14,7 @@ import java.util.HashMap;
 public class HeroesEventListener implements Listener {
 
     private HashMap<Location, CreatureDeathData> DeathToExperience = new HashMap<>();
+    private HashMap<String, Double> DamageEvents = new HashMap<>();
 
     @EventHandler
     public void onExperienceChange(ExperienceChangeEvent experienceChangeEvent){
