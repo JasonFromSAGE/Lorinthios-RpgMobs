@@ -1,8 +1,10 @@
 package me.Lorinth.LRM;
 
+import me.Lorinth.LRM.Command.ButcherExecutor;
 import me.Lorinth.LRM.Command.CommandConstants;
 import me.Lorinth.LRM.Command.MainExecutor;
 import me.Lorinth.LRM.Data.*;
+import me.Lorinth.LRM.Listener.CommandEventListener;
 import me.Lorinth.LRM.Listener.CreatureEventListener;
 import me.Lorinth.LRM.Listener.UpdaterEventListener;
 import me.Lorinth.LRM.Objects.Properties;
@@ -44,6 +46,7 @@ public class LorinthsRpgMobs extends JavaPlugin {
 
         dataLoader = new DataLoader();
         dataLoader.loadData(getConfig(), this);
+        //Bukkit.getPluginManager().registerEvents(new CommandEventListener(), this);
         Bukkit.getPluginManager().registerEvents(new CreatureEventListener(dataLoader), this);
         Bukkit.getPluginManager().registerEvents(new UpdaterEventListener(), this);
         OutputHandler.PrintInfo("Finished!");

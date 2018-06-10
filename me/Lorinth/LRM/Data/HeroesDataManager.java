@@ -62,8 +62,14 @@ public class HeroesDataManager extends Disableable implements DataManager{
         else {
             OutputHandler.PrintInfo("Heroes Integration is Enabled!");
             heroesEventListener = new HeroesEventListener();
-            characterManager = Heroes.getInstance().getCharacterManager();
             Bukkit.getPluginManager().registerEvents(heroesEventListener, plugin);
+
+            try {
+                characterManager = Heroes.getInstance().getCharacterManager();
+            }
+            catch(Exception e){
+                OutputHandler.PrintError("Heroes plugin not found or Heroes not enabled!");
+            }
         }
     }
 
@@ -77,7 +83,11 @@ public class HeroesDataManager extends Disableable implements DataManager{
             return false;
 
         Location location = deathEvent.getEntity().getLocation();
-        Hero hero = Heroes.getInstance().getCharacterManager().getHero(player);
+        CharacterManager manager = getCharacterManager();
+        if(manager == null)
+            return false;
+
+        Hero hero = manager.getHero(player);
         if(!hero.hasParty()){
             heroesEventListener.bindExperienceEvent(location, new CreatureDeathData(exp, deathEvent.getEntity()));
             return true;
@@ -123,6 +133,21 @@ public class HeroesDataManager extends Disableable implements DataManager{
             ((Monster) template).setDamage(damage);
         }
         return true;
+    }
+
+    private CharacterManager getCharacterManager(){
+        if(characterManager != null)
+            return characterManager;
+        try {
+            characterManager = Heroes.getInstance().getCharacterManager();
+            return characterManager;
+        }
+        catch(Exception e){
+            OutputHandler.PrintError("Heroes plugin not found or Heroes not enabled!");
+            OutputHandler.PrintError("Disabling Heroes Hook");
+            this.setDisabled(true);
+        }
+        return null;
     }
 
     private void setDefaults(FileConfiguration config, Plugin plugin){

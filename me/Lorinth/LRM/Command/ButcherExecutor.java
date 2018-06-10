@@ -5,9 +5,7 @@ import me.Lorinth.LRM.Command.Objects.CustomCommandArgument;
 import me.Lorinth.LRM.Command.Objects.CustomCommandExecutor;
 import me.Lorinth.LRM.Util.OutputHandler;
 import me.Lorinth.LRM.Util.TryParse;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Tameable;
+import org.bukkit.entity.*;
 
 import java.util.ArrayList;
 
@@ -24,7 +22,7 @@ public class ButcherExecutor extends CustomCommandExecutor {
             radius = Integer.parseInt(args[0]);
 
         OutputHandler.PrintInfo(player, "Butchering...");
-        for(Entity entity : player.getWorld().getLivingEntities()){
+        for(LivingEntity entity : player.getWorld().getLivingEntities()){
             if(!(entity instanceof Player)){
                 if(entity instanceof  Tameable){
                     Tameable tameable = (Tameable) entity;
