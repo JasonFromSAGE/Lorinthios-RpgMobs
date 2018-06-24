@@ -20,6 +20,7 @@ public class DataLoader implements DataManager{
     private HeroesDataManager heroesDataManager = new HeroesDataManager();
     private LevelRegionManager levelRegionManager = new LevelRegionManager();
     private MobVariantDataManager mobVariantDataManager = new MobVariantDataManager();
+    private MythicDropsDataManager mythicDropsDataManager = new MythicDropsDataManager(this);
     private MythicMobsDataManager mythicMobsDataManager = new MythicMobsDataManager();
     private SkillAPIDataManager skillAPIDataManager = new SkillAPIDataManager();
     private SpawnPointManager spawnPointManager = new SpawnPointManager(this);
@@ -58,6 +59,8 @@ public class DataLoader implements DataManager{
 
     public MobVariantDataManager getMobVariantManager(){ return mobVariantDataManager; }
 
+    public MythicDropsDataManager getMythicDropsDataManager(){ return mythicDropsDataManager; }
+
     public MythicMobsDataManager getMythicMobsDataManager() { return mythicMobsDataManager; }
 
     public SkillAPIDataManager getSkillAPIDataManager(){ return skillAPIDataManager; }
@@ -68,8 +71,8 @@ public class DataLoader implements DataManager{
 
     public boolean saveData(FileConfiguration config){
         return spawnPointManager.saveData(config) || levelRegionManager.saveData(config) || creatureDataManager.saveData(config) ||
-                heroesDataManager.saveData(config) || skillAPIDataManager.saveData(config) || mythicMobsDataManager.saveData(config) ||
-                mobVariantDataManager.saveData(config) || experiencePermissionManager.saveData(config);
+                heroesDataManager.saveData(config) || skillAPIDataManager.saveData(config) || mythicDropsDataManager.saveData(config) ||
+                mythicMobsDataManager.saveData(config) || mobVariantDataManager.saveData(config) || experiencePermissionManager.saveData(config);
     }
 
     public void loadData(FileConfiguration config, Plugin plugin){
@@ -79,6 +82,7 @@ public class DataLoader implements DataManager{
         heroesDataManager.loadData(config, plugin);
         levelRegionManager.loadData(config, plugin);
         mobVariantDataManager.loadData(config, plugin);
+        mythicDropsDataManager.loadData(config, plugin);
         mythicMobsDataManager.loadData(config, plugin);
         skillAPIDataManager.loadData(config, plugin);
         spawnPointManager.loadData(config, plugin);

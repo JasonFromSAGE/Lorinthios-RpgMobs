@@ -1,6 +1,5 @@
 package me.Lorinth.LRM.Listener;
 
-import com.herocraftonline.heroes.Heroes;
 import me.Lorinth.LRM.Data.DataLoader;
 import me.Lorinth.LRM.Data.HeroesDataManager;
 import me.Lorinth.LRM.Data.MobVariantDataManager;
@@ -11,18 +10,12 @@ import me.Lorinth.LRM.Util.MetaDataConstants;
 import me.Lorinth.LRM.Variants.MobVariant;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntityTameEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.metadata.FixedMetadataValue;
-import org.bukkit.metadata.Metadatable;
 
 import java.util.ArrayList;
 
@@ -51,13 +44,16 @@ public class CreatureEventListener implements Listener {
         if(level == -1)
             return;
 
-        entity.setMetadata(MetaDataConstants.Level, new FixedMetadataValue(LorinthsRpgMobs.instance, level));
-
+        setLevel(entity, level);
         setHealth(entity, data, level);
         setDamage(entity, data, level);
         setEquipment(entity, data, level);
         setName(entity, data, level);
         setVariant(entity);
+    }
+
+    private void setLevel(Entity entity, int level){
+        entity.setMetadata(MetaDataConstants.Level, new FixedMetadataValue(LorinthsRpgMobs.instance, level));
     }
 
     private boolean isEpicMob(Entity entity){
@@ -140,6 +136,14 @@ public class CreatureEventListener implements Listener {
             if(variant != null)
                 variant.onHit(target, event);
         }
+        if(damager instanceof Projectile){
+            if(damager.hasMetadata(MetaDataConstants.Damage)) {
+                double damage = damager.getMetadata(MetaDataConstants.Damage).get(0).asDouble();
+                event.setDamage(damage);
+            }
+
+            damager = (Entity) ((Projectile) damager).getShooter();
+        }
         if(damager instanceof LivingEntity){
             LivingEntity living = (LivingEntity) damager;
 
@@ -183,6 +187,17 @@ public class CreatureEventListener implements Listener {
                     event.setDroppedExp(0);
                 else
                     event.setDroppedExp(exp);
+            }
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onProjectileLaunch(ProjectileLaunchEvent event){
+        Projectile projectile = event.getEntity();
+        if(projectile.getShooter() instanceof Creature){
+            Creature creature = (Creature) projectile.getShooter();
+            if(creature.hasMetadata(MetaDataConstants.Damage)){
+                projectile.setMetadata(MetaDataConstants.Damage, creature.getMetadata(MetaDataConstants.Damage).get(0));
             }
         }
     }

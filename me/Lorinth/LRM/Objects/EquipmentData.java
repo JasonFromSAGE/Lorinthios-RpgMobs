@@ -50,7 +50,7 @@ public class EquipmentData{
         //Main Hand
         if (!(doesVanillaItemOverride(equipment.getItemInMainHand()))){
         	EquipmentResult mainHand = getHighest(level, WeaponLevels);
-            if(mainHand != null) {
+            if(mainHand != null && !mainHand.isEmpty) {
                 equipment.setItemInMainHand(mainHand.getItem());
                 equipment.setItemInMainHandDropChance((float) mainHand.getDropChance());
             }
@@ -59,7 +59,7 @@ public class EquipmentData{
         //Off Hand
         if (!(doesVanillaItemOverride(equipment.getItemInOffHand()))){
         	EquipmentResult offHand = getHighest(level, OffHandLevels);
-            if(offHand != null) {
+            if(offHand != null && !offHand.isEmpty) {
                 equipment.setItemInOffHand(offHand.getItem());
                 equipment.setItemInOffHandDropChance((float) offHand.getDropChance());
             }
@@ -68,7 +68,7 @@ public class EquipmentData{
         //Helmet
         if (!(doesVanillaItemOverride(equipment.getHelmet()))){
         	EquipmentResult helmet = getHighest(level, HelmetLevels);
-            if(helmet != null) {
+            if(helmet != null && !helmet.isEmpty) {
                 equipment.setHelmet(helmet.getItem());
                 equipment.setHelmetDropChance((float) helmet.getDropChance());
             }
@@ -77,7 +77,7 @@ public class EquipmentData{
         //Chest
         if (!(doesVanillaItemOverride(equipment.getChestplate()))){
             EquipmentResult chest = getHighest(level, ChestLevels);
-            if(chest != null) {
+            if(chest != null && !chest.isEmpty) {
                 equipment.setChestplate(chest.getItem());
                 equipment.setChestplateDropChance((float) chest.getDropChance());
             }
@@ -87,7 +87,7 @@ public class EquipmentData{
         //Legs
         if (!(doesVanillaItemOverride(equipment.getLeggings()))){
             EquipmentResult legs = getHighest(level, LegLevels);
-            if(legs != null) {
+            if(legs != null && !legs.isEmpty) {
                 equipment.setLeggings(legs.getItem());
                 equipment.setLeggingsDropChance((float) legs.getDropChance());
             }
@@ -96,7 +96,7 @@ public class EquipmentData{
         //Boots
         if (!(doesVanillaItemOverride(equipment.getBoots()))){
             EquipmentResult boots = getHighest(level, BootLevels);
-            if(boots != null) {
+            if(boots != null && !boots.isEmpty) {
                 equipment.setBoots(boots.getItem());
                 equipment.setBootsDropChance((float) boots.getDropChance());
             }

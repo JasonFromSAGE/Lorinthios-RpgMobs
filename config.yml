@@ -1,8 +1,12 @@
+# For more detailed information go to https://dev.bukkit.org/projects/lorinthsrpgmobs/pages/configuration-config-yml
+
 DistanceAlgorithm: Diamond # Circle, Diamond, Square (Recommend Diamond for best results, Circle is pretty intensive)
 AllowAutoUpdates: false #If true this will auto download updates on server start and will take effect on next startup
 VanillaMobEquipmentOverrides: true #If true, enchanted vanilla gear will override equipment settings in this file
+MythicDrops:
+  Enabled: false
 MythicMobs:
-  Enabled: true
+  Enabled: false
   IgnoredWorlds:
   - world_the_end
 SkillAPI:
@@ -128,7 +132,7 @@ Entity:
           '12': STONE_SWORD 25%, STONE_AXE 20%
           '20': IRON_SWORD 30%, IRON_AXE 25%
           '30': GOLD_SWORD 35%, GOLD_AXE 30%
-          '40': DIAMOND_SWORD 35%, DIAMOND_AXE 30%
+          '40': DIAMOND_SWORD 35%, DIAMOND_SWORD 5% smite:1, DIAMOND_AXE 30%
         Offhand:
           '20': SHIELD 10%
           '40': SHIELD 15%
@@ -144,6 +148,11 @@ Entity:
         Boots:
           12: LEATHER_BOOTS
           22: CHAINMAIL_BOOTS
+      MythicDrops:
+        1: common 50%, uncommon 15%
+        10: common 40%, uncommon 25%
+        20: common 30%, uncommon 35%
+        50: legendary 1%
       Names: # Names given to the entity at certain milestones
         '1':
           Name: Weak Zombie

@@ -18,6 +18,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Creature;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -63,6 +64,7 @@ public class LorinthsRpgMobs extends JavaPlugin {
             dataLoader.saveData(getConfig());
             saveConfig();
         }
+        HandlerList.unregisterAll(this);
     }
 
     public static void Reload(){

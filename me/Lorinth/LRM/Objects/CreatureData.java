@@ -1,6 +1,7 @@
 package me.Lorinth.LRM.Objects;
 
 import me.Lorinth.LRM.LorinthsRpgMobs;
+import me.Lorinth.LRM.Objects.MythicDrops.MythicDropsData;
 import me.Lorinth.LRM.Util.Calculator;
 import me.Lorinth.LRM.Util.ConfigHelper;
 import me.Lorinth.LRM.Util.OutputHandler;
@@ -20,6 +21,7 @@ public class CreatureData extends DirtyObject{
 
     private EntityType entityType;
     private EquipmentData equipmentData = new EquipmentData();
+    private MythicDropsData mythicDropsData = new MythicDropsData();
     private boolean entityDisabled = false;
     private boolean groupDisabled = false;
 
@@ -144,6 +146,7 @@ public class CreatureData extends DirtyObject{
         loadFormulas(config, prefix);
         loadNames(config, prefix);
         loadEquipmentData(config, prefix);
+        loadMythicDropsData(config, prefix);
     }
 
     /**
@@ -212,6 +215,10 @@ public class CreatureData extends DirtyObject{
         equipmentData.loadData(config, prefix);
     }
 
+    private void loadMythicDropsData(FileConfiguration config, String prefix){
+        mythicDropsData.loadData(config, prefix);
+    }
+
     /**
      * Loads the disabled worlds associated with this object from config file
      * @param config - config file to load from
@@ -273,6 +280,8 @@ public class CreatureData extends DirtyObject{
     public String getExpFormula(){
         return expFormula;
     }
+
+    public MythicDropsData getMythicDropsData(){ return mythicDropsData; }
 
     /**
      * Set the exp formula assigned to this object
