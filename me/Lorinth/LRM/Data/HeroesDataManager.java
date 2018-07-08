@@ -128,7 +128,7 @@ public class HeroesDataManager extends Disableable implements DataManager{
         if(this.isDisabled())
             return false;
 
-        CharacterTemplate template = characterManager.getCharacter(entity);
+        CharacterTemplate template = getCharacterManager().getCharacter(entity);
         if(template instanceof Monster) {
             ((Monster) template).setDamage(damage);
         }

@@ -46,7 +46,6 @@ public class ExperiencePermissionManager implements DataManager {
         float multi = defaultValue;
         for(ExperiencePermission perm : experiencePermissions){
             if(perm.hasPermission(player)){
-                OutputHandler.PrintInfo(player.getDisplayName() + " has permission, " + perm.getPermission());
                 if(perm.getMultiplier() > multi)
                     multi = perm.getMultiplier();
             }
