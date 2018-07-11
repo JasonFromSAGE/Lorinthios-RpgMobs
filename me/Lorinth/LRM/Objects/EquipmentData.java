@@ -52,7 +52,7 @@ public class EquipmentData{
         	EquipmentResult mainHand = getHighest(level, WeaponLevels);
             if(mainHand != null && !mainHand.isEmpty) {
                 equipment.setItemInMainHand(mainHand.getItem());
-                equipment.setItemInMainHandDropChance((float) mainHand.getDropChance());
+                equipment.setItemInMainHandDropChance((float) mainHand.getDropChance() / 100.0f);
             }
         }
 
@@ -61,7 +61,7 @@ public class EquipmentData{
         	EquipmentResult offHand = getHighest(level, OffHandLevels);
             if(offHand != null && !offHand.isEmpty) {
                 equipment.setItemInOffHand(offHand.getItem());
-                equipment.setItemInOffHandDropChance((float) offHand.getDropChance());
+                equipment.setItemInOffHandDropChance((float) offHand.getDropChance() / 100.0f);
             }
         }
 
@@ -70,7 +70,7 @@ public class EquipmentData{
         	EquipmentResult helmet = getHighest(level, HelmetLevels);
             if(helmet != null && !helmet.isEmpty) {
                 equipment.setHelmet(helmet.getItem());
-                equipment.setHelmetDropChance((float) helmet.getDropChance());
+                equipment.setHelmetDropChance((float) helmet.getDropChance() / 100.0f);
             }
         }
 
@@ -79,7 +79,7 @@ public class EquipmentData{
             EquipmentResult chest = getHighest(level, ChestLevels);
             if(chest != null && !chest.isEmpty) {
                 equipment.setChestplate(chest.getItem());
-                equipment.setChestplateDropChance((float) chest.getDropChance());
+                equipment.setChestplateDropChance((float) chest.getDropChance() / 100.0f);
             }
 
         }
@@ -89,7 +89,7 @@ public class EquipmentData{
             EquipmentResult legs = getHighest(level, LegLevels);
             if(legs != null && !legs.isEmpty) {
                 equipment.setLeggings(legs.getItem());
-                equipment.setLeggingsDropChance((float) legs.getDropChance());
+                equipment.setLeggingsDropChance((float) legs.getDropChance() / 100.0f);
             }
         }
 
@@ -98,7 +98,7 @@ public class EquipmentData{
             EquipmentResult boots = getHighest(level, BootLevels);
             if(boots != null && !boots.isEmpty) {
                 equipment.setBoots(boots.getItem());
-                equipment.setBootsDropChance((float) boots.getDropChance());
+                equipment.setBootsDropChance((float) boots.getDropChance() / 100.0f);
             }
         }
     }

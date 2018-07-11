@@ -19,7 +19,7 @@ public class SetLevelRegionExecutor extends CustomCommandExecutor {
     LevelRegionExecutor parentExecutor;
 
     public SetLevelRegionExecutor(LevelRegionExecutor parent) {
-        super("set", "marks a region for deletion on the next server reload/stop", new ArrayList<CustomCommandArgument>(){{
+        super("set", "Creates/Updates a level region with the given level", new ArrayList<CustomCommandArgument>(){{
             add(new CustomCommandArgument("regionId", "the Id of the level region you want to create/update", true));
             add(new CustomCommandArgument("level", "the level of the region", true));
         }});

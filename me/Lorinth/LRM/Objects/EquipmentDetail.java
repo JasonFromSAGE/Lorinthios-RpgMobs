@@ -26,7 +26,6 @@ public class EquipmentDetail {
         for(String item : items){
             item = item.trim();
             String[] details = item.split(" ");
-            Material mat = null;
             Double chance = 100d;
             Double dropChance = 0d;
             ItemStack itemStack = null;

@@ -16,8 +16,12 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
 import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Controls creature data and defaults
@@ -31,8 +35,11 @@ public class CreatureEventListener implements Listener {
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
-    public void onCreatureSpawn(CreatureSpawnEvent event){
-        LivingEntity entity = event.getEntity();
+    public void onCreatureSpawn(EntitySpawnEvent event){
+        if(!(event.getEntity() instanceof LivingEntity))
+            return;
+
+        LivingEntity entity = (LivingEntity) event.getEntity();
         CreatureData data = dataLoader.getCreatureDataManager().getData(entity);
         if(data.isDisabled(entity.getWorld().getName()))
             return;
@@ -50,6 +57,32 @@ public class CreatureEventListener implements Listener {
         setEquipment(entity, data, level);
         setName(entity, data, level);
         setVariant(entity);
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    public void onPotionSplashEvent(PotionSplashEvent event){
+        if(event.getPotion().getShooter() instanceof Witch){
+            Witch witch = (Witch) event.getPotion().getShooter();
+            if(witch.hasMetadata(MetaDataConstants.Damage)){
+                int damage = witch.getMetadata(MetaDataConstants.Damage).get(0).asInt();
+
+                ThrownPotion potion = event.getPotion();
+                Collection<PotionEffect> effects = potion.getEffects();
+                List<PotionEffect> removeEffects = new ArrayList<>();
+
+                for(PotionEffect effect : effects){
+                    if(effect.getType() == PotionEffectType.HARM){
+                        removeEffects.add(effect);
+                    }
+                }
+
+                for(PotionEffect effect : removeEffects){
+                    potion.getEffects().add(new PotionEffect(effect.getType(), effect.getDuration(), damage-1));
+                    potion.getEffects().remove(effect);
+                }
+            }
+        }
+
     }
 
     private void setLevel(Entity entity, int level){
