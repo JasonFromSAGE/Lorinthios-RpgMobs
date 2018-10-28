@@ -8,6 +8,7 @@ import me.Lorinth.LRM.Util.ConfigHelper;
 import me.Lorinth.LRM.Util.MetaDataConstants;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -78,6 +79,10 @@ public abstract class MobVariant extends Disableable{
     }
 
     protected abstract void loadDetails(FileConfiguration config);
+
+    public boolean isDisabledEntityType(EntityType type){
+        return disabledEntityTypes.contains(type.name());
+    }
 
     /**
      * Applies the variant to the entity

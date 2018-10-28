@@ -1,5 +1,6 @@
 package me.Lorinth.LRM.Variants;
 
+import me.Lorinth.LRM.LorinthsRpgMobs;
 import me.Lorinth.LRM.Objects.ConfigValue;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
@@ -29,10 +30,12 @@ public class SturdyVariant extends MobVariant {
     boolean augment(Entity entity) {
         if(entity instanceof LivingEntity) {
             LivingEntity living = (LivingEntity) entity;
-            AttributeInstance instance = living.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE);
-            if (instance != null) {
-                instance.setBaseValue(knockbackResistance);
-                return true;
+            if(LorinthsRpgMobs.properties.IsAttributeVersion){
+                AttributeInstance instance = living.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE);
+                if (instance != null) {
+                    instance.setBaseValue(knockbackResistance);
+                    return true;
+                }
             }
         }
         return false;
@@ -44,9 +47,11 @@ public class SturdyVariant extends MobVariant {
             return;
 
         LivingEntity living = (LivingEntity) entity;
-        AttributeInstance instance = living.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE);
-        if (instance != null) {
-            instance.setBaseValue(instance.getDefaultValue());
+        if(LorinthsRpgMobs.properties.IsAttributeVersion) {
+            AttributeInstance instance = living.getAttribute(Attribute.GENERIC_KNOCKBACK_RESISTANCE);
+            if (instance != null) {
+                instance.setBaseValue(instance.getDefaultValue());
+            }
         }
     }
 }

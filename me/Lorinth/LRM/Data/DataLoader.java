@@ -16,6 +16,7 @@ public class DataLoader implements DataManager{
     protected DistanceAlgorithm distanceAlgorithm = DistanceAlgorithm.Diamond;
 
     private CreatureDataManager creatureDataManager = new CreatureDataManager();
+    private EnchantmentApiManager enchantmentApiManager = new EnchantmentApiManager();
     private ExperiencePermissionManager experiencePermissionManager = new ExperiencePermissionManager();
     private HeroesDataManager heroesDataManager = new HeroesDataManager();
     private LevelRegionManager levelRegionManager = new LevelRegionManager();
@@ -77,6 +78,7 @@ public class DataLoader implements DataManager{
 
     public void loadData(FileConfiguration config, Plugin plugin){
         loadGlobalOptions(config, plugin);
+        enchantmentApiManager.loadData(config, plugin);
         creatureDataManager.loadData(config, plugin);
         experiencePermissionManager.loadData(config, plugin);
         heroesDataManager.loadData(config, plugin);

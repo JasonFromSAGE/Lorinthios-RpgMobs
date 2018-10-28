@@ -43,7 +43,7 @@ public class CreatureEventListener implements Listener {
         CreatureData data = dataLoader.getCreatureDataManager().getData(entity);
         if(data.isDisabled(entity.getWorld().getName()))
             return;
-        if(isEpicMob(entity))
+        if(isEliteMob(entity))
             return;
 
         //Set Level
@@ -89,15 +89,19 @@ public class CreatureEventListener implements Listener {
         entity.setMetadata(MetaDataConstants.Level, new FixedMetadataValue(LorinthsRpgMobs.instance, level));
     }
 
-    private boolean isEpicMob(Entity entity){
+    private boolean isEliteMob(Entity entity){
         return entity.hasMetadata("EliteMob") || entity.hasMetadata("PassiveEliteMob");
     }
 
     private void setHealth(LivingEntity entity, CreatureData data, int level){
         int health = (int)data.getHealthAtLevel(level);
-        AttributeInstance attribute = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
-        if(attribute != null)
-            attribute.setBaseValue((double) health);
+        if(LorinthsRpgMobs.properties.IsAttributeVersion){
+            AttributeInstance attribute = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+            if(attribute != null)
+                attribute.setBaseValue((double) health);
+            else
+                entity.setMaxHealth(health);
+        }
         else
             entity.setMaxHealth(health);
         entity.setHealth((double) health);
@@ -105,9 +109,11 @@ public class CreatureEventListener implements Listener {
 
     private void setDamage(LivingEntity entity, CreatureData data, int level){
         double damage = (int)data.getDamageAtLevel(level);
-        AttributeInstance attribute = entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE);
-        if(attribute != null)
-            attribute.setBaseValue(damage);
+        if(LorinthsRpgMobs.properties.IsAttributeVersion) {
+            AttributeInstance attribute = entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE);
+            if (attribute != null)
+                attribute.setBaseValue(damage);
+        }
         entity.setMetadata(MetaDataConstants.Damage, new FixedMetadataValue(LorinthsRpgMobs.instance, damage));
     }
 
@@ -202,6 +208,9 @@ public class CreatureEventListener implements Listener {
         if (data.isDisabled(entity.getWorld().getName()))
             return;
 
+        MobVariant variant = LorinthsRpgMobs.GetMobVariantOfEntity(entity);
+        if(variant != null)
+            variant.onDeath(entity);
 
         Integer level = LorinthsRpgMobs.GetLevelOfEntity(entity);
         if(level != null){

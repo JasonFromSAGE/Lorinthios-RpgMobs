@@ -27,6 +27,8 @@ public class ButcherExecutor extends CustomCommandExecutor {
         boolean removeArmorStands = false;
         boolean removeAmbient = false;
         boolean removeVillagers = false;
+        boolean removeMobs = true;
+        boolean removeFlying = false;
         if(args.length > 0 && TryParse.parseInt(args[0])) {
             radius = Integer.parseInt(args[0]);
             args = Arrays.copyOfRange(args, 1, args.length);
@@ -49,11 +51,17 @@ public class ButcherExecutor extends CustomCommandExecutor {
                     removeAmbient = true;
                 else if (args[i].equalsIgnoreCase("-v"))
                     removeVillagers = true;
+                else if (args[i].equalsIgnoreCase("-m"))
+                    removeMobs = false;
+                else if (args[i].equalsIgnoreCase("-f"))
+                    removeFlying = true;
             }
 
 
         OutputHandler.PrintInfo(player, "Butchering...");
-        String removeMessage = "Removing the following entities, Monsters";
+        String removeMessage = "Removing the following entities";
+        if(removeMobs)
+            removeMessage += ", Monsters";
         if(removeAnimals)
             removeMessage += ", Aniamls";
         if(removeGolems)
@@ -64,6 +72,8 @@ public class ButcherExecutor extends CustomCommandExecutor {
             removeMessage += ", Ambient";
         if(removeVillagers)
             removeMessage += ", Villagers";
+        if(removeFlying)
+            removeMessage += ", Flying";
         OutputHandler.PrintInfo(player, removeMessage);
 
         for(LivingEntity entity : player.getWorld().getLivingEntities()){
@@ -71,10 +81,10 @@ public class ButcherExecutor extends CustomCommandExecutor {
                 if(entity instanceof  Tameable){
                     Tameable tameable = (Tameable) entity;
                     if(!tameable.isTamed())
-                        removeEntity(player, radius, entity, removeAnimals, removeGolems, removeArmorStands, removeAmbient, removeVillagers);
+                        removeEntity(player, radius, entity, removeAnimals, removeGolems, removeArmorStands, removeAmbient, removeVillagers, removeMobs, removeFlying);
                 }
                 else{
-                    removeEntity(player, radius, entity, removeAnimals, removeGolems, removeArmorStands, removeAmbient, removeVillagers);
+                    removeEntity(player, radius, entity, removeAnimals, removeGolems, removeArmorStands, removeAmbient, removeVillagers, removeMobs, removeFlying);
                 }
             }
         }
@@ -86,31 +96,35 @@ public class ButcherExecutor extends CustomCommandExecutor {
             boolean removeGolems,
             boolean removeArmorStands,
             boolean removeAmbient,
-            boolean removeVillagers) {
+            boolean removeVillagers,
+            boolean removeMobs,
+            boolean removeFlying) {
         if(!isCloseEnough(player, entity, radius))
             return;
-        if (entity instanceof Villager) {
-            if (removeVillagers)
-                entity.remove();
-            return;
-        }
-        else if(entity instanceof ArmorStand){
-            if (removeArmorStands)
-                entity.remove();
-            return;
-        }
-        else if (entity instanceof IronGolem){
-            if (removeGolems)
-                entity.remove();
-            return;
-        }
-        else if(entity instanceof Bat || entity instanceof Squid){
-            if(removeAmbient)
-                entity.remove();
-            return;
-        }
-        else if(entity instanceof Monster)
+        if (entity instanceof Villager && removeVillagers){
             entity.remove();
+            return;
+        }
+        if(entity instanceof ArmorStand && removeArmorStands){
+            entity.remove();
+            return;
+        }
+        if ((entity instanceof IronGolem || entity instanceof Snowman) && removeGolems){
+            entity.remove();
+            return;
+        }
+        if(entity instanceof Flying && removeFlying){
+            entity.remove();
+            return;
+        }
+        if((entity instanceof Ambient || entity instanceof Squid) && removeAmbient){
+            entity.remove();
+            return;
+        }
+        if(entity instanceof Monster && removeMobs){
+            entity.remove();
+            return;
+        }
         if(entity instanceof Creature && !(entity instanceof Monster) && removeAnimals){
             entity.remove();
         }
@@ -129,10 +143,13 @@ public class ButcherExecutor extends CustomCommandExecutor {
         String prefix = "/" + CommandConstants.LorinthsRpgMobsCommand + " ";
         OutputHandler.PrintCommandInfo(player, prefix + this.getUserFriendlyCommandText());
         sendCommandArgumentDetails(player);
+        OutputHandler.PrintCommandInfo(player, " -m" + OutputHandler.HIGHLIGHT + CommandConstants.DescriptionDelimeter + "DONT Remove Mobs (hostile)");
         OutputHandler.PrintCommandInfo(player, " -a" + OutputHandler.HIGHLIGHT + CommandConstants.DescriptionDelimeter + "Remove Animals");
         OutputHandler.PrintCommandInfo(player, " -g" + OutputHandler.HIGHLIGHT + CommandConstants.DescriptionDelimeter + "Remove Iron Golems");
         OutputHandler.PrintCommandInfo(player, " -s" + OutputHandler.HIGHLIGHT + CommandConstants.DescriptionDelimeter + "Remove Armor Stands");
         OutputHandler.PrintCommandInfo(player, " -b" + OutputHandler.HIGHLIGHT + CommandConstants.DescriptionDelimeter + "Remove Ambient creatures");
         OutputHandler.PrintCommandInfo(player, " -v" + OutputHandler.HIGHLIGHT + CommandConstants.DescriptionDelimeter + "Remove Villagers");
+        OutputHandler.PrintCommandInfo(player, " -a" + OutputHandler.HIGHLIGHT + CommandConstants.DescriptionDelimeter + "Remove Animals");
+        OutputHandler.PrintCommandInfo(player, " -f" + OutputHandler.HIGHLIGHT + CommandConstants.DescriptionDelimeter + "Remove Flying");
     }
 }

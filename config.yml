@@ -75,11 +75,23 @@ MobVariants:
     DefensiveBurn:
       Ticks: 20
       Chance: 20.0
+  Explosive:
+    Disabled: false
+    DisabledTypes: []
+    Weight: 10
+    BreakBlocks: false
+    IgniteBlocks: false
+    Power: 4.0
   Fast:
     Disabled: false
     DisabledTypes: []
     Weight: 10
     SpeedMultiplier: 1.5
+  Forceful:
+    Disabled: false
+    DisabledTypes: []
+    Weight: 10
+    ForceMultiplier: 2.0
   Glowing:
     Disabled: false
     DisabledTypes: []
@@ -107,6 +119,11 @@ MobVariants:
     Weight: 10
     Damage: 2
     DamageMultiplier: 1.0
+  Sturdy:
+    Disabled: false
+    DisabledTypes: []
+    Weight: 10
+    KnockbackResistance: 1.0
   Tough:
     Disabled: false
     DisabledTypes: []

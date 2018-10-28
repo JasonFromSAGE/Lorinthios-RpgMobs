@@ -47,23 +47,34 @@ public class EquipmentData{
 
     public void equip(LivingEntity creature, int level){
         EntityEquipment equipment = creature.getEquipment();
-        //Main Hand
-        if (!(doesVanillaItemOverride(equipment.getItemInMainHand()))){
-        	EquipmentResult mainHand = getHighest(level, WeaponLevels);
-            if(mainHand != null && !mainHand.isEmpty) {
-                equipment.setItemInMainHand(mainHand.getItem());
-                equipment.setItemInMainHandDropChance((float) mainHand.getDropChance() / 100.0f);
+        if(LorinthsRpgMobs.properties.IsAttributeVersion){
+            //Main Hand
+            if (!(doesVanillaItemOverride(equipment.getItemInMainHand()))){
+                EquipmentResult mainHand = getHighest(level, WeaponLevels);
+                if(mainHand != null && !mainHand.isEmpty) {
+                    equipment.setItemInMainHand(mainHand.getItem());
+                    equipment.setItemInMainHandDropChance((float) mainHand.getDropChance() / 100.0f);
+                }
+            }
+
+            //Off Hand
+            if (!(doesVanillaItemOverride(equipment.getItemInOffHand()))){
+                EquipmentResult offHand = getHighest(level, OffHandLevels);
+                if(offHand != null && !offHand.isEmpty) {
+                    equipment.setItemInOffHand(offHand.getItem());
+                    equipment.setItemInOffHandDropChance((float) offHand.getDropChance() / 100.0f);
+                }
+            }
+        }else{
+            if(!(doesVanillaItemOverride(equipment.getItemInHand()))){
+                EquipmentResult mainHand = getHighest(level, WeaponLevels);
+                if(mainHand != null && !mainHand.isEmpty) {
+                    equipment.setItemInHand(mainHand.getItem());
+                    equipment.setItemInHandDropChance((float) mainHand.getDropChance() / 100.0f);
+                }
             }
         }
 
-        //Off Hand
-        if (!(doesVanillaItemOverride(equipment.getItemInOffHand()))){
-        	EquipmentResult offHand = getHighest(level, OffHandLevels);
-            if(offHand != null && !offHand.isEmpty) {
-                equipment.setItemInOffHand(offHand.getItem());
-                equipment.setItemInOffHandDropChance((float) offHand.getDropChance() / 100.0f);
-            }
-        }
 
         //Helmet
         if (!(doesVanillaItemOverride(equipment.getHelmet()))){

@@ -56,8 +56,14 @@ public class CreatureData extends DirtyObject{
         if(LorinthsRpgMobs.instance.getConfig().getBoolean("Entity." + type + ".Disabled"))
             groupDisabled = true;
 
-        healthFormula = (entity.getAttribute(Attribute.GENERIC_MAX_HEALTH) != null ? (int) entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() : 20) + " + ({level} / 3) + ({level} / 5) + rand(5)";
-        damageFormula = (entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE) != null ? (int) entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).getValue() : 2) + " + rand(3) + ({level} / 12)";
+        if(LorinthsRpgMobs.properties.IsAttributeVersion){
+            healthFormula = (entity.getAttribute(Attribute.GENERIC_MAX_HEALTH) != null ? (int) entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue() : 20) + " + ({level} / 3) + ({level} / 5) + rand(5)";
+            damageFormula = (entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE) != null ? (int) entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).getValue() : 2) + " + rand(3) + ({level} / 12)";
+        }
+        else{
+            healthFormula = entity.getMaxHealth() + " + ({level} / 3) + ({level} / 5) + rand(5)";
+            damageFormula = "1 + rand(3) + ({level} / 12)";
+        }
         expFormula = "rand(5) + 1 + rand({level} / 5)";
 
         String friendlyName = getUserFriendlyName(entityType);

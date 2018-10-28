@@ -33,7 +33,10 @@ public class ExplosiveVariant extends MobVariant{
 
     @Override
     boolean augment(Entity entity) {
-        return false;
+        if(!(entity instanceof LivingEntity))
+            return false;
+
+        return true;
     }
 
     @Override

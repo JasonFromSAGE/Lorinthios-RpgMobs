@@ -1,5 +1,8 @@
 package me.Lorinth.LRM.Objects;
 
+import com.sucy.enchant.EnchantmentAPI;
+import com.sucy.enchant.api.CustomEnchantment;
+import me.Lorinth.LRM.Data.EnchantmentApiManager;
 import me.Lorinth.LRM.Util.OutputHandler;
 import me.Lorinth.LRM.Util.TryParse;
 import org.bukkit.Material;
@@ -29,7 +32,7 @@ public class EquipmentDetail {
             Double chance = 100d;
             Double dropChance = 0d;
             ItemStack itemStack = null;
-            Map<Enchantment, Integer> enchants = new HashMap<>();
+            Map<String, Integer> enchants = new HashMap<>();
 
             for(String detail : details){
                 detail = detail.replace("%", "").trim();
@@ -40,7 +43,7 @@ public class EquipmentDetail {
                         String[] args = detail.split(":");
                         if(args.length == 2){
                             if(TryParse.parseEnchantFriendlyName(args[0]) != null && TryParse.parseInt(args[1])){
-                                enchants.put(TryParse.parseEnchantFriendlyName(args[0]), Integer.parseInt(args[1]));
+                                enchants.put(args[0], Integer.parseInt(args[1]));
                             }
                         }
                     }
@@ -52,11 +55,20 @@ public class EquipmentDetail {
             }
 
             if(itemStack != null){
-                for(Map.Entry<Enchantment, Integer> entry : enchants.entrySet()){
-                    if(entry.getKey().canEnchantItem(itemStack))
-                        itemStack.addEnchantment(entry.getKey(), entry.getValue());
+                for(Map.Entry<String, Integer> entry : enchants.entrySet()){
+                    Object enchant = EnchantmentApiManager.getEnchantment(entry.getKey());
+                    if(enchant != null){
+                        if(enchant instanceof Enchantment){
+                            if(((Enchantment) enchant).canEnchantItem(itemStack))
+                                itemStack.addEnchantment((Enchantment) enchant, entry.getValue());
+                        }
+                        else if(enchant instanceof CustomEnchantment){
+                            if(((CustomEnchantment) enchant).canEnchantOnto(itemStack))
+                                ((CustomEnchantment) enchant).addToItem(itemStack, entry.getValue());
+                        }
+                    }
                     else
-                        OutputHandler.PrintError("Can't apply enchant, " + entry.getKey().getName() + " to material, " + itemStack.getType().name());
+                        OutputHandler.PrintError("Can't apply enchant, " + entry.getKey() + " to material, " + itemStack.getType().name());
                 }
 
                 ItemStacks.add(itemStack);

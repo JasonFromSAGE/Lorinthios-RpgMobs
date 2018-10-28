@@ -47,7 +47,8 @@ public class LorinthsRpgMobs extends JavaPlugin {
 
         dataLoader = new DataLoader();
         dataLoader.loadData(getConfig(), this);
-        //Bukkit.getPluginManager().registerEvents(new CommandEventListener(), this);
+        //Bukkit.getPluginManager().registerEvents(new CommandEventListener(), this);\
+        loadMinecraftVersion();
         Bukkit.getPluginManager().registerEvents(new CreatureEventListener(dataLoader), this);
         Bukkit.getPluginManager().registerEvents(new UpdaterEventListener(), this);
         OutputHandler.PrintInfo("Finished!");
@@ -70,6 +71,12 @@ public class LorinthsRpgMobs extends JavaPlugin {
     public static void Reload(){
         instance.onDisable();
         instance.onEnable();
+    }
+
+    private void loadMinecraftVersion(){
+        String version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
+        int subVersion = Integer.parseInt(version.replace("v1_", "").replaceAll("_R\\d", ""));
+        properties.IsAttributeVersion = subVersion > 8;
     }
 
     private void loadConfiguration(){

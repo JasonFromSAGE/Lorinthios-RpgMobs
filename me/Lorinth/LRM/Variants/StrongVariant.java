@@ -1,11 +1,14 @@
 package me.Lorinth.LRM.Variants;
 
+import me.Lorinth.LRM.LorinthsRpgMobs;
 import me.Lorinth.LRM.Objects.ConfigValue;
+import me.Lorinth.LRM.Util.MetaDataConstants;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.metadata.FixedMetadataValue;
 
 import java.util.ArrayList;
 
@@ -31,11 +34,15 @@ public class StrongVariant extends MobVariant{
     @Override
     boolean augment(Entity entity) {
         if(entity instanceof LivingEntity) {
-            AttributeInstance instance = ((LivingEntity) entity).getAttribute(Attribute.GENERIC_ATTACK_DAMAGE);
-            if (instance != null) {
-                instance.setBaseValue(instance.getValue() * damageMultiplier + rawDamage);
-                return true;
+            if(LorinthsRpgMobs.properties.IsAttributeVersion){
+                AttributeInstance instance = ((LivingEntity) entity).getAttribute(Attribute.GENERIC_ATTACK_DAMAGE);
+                if (instance != null) {
+                    instance.setBaseValue(instance.getValue() * damageMultiplier + rawDamage);
+                    return true;
+                }
             }
+            entity.setMetadata(MetaDataConstants.Damage, new FixedMetadataValue(LorinthsRpgMobs.instance,
+                    entity.getMetadata(MetaDataConstants.Damage).get(0).asDouble() * damageMultiplier + rawDamage));
         }
         return false;
     }
@@ -46,9 +53,11 @@ public class StrongVariant extends MobVariant{
             return;
 
         LivingEntity living = (LivingEntity) entity;
-        AttributeInstance instance = living.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE);
-        if (instance != null) {
-            instance.setBaseValue(instance.getValue() * (1 / damageMultiplier) - rawDamage);
+        if(LorinthsRpgMobs.properties.IsAttributeVersion){
+            AttributeInstance instance = living.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE);
+            if (instance != null) {
+                instance.setBaseValue((instance.getValue() - rawDamage) * (1 / damageMultiplier));
+            }
         }
     }
 }

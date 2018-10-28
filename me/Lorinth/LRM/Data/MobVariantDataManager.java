@@ -17,10 +17,10 @@ import java.util.Random;
 
 public class MobVariantDataManager extends Disableable implements DataManager {
 
-    private static HashMap<String, MobVariant> mobVariants = new HashMap<>();
+    private static HashMap<String, ArrayList<MobVariant>> entityTypeVariants = new HashMap<>();
+    private static HashMap<String, Integer> entityTypeVariantWeight = new HashMap<>();
     private static ArrayList<String> disabledEntityTypes = new ArrayList<>();
     private static boolean disabled = false;
-    private static int totalWeight = 0;
     private static int variantChance = 0;
     private static MobVariantDataManager instance;
     private static Random random = new Random();
@@ -46,6 +46,8 @@ public class MobVariantDataManager extends Disableable implements DataManager {
         variantChance = config.getInt("MobVariants.VariantChance");
         disabledEntityTypes.addAll(config.getStringList("MobVariants.DisabledTypes"));
 
+        entityTypeVariants = new HashMap<>();
+        entityTypeVariantWeight = new HashMap<>();
         loadInternalVariants();
     }
 
@@ -66,22 +68,31 @@ public class MobVariantDataManager extends Disableable implements DataManager {
     }
 
     public static void AddVariant(MobVariant variant){
-        //OutputHandler.PrintInfo("Loaded Variant, " + variant.getName());
-        mobVariants.put(variant.getName(), variant);
-        totalWeight += variant.getWeight();
+        for(EntityType type : EntityType.values()){
+            if(!variant.isDisabledEntityType(type)){
+                ArrayList<MobVariant> variants = entityTypeVariants.getOrDefault(type.name(), new ArrayList<>());
+                Integer totalWeight = entityTypeVariantWeight.getOrDefault(type.name(), 0);
+
+                variants.add(variant);
+                entityTypeVariants.put(type.name(), variants);
+                entityTypeVariantWeight.put(type.name(), totalWeight + variant.getWeight());
+            }
+        }
     }
+
+
 
     public static MobVariant GetVariant(LivingEntity entity){
         if(disabled ||
-            totalWeight == 0 ||
             disabledEntityTypes.contains(entity.getType().name()) ||
+            entityTypeVariantWeight.getOrDefault(entity.getType().name(), 0) == 0 ||
             LorinthsRpgMobs.IsMythicMob(entity))
             return null;
 
         if(random.nextInt(100) < variantChance){
             int current = 0;
-            int target = random.nextInt(totalWeight);
-            for(MobVariant variant : mobVariants.values()){
+            int target = random.nextInt(entityTypeVariantWeight.get(entity.getType().name()));
+            for(MobVariant variant : entityTypeVariants.get(entity.getType().name())){
                 current += variant.getWeight();
                 if(current > target)
                     if(variant.apply(entity))

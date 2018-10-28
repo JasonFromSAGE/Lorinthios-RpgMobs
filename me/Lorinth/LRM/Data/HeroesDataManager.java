@@ -10,16 +10,12 @@ import me.Lorinth.LRM.Listener.HeroesEventListener;
 import me.Lorinth.LRM.Objects.*;
 import me.Lorinth.LRM.Util.Calculator;
 import me.Lorinth.LRM.Util.ConfigHelper;
-import me.Lorinth.LRM.Util.MetaDataConstants;
 import me.Lorinth.LRM.Util.OutputHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.plugin.Plugin;
 
