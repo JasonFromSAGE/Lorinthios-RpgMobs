@@ -29,7 +29,13 @@ public class HereLevelRegionExecutor extends CustomCommandExecutor{
 
         OutputHandler.PrintWhiteSpace(player, 2);
         OutputHandler.PrintCommandInfo(player, "[LorinthsRpgMobs] : " + OutputHandler.HIGHLIGHT + "Level info for your location");
-        OutputHandler.PrintCommandInfo(player, "Level : " + OutputHandler.HIGHLIGHT + level + (levelRegion != null ? " ( region : " + levelRegion.getName() + ")" : ""));
+        if(levelRegion != null){
+            OutputHandler.PrintCommandInfo(player, "Level Region : " + OutputHandler.HIGHLIGHT + levelRegion.getName());
+            OutputHandler.PrintCommandInfo(player, "Level : " + OutputHandler.HIGHLIGHT + levelRegion.getLevelRange());
+        }
+        else {
+            OutputHandler.PrintCommandInfo(player, "Level : " + OutputHandler.HIGHLIGHT + level);
+        }
     }
 
     @Override

@@ -1,6 +1,5 @@
 package me.Lorinth.LRM.Objects;
 
-import com.sucy.enchant.EnchantmentAPI;
 import com.sucy.enchant.api.CustomEnchantment;
 import me.Lorinth.LRM.Data.EnchantmentApiManager;
 import me.Lorinth.LRM.Util.OutputHandler;
@@ -50,7 +49,7 @@ public class EquipmentDetail {
                 }
                 else if(TryParse.parseDouble(detail))
                     chance = Double.parseDouble(detail);
-                else if(TryParse.parseMaterial(detail))
+                else if(TryParse.parseEnum(Material.class, detail))
                     itemStack = new ItemStack(Material.valueOf(detail), 1);
             }
 

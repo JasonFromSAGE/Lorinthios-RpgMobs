@@ -42,11 +42,11 @@ public class SkillAPIDataManager extends Disableable implements DataManager {
         return false;
     }
 
-    public boolean handleEntityDeathEvent(EntityDeathEvent deathEvent, Player player, int exp){
+    public boolean handleEntityDeathEvent(EntityDeathEvent deathEvent, Player player, int exp, double currency){
         if(this.isDisabled())
             return false;
 
-        skillAPIEventListener.bindDeathEvent(player, new CreatureDeathData(exp, deathEvent.getEntity()));
+        skillAPIEventListener.bindDeathEvent(player, new CreatureDeathData(exp, currency, deathEvent.getEntity()));
         return true;
     }
 

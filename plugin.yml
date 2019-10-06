@@ -1,8 +1,9 @@
 name: LorinthsRpgMobs
 main: me.Lorinth.LRM.LorinthsRpgMobs
-version: 1.2.9.1
-softdepend: [WorldGuard, Heroes, SkillAPI, MythicMobs, MythicDrops, EnchantmentAPI]
+version: 1.3.4
+softdepend: [WorldGuard, Heroes, SkillAPI, MythicMobs, MythicDrops, EnchantmentAPI, Vault, LorinthsBossApi]
 description: A plugin that provides configurable settings for creatures
+api-version: 1.14
 commands:
   lrm:
     description: Accesses most configurable settings for Lorinths Rpg Mobs

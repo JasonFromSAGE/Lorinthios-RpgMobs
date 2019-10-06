@@ -1,12 +1,19 @@
 package me.Lorinth.LRM.Data;
 
 import me.Lorinth.LRM.LorinthsRpgMobs;
-import me.Lorinth.LRM.Objects.*;
+import me.Lorinth.LRM.Objects.DataManager;
+import me.Lorinth.LRM.Objects.DistanceAlgorithm;
+import me.Lorinth.LRM.Objects.LevelRegion;
+import me.Lorinth.LRM.Objects.SpawnPoint;
+import me.Lorinth.LRM.Util.ConfigHelper;
 import me.Lorinth.LRM.Util.OutputHandler;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
 import org.bukkit.plugin.Plugin;
+
+import java.util.ArrayList;
+import java.util.UUID;
 
 /**
  * This class shouldn't be used outside of the plugin
@@ -14,6 +21,8 @@ import org.bukkit.plugin.Plugin;
 public class DataLoader implements DataManager{
 
     protected DistanceAlgorithm distanceAlgorithm = DistanceAlgorithm.Diamond;
+    protected boolean ignoreSpawnerMobs = true;
+    protected ArrayList<UUID> ignoredEntities = new ArrayList<>();
 
     private CreatureDataManager creatureDataManager = new CreatureDataManager();
     private EnchantmentApiManager enchantmentApiManager = new EnchantmentApiManager();
@@ -25,6 +34,7 @@ public class DataLoader implements DataManager{
     private MythicMobsDataManager mythicMobsDataManager = new MythicMobsDataManager();
     private SkillAPIDataManager skillAPIDataManager = new SkillAPIDataManager();
     private SpawnPointManager spawnPointManager = new SpawnPointManager(this);
+    private VaultManager vaultManager = new VaultManager();
 
     public int calculateLevel(Location location, Entity entity){
         LevelRegion region = levelRegionManager.getHighestPriorityLeveledRegionAtLocation(location);
@@ -70,6 +80,7 @@ public class DataLoader implements DataManager{
         return spawnPointManager;
     }
 
+
     public boolean saveData(FileConfiguration config){
         return spawnPointManager.saveData(config) || levelRegionManager.saveData(config) || creatureDataManager.saveData(config) ||
                 heroesDataManager.saveData(config) || skillAPIDataManager.saveData(config) || mythicDropsDataManager.saveData(config) ||
@@ -88,6 +99,7 @@ public class DataLoader implements DataManager{
         mythicMobsDataManager.loadData(config, plugin);
         skillAPIDataManager.loadData(config, plugin);
         spawnPointManager.loadData(config, plugin);
+        vaultManager.loadData(config, plugin);
     }
 
     private void loadGlobalOptions(FileConfiguration config, Plugin plugin){
@@ -95,6 +107,7 @@ public class DataLoader implements DataManager{
         LorinthsRpgMobs.properties.NameFormat = config.getString("Names.Format").replaceAll("&", "§");
         loadDistanceAlgorithm(config, plugin);
         loadVanillaEquipmentOverride(config, plugin);
+        loadIgnoreSpawnerMobs(config, plugin);
     }
 
     private void loadDistanceAlgorithm(FileConfiguration config, Plugin plugin){
@@ -109,8 +122,35 @@ public class DataLoader implements DataManager{
         }
     }
 
+    private void loadIgnoreSpawnerMobs(FileConfiguration config, Plugin plugin){
+        if(ConfigHelper.ConfigContainsPath(config, "IgnoreSpawnerMobs")){
+            ignoreSpawnerMobs = config.getBoolean("IgnoreSpawnerMobs");
+        }
+        else{
+            OutputHandler.PrintError("Couldn't find value 'IgnoreSpawnerMobs' in config.yml. Using " + OutputHandler.HIGHLIGHT + "IgnoreSpawnerMobs: true" + OutputHandler.ERROR + " as default");
+            config.set("IgnoreSpawnerMobs", true);
+            ignoreSpawnerMobs = true;
+        }
+    }
+
     private void loadVanillaEquipmentOverride(FileConfiguration config, Plugin plugin){
         LorinthsRpgMobs.properties.VanillaMobEquipmentOverrides = config.getBoolean("VanillaMobEquipmentOverrides");
+    }
+
+    public boolean ignoresSpawnerMobs(){
+        return ignoreSpawnerMobs;
+    }
+
+    public void ignoreEntity(Entity entity){
+        ignoredEntities.add(entity.getUniqueId());
+    }
+
+    public boolean isIgnoredEntity(Entity entity, boolean remove){
+        boolean isIgnored = ignoredEntities.contains(entity.getUniqueId());
+        if(remove)
+            ignoredEntities.remove(entity.getUniqueId());
+        return isIgnored;
+
     }
 
 }

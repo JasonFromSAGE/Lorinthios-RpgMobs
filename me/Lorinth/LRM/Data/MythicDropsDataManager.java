@@ -1,7 +1,7 @@
 package me.Lorinth.LRM.Data;
 
 import com.tealcube.minecraft.bukkit.mythicdrops.api.MythicDrops;
-import com.tealcube.minecraft.bukkit.mythicdrops.items.MythicDropBuilder;
+import com.tealcube.minecraft.bukkit.mythicdrops.items.builders.MythicDropBuilder;
 import me.Lorinth.LRM.Listener.MythicDropsListener;
 import me.Lorinth.LRM.Objects.CreatureData;
 import me.Lorinth.LRM.Objects.DataManager;
@@ -12,7 +12,6 @@ import me.Lorinth.LRM.Util.OutputHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Entity;
-import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 

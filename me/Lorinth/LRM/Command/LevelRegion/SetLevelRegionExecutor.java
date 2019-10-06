@@ -30,7 +30,7 @@ public class SetLevelRegionExecutor extends CustomCommandExecutor {
     @Override
     public void safeExecute(Player player, String[] args) {
         String name = args[0].toLowerCase();
-        int level = Integer.parseInt(args[1]);
+        String level = args[1];
 
         LevelRegion region = LorinthsRpgMobs.GetLevelRegionManager().getLevelRegionByName(player.getWorld(), name);
         if(region == null){

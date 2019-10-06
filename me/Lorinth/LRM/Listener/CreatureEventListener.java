@@ -1,18 +1,23 @@
 package me.Lorinth.LRM.Listener;
 
+import me.Lorinth.LRM.Data.BossApiManager;
 import me.Lorinth.LRM.Data.DataLoader;
-import me.Lorinth.LRM.Data.HeroesDataManager;
 import me.Lorinth.LRM.Data.MobVariantDataManager;
-import me.Lorinth.LRM.Data.SkillAPIDataManager;
+import me.Lorinth.LRM.Data.VaultManager;
+import me.Lorinth.LRM.Events.RpgMobDeathEvent;
 import me.Lorinth.LRM.LorinthsRpgMobs;
-import me.Lorinth.LRM.Objects.*;
+import me.Lorinth.LRM.Objects.CreatureData;
+import me.Lorinth.LRM.Objects.EquipmentData;
+import me.Lorinth.LRM.Objects.LevelRegion;
+import me.Lorinth.LRM.Objects.NameData;
 import me.Lorinth.LRM.Util.MetaDataConstants;
 import me.Lorinth.LRM.Variants.MobVariant;
+import me.Lorinth.LRM.Variants.WealthyVariant;
+import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
 import org.bukkit.metadata.FixedMetadataValue;
@@ -22,6 +27,7 @@ import org.bukkit.potion.PotionEffectType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Controls creature data and defaults
@@ -29,34 +35,53 @@ import java.util.List;
 public class CreatureEventListener implements Listener {
 
     private DataLoader dataLoader;
+    private Random random;
 
     public CreatureEventListener(DataLoader dataLoader){
         this.dataLoader = dataLoader;
+        random = new Random();
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.NORMAL)
-    public void onCreatureSpawn(EntitySpawnEvent event){
+    @EventHandler(ignoreCancelled = true)
+    public void onEntitySpawn(EntitySpawnEvent event){
         if(!(event.getEntity() instanceof LivingEntity))
             return;
-
-        LivingEntity entity = (LivingEntity) event.getEntity();
-        CreatureData data = dataLoader.getCreatureDataManager().getData(entity);
-        if(data.isDisabled(entity.getWorld().getName()))
-            return;
-        if(isEliteMob(entity))
+        if(event.getEntity() instanceof Creature)
             return;
 
-        //Set Level
-        int level = dataLoader.calculateLevel(entity.getLocation(), entity);
-        if(level == -1)
-            return;
+        updateEntity(event, (LivingEntity) event.getEntity(), null);
+    }
 
-        setLevel(entity, level);
-        setHealth(entity, data, level);
-        setDamage(entity, data, level);
-        setEquipment(entity, data, level);
-        setName(entity, data, level);
-        setVariant(entity);
+    @EventHandler(ignoreCancelled = true)
+    public void onCreatureSpawn(CreatureSpawnEvent event){
+        updateEntity(event, event.getEntity(), event.getSpawnReason());
+    }
+
+    private void updateEntity(EntitySpawnEvent event, LivingEntity entity, CreatureSpawnEvent.SpawnReason spawnReason){
+        if(!replaceWithBoss(event, entity)){
+            if(spawnReason != null && spawnReason == CreatureSpawnEvent.SpawnReason.SPAWNER && dataLoader.ignoresSpawnerMobs()) {
+                dataLoader.ignoreEntity(event.getEntity());
+                return;
+            }
+
+            CreatureData data = dataLoader.getCreatureDataManager().getData(entity);
+            if(data.isDisabled(entity.getWorld().getName()))
+                return;
+            if(isEliteMob(entity))
+                return;
+
+            //Set Level
+            int level = dataLoader.calculateLevel(entity.getLocation(), entity);
+            if(level == -1)
+                return;
+
+            setLevel(entity, level);
+            setHealth(entity, data, level);
+            setDamage(entity, data, level);
+            setEquipment(entity, data, level);
+            setName(entity, data, level);
+            setVariant(entity);
+        }
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -83,6 +108,19 @@ public class CreatureEventListener implements Listener {
             }
         }
 
+    }
+
+    private boolean replaceWithBoss(EntitySpawnEvent event, Entity entity){
+        LevelRegion region = LorinthsRpgMobs.GetLevelRegionManager().getHighestPriorityLeveledRegionAtLocation(entity.getLocation());
+        if(region == null)
+            return false;
+
+        if(BossApiManager.isEnabled() &&
+                BossApiManager.spawnBoss(event.getLocation(), entity.getType(), region.getBossReplacements())){
+            event.setCancelled(true);
+            return true;
+        }
+        return false;
     }
 
     private void setLevel(Entity entity, int level){
@@ -204,6 +242,9 @@ public class CreatureEventListener implements Listener {
         if(event.getDroppedExp() == 0 || entity.getKiller() == null)
             return;
 
+        //if(dataLoader.isIgnoredEntity(entity, true))
+            //return;
+
         CreatureData data = dataLoader.getCreatureDataManager().getData(entity);
         if (data.isDisabled(entity.getWorld().getName()))
             return;
@@ -215,20 +256,39 @@ public class CreatureEventListener implements Listener {
         Integer level = LorinthsRpgMobs.GetLevelOfEntity(entity);
         if(level != null){
             int exp = data.getExperienceAtLevel(level);
+            double currencyValue = 0;
+            double currencyChance = data.getCurrencyChanceAtLevel(level);
+            double roll = random.nextDouble() * 100.0;
+
+            if(currencyChance > roll || variant instanceof WealthyVariant)
+                currencyValue = data.getCurrencyValueAtLevel(level);
 
             if(exp > 0){
-                Player player = entity.getKiller();
+                Player player = getKillerFromEntity(event);
                 float multiplier = dataLoader.getExperiencePermissionManager().getExperienceMultiplier(player);
                 exp =  (int) (exp * multiplier);
 
-                HeroesDataManager heroesManager = dataLoader.getHeroesDataManager();
-                SkillAPIDataManager skillAPIDataManager = dataLoader.getSkillAPIDataManager();
-                if(heroesManager.handleEntityDeathEvent(event, player, exp))
-                    event.setDroppedExp(0);
-                else if(skillAPIDataManager.handleEntityDeathEvent(event, player, exp))
-                    event.setDroppedExp(0);
-                else
-                    event.setDroppedExp(exp);
+                RpgMobDeathEvent rpgMobDeathEvent = new RpgMobDeathEvent(player, entity, level, exp, currencyValue);
+                Bukkit.getPluginManager().callEvent(rpgMobDeathEvent);
+                if(!rpgMobDeathEvent.isCancelled()){
+                    if(variant != null)
+                        variant.onDeathEvent(rpgMobDeathEvent);
+
+                    if(rpgMobDeathEvent.getExp() > 0){
+                        if(dataLoader.getHeroesDataManager().handleEntityDeathEvent(event, player, rpgMobDeathEvent.getExp(), rpgMobDeathEvent.getCurrencyValue()))
+                            return;
+                        else if(dataLoader.getSkillAPIDataManager().handleEntityDeathEvent(event, player, rpgMobDeathEvent.getExp(), rpgMobDeathEvent.getCurrencyValue()))
+                            return;
+                        else{
+                            event.setDroppedExp(rpgMobDeathEvent.getExp());
+                        }
+                    }
+
+                    Integer currency = (int)Math.floor(rpgMobDeathEvent.getCurrencyValue());
+                    if(currency > 0){
+                        VaultManager.addMoney(player, entity, currency);
+                    }
+                }
             }
         }
     }
@@ -242,5 +302,30 @@ public class CreatureEventListener implements Listener {
                 projectile.setMetadata(MetaDataConstants.Damage, creature.getMetadata(MetaDataConstants.Damage).get(0));
             }
         }
+    }
+
+    private Player getKillerFromEntity(EntityDeathEvent event){
+        EntityDamageEvent lastDamageEvent = event.getEntity().getLastDamageCause();
+
+        Player killer = event.getEntity().getKiller();
+        killer = killer != null ? killer : getKillerFromTamedEntity(lastDamageEvent);
+
+        return killer;
+    }
+
+    private Player getKillerFromTamedEntity(EntityDamageEvent lastDamageEvent){
+        if(lastDamageEvent instanceof EntityDamageByEntityEvent){
+            Entity damager = ((EntityDamageByEntityEvent) lastDamageEvent).getDamager();
+            if(damager instanceof Player){
+                return (Player) damager;
+            }
+            if(damager instanceof Tameable){
+                AnimalTamer tamer = ((Tameable) damager).getOwner();
+                if(tamer instanceof Player)
+                    return (Player) tamer;
+            }
+        }
+
+        return null;
     }
 }

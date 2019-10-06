@@ -1,0 +1,8 @@
+##################################
+# messages.yml
+# Change messages that are displayed to players
+#
+# MoneyDrop: This message is displayed when the player earns more than 0.0 currency
+#
+##################################
+MoneyDrop: '&aThe {entity} dropped &e{money}&a gold!'

@@ -5,6 +5,8 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 
+import java.util.Random;
+
 /**
  * Contains data for spawn calculations including, starting level, distance, center buffer, max level, and if it is disabled
  */
@@ -12,10 +14,12 @@ public class SpawnPoint extends DirtyObject{
 
     private String Name;
     private Location Center;
+    private Random random = new Random();
     private int StartingLevel = 1;
     private int LevelDistance = 50;
     private int CenterBuffer = 50;
     private int MaxLevel = 1000;
+    private int Variance = 0;
 
     /**
      * Loads a pre-existing spawn point from config
@@ -37,6 +41,7 @@ public class SpawnPoint extends DirtyObject{
             CenterBuffer = config.getInt(prefix + ".CenterBuffer");
             setDisabled(config.getBoolean(prefix + ".Disabled"));
             MaxLevel = config.getInt(prefix + ".MaxLevel");
+            Variance = config.getInt(prefix + ".Variance");
             if(MaxLevel == -1)
                 MaxLevel = Integer.MAX_VALUE;
         }
@@ -74,6 +79,7 @@ public class SpawnPoint extends DirtyObject{
             config.set(prefix + ".MaxLevel", MaxLevel == Integer.MAX_VALUE ? -1 : MaxLevel);
             config.set(prefix + ".Distance", LevelDistance);
             config.set(prefix + ".CenterBuffer", CenterBuffer);
+            config.set(prefix + ".Variance", Variance);
             config.set(prefix + ".Location.X", Center.getBlockX());
             config.set(prefix + ".Location.Z", Center.getBlockZ());
         }
@@ -206,6 +212,28 @@ public class SpawnPoint extends DirtyObject{
     }
 
     /**
+     * Gets the random level variance of this spawn point
+     * Returns 0 if not set
+     * @return Max Level
+     */
+    public int getVariance(){
+        return Variance;
+    }
+
+    /**
+     * Sets the random level variance of this spawn point
+     * @param variance the random level variance
+     */
+    public void setVariance(int variance){
+        if(variance < 0){
+            variance = 1;
+        }
+
+        Variance = variance;
+        this.setDirty();
+    }
+
+    /**
      * Calculate the distance to a spawnpoint from a location
      * @param loc The location we want to check
      * @param algorithm The algorithm to calculate distance
@@ -241,7 +269,9 @@ public class SpawnPoint extends DirtyObject{
         loc.setY(0); // We only care about x/y
 
         try{
-            return (int) Math.min(MaxLevel, StartingLevel + (calculateDistanceWithBuffer(loc, algorithm) / (double) LevelDistance));
+            int variance = random.nextInt(getVariance() + 1);
+
+            return (int) Math.min(MaxLevel, StartingLevel + variance + (calculateDistanceWithBuffer(loc, algorithm) / (double) LevelDistance));
         }
         catch(Exception e){
             e.printStackTrace();

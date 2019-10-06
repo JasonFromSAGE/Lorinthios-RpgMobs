@@ -48,6 +48,7 @@ public class InfoSpawnPointExecutor extends CustomCommandExecutor{
         OutputHandler.PrintCommandInfo(player, "Max Level : " + OutputHandler.HIGHLIGHT + (spawnPoint.getMaxLevel() == Integer.MAX_VALUE ? "N/A" : spawnPoint.getMaxLevel()));
         OutputHandler.PrintCommandInfo(player, "Distance : " + OutputHandler.HIGHLIGHT + spawnPoint.getLevelDistance());
         OutputHandler.PrintCommandInfo(player, "Center Buffer : " + OutputHandler.HIGHLIGHT + spawnPoint.getCenterBuffer());
+        OutputHandler.PrintCommandInfo(player, "Variance : " + OutputHandler.HIGHLIGHT + spawnPoint.getVariance());
     }
 
     @Override

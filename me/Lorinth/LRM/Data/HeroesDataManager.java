@@ -74,7 +74,7 @@ public class HeroesDataManager extends Disableable implements DataManager{
         return false;
     }
 
-    public boolean handleEntityDeathEvent(EntityDeathEvent deathEvent,  Player player, int exp){
+    public boolean handleEntityDeathEvent(EntityDeathEvent deathEvent,  Player player, int exp, double currency){
         if(this.isDisabled())
             return false;
 
@@ -85,7 +85,7 @@ public class HeroesDataManager extends Disableable implements DataManager{
 
         Hero hero = manager.getHero(player);
         if(!hero.hasParty()){
-            heroesEventListener.bindExperienceEvent(location, new CreatureDeathData(exp, deathEvent.getEntity()));
+            heroesEventListener.bindExperienceEvent(location, new CreatureDeathData(exp, currency, deathEvent.getEntity()));
             return true;
         }
 
@@ -115,7 +115,7 @@ public class HeroesDataManager extends Disableable implements DataManager{
             exp = (int) Calculator.eval(formula);
         }
 
-        heroesEventListener.bindExperienceEvent(deathEvent.getEntity().getLocation(), new CreatureDeathData(exp, deathEvent.getEntity()));
+        heroesEventListener.bindExperienceEvent(deathEvent.getEntity().getLocation(), new CreatureDeathData(exp, currency, deathEvent.getEntity()));
 
         return true;
     }

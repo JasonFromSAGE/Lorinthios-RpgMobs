@@ -9,8 +9,13 @@ import org.bukkit.entity.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class ButcherExecutor extends CustomCommandExecutor {
+
+    private List<String> MonsterNames = new ArrayList<String>(){{
+        add("org.bukkit.entity.phantom");
+    }};
 
     public ButcherExecutor(){
         super("butcher","butchers all loaded mobs",

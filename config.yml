@@ -3,6 +3,7 @@
 DistanceAlgorithm: Diamond # Circle, Diamond, Square (Recommend Diamond for best results, Circle is pretty intensive)
 AllowAutoUpdates: false #If true this will auto download updates on server start and will take effect on next startup
 VanillaMobEquipmentOverrides: true #If true, enchanted vanilla gear will override equipment settings in this file
+IgnoreSpawnerMobs: true #If true, mobs spawned from a mob spawner will not have level or experience changed
 MythicDrops:
   Enabled: false
 MythicMobs:
@@ -11,6 +12,8 @@ MythicMobs:
   - world_the_end
 SkillAPI:
   Enabled: false # if enabled, will use exp calculations for SkillAPI
+LorinthsRpgItems:
+  Enabled: false # if enabled, will use exp calculations for RpgItems
 Heroes:
   Enabled: false # if enabled, will use exp calculations for Heroes
   PartyExperienceFormulas:
@@ -19,6 +22,8 @@ Heroes:
     '4': "2.0 * {exp} / 4"
     '5': "2.2 * {exp} / 5"
     '6': "2.4 * {exp} / 6"
+Vault:
+  Enabled: false # if enabled, will drop money using CurrencyValue / CurrencyChance
 ExperiencePermissions: # Give permissions with, lrm.experience.<name> e.g. lrm.experience.vip
   default: 1.0 # multiplier of dropped/gained experience
   vip: 1.5 # 1.5x exp dropped
@@ -33,6 +38,7 @@ SpawnPoints:
       Distance: 50 # Interval to level up
       MaxLevel: -1 # -1 is disabled, but what level do mobs cap at for this spawn point?
       CenterBuffer: 50 # distance delay for creatures to not level up from the center
+      Variance: 0 # level offset to add some randomization to levels (This is Additive)
       Location: # The actual center point distance is calculated from
         X: 0
         Z: 0
@@ -42,6 +48,7 @@ SpawnPoints:
       Distance: 100
       MaxLevel: 50
       CenterBuffer: 0
+      Variance: 0
       Location:
         X: 10000
         Z: -5000
@@ -51,6 +58,9 @@ LevelRegions:
       Level: 40 # level of all mobs in the region
       Names: # custom names for entities
         ZOMBIE: '&5Undead Warrior' # All zombies will have their name purple and be called 'Undead Warrior', accepts {level} tag
+      Bosses:
+        ZOMBIE:
+         CrystalMiner: 10.0
       Disabled: false
       DisabledEntities:
       # Use "- '*' " to disable all entities
@@ -130,6 +140,11 @@ MobVariants:
     Weight: 10
     Armor: 2
     ArmorMultiplier: 1.0
+  Wealthy:
+    Disabled: false
+    DisabledTypes: []
+    Weight: 5
+    CurrencyValueMutiplier: 5.0
 Entity:
   Animal:
     Disabled: true
@@ -143,12 +158,14 @@ Entity:
         Damage: rand(3) + ({level} / 10)
         Health: 20 + ({level} / 3) + ({level} / 5) + rand(5)
         Experience: rand(3) + 1
+        CurrencyChance: 10.0 + ({level} / 5)
+        CurrencyValue: 5.0 + ({level} / 3) + rand(3)
       Equipment: # Equipment given when entity is spawned
         Weapon:
-          '1': RAW_FISH 10% drop:15%, WOOD_SWORD 10%, WOOD_AXE 10% # MATERIAL equip% drop:drop%, etc
+          '1': SALMON 10% drop:15%, WOODEN_SWORD 10%, WOODEN_AXE 10%, TRIDENT 10% impaling:1 drop:10% # MATERIAL equip% drop:drop%, etc
           '12': STONE_SWORD 25%, STONE_AXE 20%
           '20': IRON_SWORD 30%, IRON_AXE 25%
-          '30': GOLD_SWORD 35%, GOLD_AXE 30%
+          '30': GOLDEN_SWORD 35%, GOLDEN_AXE 30%
           '40': DIAMOND_SWORD 35%, DIAMOND_SWORD 5% smite:1, DIAMOND_AXE 30%
         Offhand:
           '20': SHIELD 10%

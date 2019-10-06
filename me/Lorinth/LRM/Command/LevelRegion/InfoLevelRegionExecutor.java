@@ -38,7 +38,7 @@ public class InfoLevelRegionExecutor extends CustomCommandExecutor{
         OutputHandler.PrintWhiteSpace(player, 2);
         OutputHandler.PrintCommandInfo(player, "[LorinthsRpgMobs] : " + OutputHandler.HIGHLIGHT + "Level Region Info");
         OutputHandler.PrintCommandInfo(player, "Name : " + OutputHandler.HIGHLIGHT + levelRegion.getName());
-        OutputHandler.PrintCommandInfo(player, "Level : " + OutputHandler.HIGHLIGHT + levelRegion.getLevel());
+        OutputHandler.PrintCommandInfo(player, "Level : " + OutputHandler.HIGHLIGHT + levelRegion.getLevelRange());
     }
 
     @Override

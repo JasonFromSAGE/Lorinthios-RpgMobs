@@ -26,6 +26,7 @@ public class SetSpawnPointExecutor extends CustomCommandExecutor{
             add(new CustomCommandArgument("level", "starting level for this spawn point", true));
             add(new CustomCommandArgument("maxlevel", "level cap for this spawn point", false));
             add(new CustomCommandArgument("centerBuffer", "center buffer to delay mobs from leveling until further from center", false));
+            add(new CustomCommandArgument("variance", "the maximum random variance in level when a mob is spawned using this spawn point", false));
         }});
         parentExecutor = parent;
     }
@@ -49,6 +50,11 @@ public class SetSpawnPointExecutor extends CustomCommandExecutor{
                 if(args.length > 4){
                     int centerBuffer = Integer.parseInt(args[4]);
                     spawnPoint.setCenterBuffer(centerBuffer);
+
+                    if(args.length > 5){
+                        int variance = Integer.parseInt(args[5]);
+                        spawnPoint.setVariance(variance);
+                    }
                 }
             }
             OutputHandler.PrintRawInfo(player, "Created spawn point with name, " + OutputHandler.HIGHLIGHT + name);
@@ -66,6 +72,11 @@ public class SetSpawnPointExecutor extends CustomCommandExecutor{
                 if(args.length > 4){
                     int centerBuffer = Integer.parseInt(args[4]);
                     spawnPoint.setCenterBuffer(centerBuffer);
+
+                    if(args.length > 5){
+                        int variance = Integer.parseInt(args[5]);
+                        spawnPoint.setVariance(variance);
+                    }
                 }
             }
             OutputHandler.PrintRawInfo(player, "Updated spawn point with name, " + OutputHandler.HIGHLIGHT + name);

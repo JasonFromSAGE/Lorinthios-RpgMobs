@@ -1,6 +1,5 @@
 package me.Lorinth.LRM.Util;
 
-import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 
 public class TryParse {
@@ -41,11 +40,10 @@ public class TryParse {
         }
     }
 
-    public static boolean parseMaterial(String value){
-        try {
-            Material mat = Material.valueOf(value);
-            return mat != null;
-        } catch (Exception e) {
+    public static boolean parseEnum(Class clazz, String value){
+        try{
+            return Enum.valueOf(clazz, value) != null;
+        } catch(Exception e){
             return false;
         }
     }

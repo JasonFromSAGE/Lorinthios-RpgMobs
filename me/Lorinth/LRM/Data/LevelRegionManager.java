@@ -1,9 +1,11 @@
 package me.Lorinth.LRM.Data;
 
-import com.sk89q.worldguard.bukkit.WGBukkit;
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldguard.WorldGuard;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.protection.managers.RegionManager;
 import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import com.sk89q.worldguard.protection.regions.RegionContainer;
+import com.sk89q.worldguard.protection.regions.RegionQuery;
 import me.Lorinth.LRM.Objects.DataManager;
 import me.Lorinth.LRM.Objects.LevelRegion;
 import me.Lorinth.LRM.Util.OutputHandler;
@@ -20,12 +22,15 @@ import java.util.HashMap;
  */
 public class LevelRegionManager implements DataManager{
 
-    public boolean WorldGuardFound = false;
+    public boolean WorldGuardFound;
+    private WorldGuard WG;
     private HashMap<String, HashMap<String, LevelRegion>> allLevelRegions = new HashMap<>();
 
     public LevelRegionManager(){
         try{
-            WorldGuardFound = WGBukkit.getPlugin() != null;
+            WorldGuardFound = WorldGuard.getInstance() != null;
+            if(WorldGuardFound)
+                WG = WorldGuard.getInstance();
         }
         catch(NoClassDefFoundError exception){
             WorldGuardFound = false;
@@ -50,7 +55,7 @@ public class LevelRegionManager implements DataManager{
                 for(String key : config.getConfigurationSection("LevelRegions." + world).getKeys(false)){
                     LevelRegion region = loadRegion(config, key, "LevelRegions." + world);
                     allLevelRegions.get(world).put(key, region);
-                    OutputHandler.PrintInfo("Loaded Region, " + region.getName());
+                    OutputHandler.PrintInfo("Loaded Region, " + region.getName() + " " + (region.isDisabled() ? "(disabled)" : "(Level:" + region.getLevelRange() + ")"));
                 }
                 OutputHandler.PrintInfo("Loaded World, " + world);
             }
@@ -118,15 +123,19 @@ public class LevelRegionManager implements DataManager{
         if(regionsInWorld == null || regionsInWorld.size() == 0)
             return null;
 
-        RegionManager regionManager = WGBukkit.getRegionManager(location.getWorld());
-        ApplicableRegionSet set = regionManager.getApplicableRegions(location);
-        for(ProtectedRegion region : set.getRegions()){
-            if(regionsInWorld.containsKey(region.getId()) && (highestPriority == null || highestLevelRegion == null || (highestPriority.getPriority() < region.getPriority()) )){
-                highestPriority = region;
-                LevelRegion levelRegion = regionsInWorld.get(region.getId());
-                if(levelRegion != null && !levelRegion.isDisabled()) {
+        RegionContainer rgContainer = WG.getPlatform().getRegionContainer();
+        if(rgContainer != null) {
+            RegionQuery query = rgContainer.createQuery();
+            ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(location));
+
+            for(ProtectedRegion region : set.getRegions()){
+                if(regionsInWorld.containsKey(region.getId()) && (highestPriority == null || highestLevelRegion == null || (highestPriority.getPriority() < region.getPriority()) )){
                     highestPriority = region;
-                    highestLevelRegion = levelRegion;
+                    LevelRegion levelRegion = regionsInWorld.get(region.getId());
+                    if(levelRegion != null && !levelRegion.isDisabled()) {
+                        highestPriority = region;
+                        highestLevelRegion = levelRegion;
+                    }
                 }
             }
         }
@@ -148,12 +157,18 @@ public class LevelRegionManager implements DataManager{
         if(regionsInWorld == null)
             return -1; //For invalid
 
-        RegionManager regionManager = WGBukkit.getRegionManager(location.getWorld());
-        ApplicableRegionSet set = regionManager.getApplicableRegions(location);
-        for(ProtectedRegion region : set.getRegions()){
-            if(regionsInWorld.containsKey(region.getId()))
-                level = Math.min(level, regionsInWorld.get(region.getId()).getLevel());
+        RegionContainer rgContainer = WG.getPlatform().getRegionContainer();
+        if(rgContainer != null) {
+            RegionQuery query = rgContainer.createQuery();
+            ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(location));
+
+            for(ProtectedRegion region : set.getRegions()){
+                if(regionsInWorld.containsKey(region.getId()))
+                    level = Math.min(level, regionsInWorld.get(region.getId()).getLevel());
+            }
         }
+
+
 
         return level;
     }
@@ -172,11 +187,15 @@ public class LevelRegionManager implements DataManager{
         if(regionsInWorld == null)
             return -1; //For invalid
 
-        RegionManager regionManager = WGBukkit.getRegionManager(location.getWorld());
-        ApplicableRegionSet set = regionManager.getApplicableRegions(location);
-        for(ProtectedRegion region : set.getRegions()){
-            if(regionsInWorld.containsKey(region.getId()))
-                level = Math.max(level, regionsInWorld.get(region.getId()).getLevel());
+        RegionContainer rgContainer = WG.getPlatform().getRegionContainer();
+        if(rgContainer != null) {
+            RegionQuery query = rgContainer.createQuery();
+            ApplicableRegionSet set = query.getApplicableRegions(BukkitAdapter.adapt(location));
+
+            for (ProtectedRegion region : set.getRegions()) {
+                if (regionsInWorld.containsKey(region.getId()))
+                    level = Math.max(level, regionsInWorld.get(region.getId()).getLevel());
+            }
         }
 
         return level;

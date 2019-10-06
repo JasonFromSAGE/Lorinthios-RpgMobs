@@ -35,6 +35,10 @@ public class NameData {
                          .replace("{level}", Integer.toString(level));
     }
 
+    public String getRawNameFormat(){
+        return Name;
+    }
+
     public int getLevel(){
         return Level;
     }

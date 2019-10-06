@@ -17,20 +17,19 @@ import java.util.Random;
 
 public class MobVariantDataManager extends Disableable implements DataManager {
 
-    private static HashMap<String, ArrayList<MobVariant>> entityTypeVariants = new HashMap<>();
-    private static HashMap<String, Integer> entityTypeVariantWeight = new HashMap<>();
-    private static ArrayList<String> disabledEntityTypes = new ArrayList<>();
+    private static HashMap<String, ArrayList<MobVariant>> entityTypeVariants;
+    private static HashMap<String, Integer> entityTypeVariantWeight;
+    private static ArrayList<String> disabledEntityTypes;
     private static boolean disabled = false;
     private static int variantChance = 0;
-    private static MobVariantDataManager instance;
     private static Random random = new Random();
-
-    public MobVariantDataManager(){
-        instance = this;
-    }
 
     @Override
     public void loadData(FileConfiguration config, Plugin plugin) {
+        entityTypeVariants = new HashMap<>();
+        entityTypeVariantWeight = new HashMap<>();
+        disabledEntityTypes = new ArrayList<>();
+
         if(!ConfigHelper.ConfigContainsPath(config, "MobVariants.Disabled")){
             OutputHandler.PrintInfo("Mob Variants options not found, Generating...");
             setDefaults(config, plugin);
@@ -45,9 +44,6 @@ public class MobVariantDataManager extends Disableable implements DataManager {
         OutputHandler.PrintInfo("Mob Variants Enabled!");
         variantChance = config.getInt("MobVariants.VariantChance");
         disabledEntityTypes.addAll(config.getStringList("MobVariants.DisabledTypes"));
-
-        entityTypeVariants = new HashMap<>();
-        entityTypeVariantWeight = new HashMap<>();
         loadInternalVariants();
     }
 
@@ -65,6 +61,7 @@ public class MobVariantDataManager extends Disableable implements DataManager {
         new StrongVariant();
         new SturdyVariant();
         new ToughVariant();
+        new WealthyVariant();
     }
 
     public static void AddVariant(MobVariant variant){
@@ -79,8 +76,6 @@ public class MobVariantDataManager extends Disableable implements DataManager {
             }
         }
     }
-
-
 
     public static MobVariant GetVariant(LivingEntity entity){
         if(disabled ||

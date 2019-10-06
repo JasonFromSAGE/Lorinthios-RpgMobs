@@ -1,6 +1,7 @@
 package me.Lorinth.LRM.Variants;
 
 import me.Lorinth.LRM.Data.MobVariantDataManager;
+import me.Lorinth.LRM.Events.RpgMobDeathEvent;
 import me.Lorinth.LRM.LorinthsRpgMobs;
 import me.Lorinth.LRM.Objects.ConfigValue;
 import me.Lorinth.LRM.Objects.Disableable;
@@ -61,6 +62,8 @@ public abstract class MobVariant extends Disableable{
     public void onSpawn(LivingEntity entity){}
 
     public void onDeath(LivingEntity entity){}
+
+    public void onDeathEvent(RpgMobDeathEvent event) {}
 
     public String getName(){
         return this.name;

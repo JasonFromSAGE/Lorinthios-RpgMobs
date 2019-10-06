@@ -29,6 +29,8 @@ public class CreatureData extends DirtyObject{
     private String damageFormula;
     private String expFormula;
     private String healthFormula;
+    private String currencyChanceFormula;
+    private String currencyValueFormula;
 
     private ArrayList<NameData> nameData = new ArrayList<>();
     private ArrayList<String> groupDisabledWorlds = new ArrayList<String>();
@@ -65,6 +67,8 @@ public class CreatureData extends DirtyObject{
             damageFormula = "1 + rand(3) + ({level} / 12)";
         }
         expFormula = "rand(5) + 1 + rand({level} / 5)";
+        currencyChanceFormula = "5.0 + ({level} / 5)";
+        currencyValueFormula = "3.0 + ({level} / 3) + rand(3)";
 
         String friendlyName = getUserFriendlyName(entityType);
         nameData.add(new NameData(1, friendlyName, false));
@@ -120,8 +124,9 @@ public class CreatureData extends DirtyObject{
         prefix += ".Formulas";
         config.set(prefix + ".Health", healthFormula);
         config.set(prefix + ".Damage", damageFormula);
-        config.set(prefix + ".Exp", null);
         config.set(prefix + ".Experience", expFormula);
+        config.set(prefix + ".CurrencyChance", currencyChanceFormula);
+        config.set(prefix + ".CurrencyValue", currencyValueFormula);
     }
 
     /**
@@ -175,10 +180,26 @@ public class CreatureData extends DirtyObject{
             prefix += ".Formulas";
             healthFormula = config.getString(prefix + ".Health");
             damageFormula = config.getString(prefix + ".Damage");
+
             if(config.contains(prefix + ".Exp"))
                 expFormula = config.getString(prefix + ".Exp");
             else
                 expFormula = config.getString(prefix + ".Experience");
+
+            if(config.contains(prefix + ".CurrencyChance"))
+                currencyChanceFormula = config.getString(prefix + ".CurrencyChance");
+            else{
+                currencyChanceFormula = "10.0 + ({level} / 5)";
+                this.setDirty();
+            }
+
+
+            if(config.contains(prefix + ".CurrencyValue"))
+                currencyValueFormula = config.getString(prefix + ".CurrencyValue");
+            else {
+                currencyValueFormula = "5.0 + ({level} / 3) + rand(3)";
+                this.setDirty();
+            }
         }
     }
 
@@ -372,6 +393,28 @@ public class CreatureData extends DirtyObject{
         catch(Exception exception){
             OutputHandler.PrintRawError("Got Experience Error for, " + entityType.toString());
             OutputHandler.PrintException("Level : " + level + ", Formula : " + expFormula, exception);
+        }
+        return 1;
+    }
+
+    public double getCurrencyChanceAtLevel(Integer level){
+        try{
+            return (int) Calculator.eval(preParseFormula(currencyChanceFormula, level));
+        }
+        catch(Exception exception){
+            OutputHandler.PrintRawError("Got Currency Chance Formula Error for, " + entityType.toString());
+            OutputHandler.PrintException("Level : " + level + ", Formula : " + currencyChanceFormula, exception);
+        }
+        return 1;
+    }
+
+    public double getCurrencyValueAtLevel(Integer level){
+        try{
+            return (int) Calculator.eval(preParseFormula(currencyValueFormula, level));
+        }
+        catch(Exception exception){
+            OutputHandler.PrintRawError("Got Currency Value Formula Error for, " + entityType.toString());
+            OutputHandler.PrintException("Level : " + level + ", Formula : " + currencyValueFormula, exception);
         }
         return 1;
     }
